@@ -10,40 +10,47 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.example.android.tranner.R;
+import com.example.android.tranner.mainscreen.adapters.MainActivityAdapter;
+import com.example.android.tranner.mainscreen.dagger2.DaggerMainActivityComponent;
+import com.example.android.tranner.mainscreen.dagger2.MainActivityComponent;
+import com.example.android.tranner.mainscreen.dagger2.MainActivityModule;
 import com.example.android.tranner.mainscreen.data.Category;
 import com.example.android.tranner.mainscreen.dialogs.CategoryDialog;
-import com.example.android.tranner.mainscreen.listeners.CategoryDialogListener;
-import com.example.android.tranner.mainscreen.adapters.MainActivityAdapter;
-import com.example.android.tranner.mainscreen.listeners.MainActivityAdapterListener;
-import com.example.android.tranner.R;
 import com.example.android.tranner.mainscreen.dialogs.WebImageDialog;
+import com.example.android.tranner.mainscreen.listeners.CategoryDialogListener;
+import com.example.android.tranner.mainscreen.listeners.MainActivityAdapterListener;
 import com.example.android.tranner.mainscreen.listeners.WebImageDialogAdapterListener;
+import com.example.android.tranner.mainscreen.mvp.CategoryContract;
+import com.example.android.tranner.mainscreen.mvp.CategoryPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements CategoryDialogListener,
-        MainActivityAdapterListener, WebImageDialogAdapterListener {
+        MainActivityAdapterListener,
+        WebImageDialogAdapterListener,
+        CategoryContract.View {
 
     private static final String TAG = "MainActivity";
-
+    private static MainActivity sInstance;
     @BindView(R.id.fab)
     FloatingActionButton fab;
     @BindView(R.id.main_recycler_view)
     RecyclerView mRecyclerView;
-
     private List<Category> mCategoryList;
     private MainActivityAdapter mAdapter;
     private CategoryDialog mCategoryDialog;
     private WebImageDialog mWebDialog;
+    @Inject CategoryPresenter mPresenter;
+
 
     public void fabClick(View view) {
         FragmentManager manager = getSupportFragmentManager();
@@ -59,11 +66,20 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+        DaggerMainActivityComponent.builder()
+                .mainActivityModule(new MainActivityModule(this))
+                .build()
+                .inject(this);
+
+        mPresenter.loadCategories();
+
         mCategoryList = new ArrayList<>();
         mCategoryList.add(new Category("one"));
         mCategoryList.add(new Category("two"));
         mCategoryList.add(new Category("three"));
         mCategoryList.add(new Category("four"));
+
 
         mAdapter = new MainActivityAdapter(this, mCategoryList);
 
@@ -125,4 +141,18 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
         mAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onCategoryLoaded(List<Category> categoryList) {
+        this.mCategoryList = categoryList;
+    }
+
+    @Override
+    public void onNoCategoryLoaded() {
+        Toast.makeText(this, "No categories...", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onCategoryLoadError() {
+        Toast.makeText(this, "Category load error...", Toast.LENGTH_SHORT).show();
+    }
 }
