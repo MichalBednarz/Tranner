@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
     <TextView
         android:id="@+id/dialog_item_text"
-        android:textSize="@dimen/dialog_font"
+        android:textSize="@dimen/dialog_list_font"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

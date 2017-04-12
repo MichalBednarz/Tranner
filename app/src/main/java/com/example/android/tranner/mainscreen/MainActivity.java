@@ -34,6 +34,8 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import jp.wasabeef.recyclerview.animators.FlipInTopXAnimator;
+import jp.wasabeef.recyclerview.animators.ScaleInAnimator;
 
 public class MainActivity extends AppCompatActivity implements CategoryDialogListener,
         MainActivityAdapterListener,
@@ -51,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
     private MainActivityAdapter mAdapter;
     private CategoryDialog mCategoryDialog;
     private WebImageDialog mWebDialog;
+
 
     public void fabClick(View view) {
         FragmentManager manager = getSupportFragmentManager();
@@ -78,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
         mRecyclerView.setAdapter(mAdapter);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(manager);
+
 
     }
 

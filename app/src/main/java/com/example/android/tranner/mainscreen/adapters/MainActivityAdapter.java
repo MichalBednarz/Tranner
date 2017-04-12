@@ -11,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,6 +35,8 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
     private Context mContext;
     private List<Category> mCategoryList;
     private MainActivityAdapterListener mListener;
+    //field used for animation purpose to detect whether down or up scrooling
+    private int mPreviousPosition = 0;
 
     public MainActivityAdapter(Context mContext, List<Category> mCategoryList) {
         this.mContext = mContext;
@@ -68,6 +71,16 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
             }
         });
 
+
+        //provides item animation respectively for down scroll and up scrool
+        if(position > mPreviousPosition) {
+            AnimationUtil.animate(holder, true);
+        }else {
+            AnimationUtil.animate(holder, false);
+        }
+        mPreviousPosition = position;
+
+        //
         setItemBackdrop(holder, position);
     }
 
@@ -106,13 +119,13 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
                 switch (item.getItemId()) {
                     case R.id.item_delete:
                         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                        builder.setTitle("Do you want to delete this category?")
-                                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                        builder.setTitle("Delete category?")
+                                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
 
                                     }
-                                }).setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                                }).setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         mListener.onCategoryDeleted(category);

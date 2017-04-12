@@ -84,6 +84,7 @@ public class CategoryRepository implements CategoryContract.Repository {
         String[] selectionArgs = {category.getCategory(), category.getImageUrl()};
         db.delete(CategoryEntry.TABLE_NAME, selection, selectionArgs);
 
+
         db.close();
     }
 

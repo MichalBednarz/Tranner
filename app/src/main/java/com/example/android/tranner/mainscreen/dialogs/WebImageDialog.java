@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -61,7 +62,7 @@ public class WebImageDialog extends android.support.v4.app.DialogFragment {
         mAdapter = new WebImageDialogAdapter(this, mUrls, (Category) getArguments().getSerializable("category"));
         mAdapter.setListener(mListener);
         mRecyclerView.setAdapter(mAdapter);
-        RecyclerView.LayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        RecyclerView.LayoutManager manager = new GridLayoutManager(getActivity(), 2);
         mRecyclerView.setLayoutManager(manager);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

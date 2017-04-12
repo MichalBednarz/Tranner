@@ -1,5 +1,6 @@
 package com.example.android.tranner.mainscreen.adapters;
 
+import android.graphics.Color;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -60,6 +61,7 @@ public class CategoryDialogAdapter extends RecyclerView.Adapter<CategoryDialogAd
                 mDialog.dismiss();
             }
         });
+
     }
 
     @Override

@@ -2,11 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:minWidth="1000dp"
+    android:minHeight="1000dp"
     android:padding="@dimen/dialog_padding">
 
     <EditText
         android:id="@+id/dialog_edit"
-        android:textSize="@dimen/dialog_font"
+        android:textSize="@dimen/dialog_hint_font"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="text"
@@ -16,7 +18,7 @@
         android:id="@+id/dialog_recyclerview"
         android:layout_below="@id/dialog_edit"
         android:layout_width="match_parent"
-        android:layout_height="150dp">
+        android:layout_height="wrap_content">
 
     </android.support.v7.widget.RecyclerView>
 
