@@ -1,18 +1,11 @@
 package com.example.android.tranner.mainscreen.mvp;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
-import com.example.android.tranner.mainscreen.MainActivity;
 import com.example.android.tranner.mainscreen.data.Category;
 
 import java.util.List;
-import java.util.concurrent.Callable;
-
-import javax.inject.Inject;
-
-import io.reactivex.Observable;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.internal.operators.observable.ObservableBlockingSubscribe;
 
 /**
  * Created by Michał on 2017-04-11.
@@ -54,18 +47,59 @@ public class CategoryPresenter implements CategoryContract.Actions {
     }
 
     @Override
-    public void addCategory(Category category) {
+    public void addCategory(final Category category) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                mRepository.addCategory(category);
+                return null;
+            }
 
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                mView.onCategoryAdded();
+            }
+        }.execute();
     }
 
     @Override
-    public void deleteCategory(Category category) {
+    public void deleteCategory(final Category category) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                mRepository.deleteCategory(category);
+                return null;
+            }
 
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                mView.onCategoryDeleted();
+            }
+        }.execute();
     }
 
     @Override
-    public void updateCategory(Category category) {
+    public void updateCategory(final Category category) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                mRepository.updateCategory(category);
+                return null;
+            }
 
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                mView.onCategoryUpdated();
+            }
+        }.execute();
+    }
+
+    @Override
+    public void closeDatabase() {
+        mRepository.closeDatabase();
     }
 
 

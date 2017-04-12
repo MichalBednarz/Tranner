@@ -1,10 +1,12 @@
 package com.example.android.tranner.mainscreen.listeners;
 
+import com.example.android.tranner.mainscreen.data.Category;
+
 /**
  * Created by Michał on 2017-04-10.
  */
 
 public interface MainActivityAdapterListener {
-    void onCategoryDeleted(int position);
-    void onChangeBackdropClicked(int position);
+    void onCategoryDeleted(Category category);
+    void onChangeBackdropClicked(Category category);
 }

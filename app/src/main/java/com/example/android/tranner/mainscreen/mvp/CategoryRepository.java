@@ -6,12 +6,11 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.example.android.tranner.mainscreen.data.Category;
 import com.example.android.tranner.mainscreen.mvp.repository.CategoryDatabaseHelper;
-import com.example.android.tranner.mainscreen.mvp.repository.CategoryEntryContract;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.android.tranner.mainscreen.mvp.repository.CategoryEntryContract.*;
+import static com.example.android.tranner.mainscreen.mvp.repository.CategoryEntryContract.CategoryEntry;
 
 /**
  * Created by Michał on 2017-04-11.
@@ -35,11 +34,6 @@ public class CategoryRepository implements CategoryContract.Repository {
                 CategoryEntry.COLUMN_NAME_URL
         };
 
-       /* String selection = CategoryEntry.COLUMN_NAME_TITLE + " = ?";
-        String[] selectionArgs = { "My Title" };
-        String sortOrder =
-                CategoryEntry.COLUMN_NAME_URL + " DESC";*/
-
         Cursor cursor = db.query(
                 CategoryEntry.TABLE_NAME,
                 projection,
@@ -57,15 +51,17 @@ public class CategoryRepository implements CategoryContract.Repository {
         int urlCategory = cursor.getColumnIndex(CategoryEntry.COLUMN_NAME_URL);
 
         cursor.moveToFirst();
-        while(cursor.moveToNext()) {
-            name = cursor.getColumnName(indexCategory);
-            url = cursor.getColumnName(urlCategory);
+        while (cursor.moveToNext()) {
+            name = cursor.getString(indexCategory);
+            url = cursor.getString(urlCategory);
             category = new Category(name);
-            if(url != null) {
+            if (url != null) {
                 category.setImageUrl(url);
             }
             categoryList.add(category);
         }
+        cursor.close();
+        db.close();
 
         return categoryList;
     }
@@ -75,16 +71,46 @@ public class CategoryRepository implements CategoryContract.Repository {
         SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(CategoryEntry.COLUMN_NAME_TITLE, category.getCategory());
+        contentValues.put(CategoryEntry.COLUMN_NAME_URL, (byte[]) null);
         long newRowId = db.insert(CategoryEntry.TABLE_NAME, null, contentValues);
+        db.close();
     }
 
     @Override
     public void deleteCategory(Category category) {
+        SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
+        String selection = CategoryEntry.COLUMN_NAME_TITLE + " LIKE ? AND "
+                + CategoryEntry.COLUMN_NAME_URL + " LIKE ?";
+        String[] selectionArgs = {category.getCategory(), category.getImageUrl()};
+        db.delete(CategoryEntry.TABLE_NAME, selection, selectionArgs);
 
+        db.close();
     }
 
     @Override
     public void updateCategory(Category category) {
+        SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
 
+        ContentValues values = new ContentValues();
+        values.put(CategoryEntry.COLUMN_NAME_URL, category.getImageUrl());
+
+        String selection = CategoryEntry.COLUMN_NAME_TITLE + " LIKE ?";
+        String[] selectionArgs = {category.getCategory()};
+
+        int count = db.update(
+                CategoryEntry.TABLE_NAME,
+                values,
+                selection,
+                selectionArgs);
+
+        db.close();
+
+    }
+
+    @Override
+    public void closeDatabase() {
+        if (mDatabaseHelper != null) {
+            mDatabaseHelper.close();
+        }
     }
 }

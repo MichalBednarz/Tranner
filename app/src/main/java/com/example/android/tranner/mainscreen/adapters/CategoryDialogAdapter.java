@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.android.tranner.mainscreen.data.Category;
 import com.example.android.tranner.mainscreen.listeners.CategoryDialogListener;
 import com.example.android.tranner.R;
 
@@ -22,15 +23,14 @@ import butterknife.ButterKnife;
 
 public class CategoryDialogAdapter extends RecyclerView.Adapter<CategoryDialogAdapter.ViewHolder> {
 
-    public List<String> mDialogSuggested =
-            new ArrayList<String>() {{
-                add("Hobby");
-                add("Work");
-                add("Travel");
-                add("Sport");
-                add("one");
-                add("two");
-                add("three");
+    public List<Category> mDialogSuggested =
+            new ArrayList<Category>() {{
+                add(new Category("Hobby"));
+                add(new Category("Work"));
+                add(new Category("Sport"));
+                add(new Category("Cooking"));
+                add(new Category("Passion"));
+                add(new Category("Reading"));
             }};
 
     private CategoryDialogListener mListener;
@@ -49,8 +49,8 @@ public class CategoryDialogAdapter extends RecyclerView.Adapter<CategoryDialogAd
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        final String suggested = mDialogSuggested.get(position);
-        holder.dialogItemText.setText(suggested);
+        final Category suggested = mDialogSuggested.get(position);
+        holder.dialogItemText.setText(suggested.getCategory());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

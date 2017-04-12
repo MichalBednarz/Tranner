@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.android.tranner.R;
+import com.example.android.tranner.mainscreen.data.Category;
 import com.example.android.tranner.mainscreen.dialogs.WebImageDialog;
 import com.example.android.tranner.mainscreen.listeners.WebImageDialogAdapterListener;
 import com.squareup.picasso.Picasso;
@@ -25,13 +26,14 @@ public class WebImageDialogAdapter extends RecyclerView.Adapter<WebImageDialogAd
 
     private WebImageDialog mDialog;
     private List<String> mUrls;
-    private int mPosition;
+    private Category mCategory;
+
     private WebImageDialogAdapterListener mListener;
 
-    public WebImageDialogAdapter(WebImageDialog mDialog, List<String> mUrls, int mPosition) {
+    public WebImageDialogAdapter(WebImageDialog mDialog, List<String> mUrls, Category category) {
         this.mDialog = mDialog;
         this.mUrls = mUrls;
-        this.mPosition = mPosition;
+        this.mCategory = category;
     }
 
     public void setListener(WebImageDialogAdapterListener mListener) {
@@ -51,7 +53,8 @@ public class WebImageDialogAdapter extends RecyclerView.Adapter<WebImageDialogAd
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onPickImageUrl(mPosition, url);
+                mCategory.setImageUrl(url);
+                mListener.onPickImageUrl(mCategory);
                 mDialog.dismiss();
             }
         });

@@ -13,6 +13,9 @@ public class CategoryContract {
         void onCategoryLoaded(List<Category> categoryList);
         void onNoCategoryLoaded();
         void onCategoryLoadError();
+        void onCategoryAdded();
+        void onCategoryDeleted();
+        void onCategoryUpdated();
     }
 
     public interface Actions {
@@ -20,6 +23,7 @@ public class CategoryContract {
         void addCategory(Category category);
         void deleteCategory(Category category);
         void updateCategory(Category category);
+        void closeDatabase();
     }
 
     public interface Repository {
@@ -27,5 +31,6 @@ public class CategoryContract {
         void addCategory(Category category);
         void deleteCategory(Category category);
         void updateCategory(Category category);
+        void closeDatabase();
     }
 }

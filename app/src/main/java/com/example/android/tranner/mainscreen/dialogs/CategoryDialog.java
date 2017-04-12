@@ -15,6 +15,7 @@ import android.widget.EditText;
 
 import com.example.android.tranner.mainscreen.adapters.CategoryDialogAdapter;
 import com.example.android.tranner.mainscreen.adapters.CategoryDialogAdapterDecoration;
+import com.example.android.tranner.mainscreen.data.Category;
 import com.example.android.tranner.mainscreen.listeners.CategoryDialogListener;
 import com.example.android.tranner.R;
 
@@ -77,7 +78,8 @@ public class CategoryDialog extends android.support.v4.app.DialogFragment {
                 .setPositiveButton("create", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mListener.onNewCategoryCreated(mDialogEdit.getText().toString());
+                        Category category = new Category(mDialogEdit.getText().toString());
+                        mListener.onNewCategoryCreated(category);
                     }
                 });
 

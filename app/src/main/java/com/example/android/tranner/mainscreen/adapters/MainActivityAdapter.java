@@ -33,12 +33,12 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
 
     private Context mContext;
     private List<Category> mCategoryList;
-    private MainActivityAdapterListener listener;
+    private MainActivityAdapterListener mListener;
 
     public MainActivityAdapter(Context mContext, List<Category> mCategoryList) {
         this.mContext = mContext;
         this.mCategoryList = mCategoryList;
-        this.listener = (MainActivityAdapterListener) mContext;
+        this.mListener = (MainActivityAdapterListener) mContext;
     }
 
     @Override
@@ -49,7 +49,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        Category category = mCategoryList.get(position);
+        final Category category = mCategoryList.get(position);
         holder.textView.setText(category.getCategory());
         if (category.getImageUrl() != null) {
             Picasso.with(mContext).load(category.getImageUrl()).into(holder.mainItemImage);
@@ -57,13 +57,13 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
         holder.mainItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showPopupMenu(view, position, holder);
+                showPopupMenu(view, category, holder);
             }
         });
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                showPopupMenu(v, position, holder);
+                showPopupMenu(v, category, holder);
                 return true;
             }
         });
@@ -96,7 +96,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
      * @param position
      * @param holder
      */
-    private void showPopupMenu(View view, final int position, final ViewHolder holder) {
+    private void showPopupMenu(View view, final Category category, final ViewHolder holder) {
         PopupMenu popup = new PopupMenu(view.getContext(), view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_main_item, popup.getMenu());
@@ -115,12 +115,12 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
                                 }).setPositiveButton("YES", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        listener.onCategoryDeleted(position);
+                                        mListener.onCategoryDeleted(category);
                                     }
                                 }).create().show();
                         return true;
                     case R.id.item_backdrop:
-                        listener.onChangeBackdropClicked(position);
+                        mListener.onChangeBackdropClicked(category);
                         return true;
                 }
                 return false;

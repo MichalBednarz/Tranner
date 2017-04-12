@@ -14,6 +14,7 @@ import android.view.View;
 
 import com.example.android.tranner.R;
 import com.example.android.tranner.mainscreen.adapters.WebImageDialogAdapter;
+import com.example.android.tranner.mainscreen.data.Category;
 import com.example.android.tranner.mainscreen.data.WebImageDialogList;
 import com.example.android.tranner.mainscreen.listeners.WebImageDialogAdapterListener;
 
@@ -32,10 +33,10 @@ public class WebImageDialog extends android.support.v4.app.DialogFragment {
     private RecyclerView mRecyclerView;
     private WebImageDialogAdapter mAdapter;
 
-    public static WebImageDialog newInstance(int position) {
+    public static WebImageDialog newInstance(Category category) {
 
         Bundle args = new Bundle();
-        args.putInt("position", position);
+        args.putSerializable("category", category);
         WebImageDialog fragment = new WebImageDialog();
         fragment.setArguments(args);
         return fragment;
@@ -57,7 +58,7 @@ public class WebImageDialog extends android.support.v4.app.DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View v = inflater.inflate(R.layout.web_dialog_fragment, null);
         mRecyclerView = (RecyclerView) v.findViewById(R.id.web_dialog_recyclerview);
-        mAdapter = new WebImageDialogAdapter(this, mUrls, getArguments().getInt("position"));
+        mAdapter = new WebImageDialogAdapter(this, mUrls, (Category) getArguments().getSerializable("category"));
         mAdapter.setListener(mListener);
         mRecyclerView.setAdapter(mAdapter);
         RecyclerView.LayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);

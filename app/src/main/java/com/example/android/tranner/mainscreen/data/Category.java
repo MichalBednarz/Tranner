@@ -1,10 +1,12 @@
 package com.example.android.tranner.mainscreen.data;
 
+import java.io.Serializable;
+
 /**
  * Created by Michał on 2017-04-11.
  */
 
-public class Category {
+public class Category implements Serializable {
     private String mCategory;
     private String mImageUrl;
 
