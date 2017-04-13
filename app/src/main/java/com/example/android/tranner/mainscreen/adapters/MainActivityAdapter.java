@@ -1,5 +1,6 @@
 package com.example.android.tranner.mainscreen.adapters;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
@@ -13,6 +14,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -75,7 +77,6 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
             }
         });
 
-
         provideAnimation(holder, position);
 
         setItemBackdrop(holder, position);
@@ -119,14 +120,6 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
             theme.resolveAttribute(R.attr.item_three, typedValue, true);
             @ColorInt int color = typedValue.data;
             holder.itemView.setBackgroundColor(color);
-        }
-    }
-
-    public static int getColor(Context context, int id) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return context.getColor(id);
-        } else {
-            return context.getResources().getColor(id);
         }
     }
 

@@ -1,6 +1,5 @@
 package com.example.android.tranner.mainscreen.adapters;
 
-import android.graphics.Color;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,9 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.android.tranner.R;
 import com.example.android.tranner.mainscreen.data.Category;
 import com.example.android.tranner.mainscreen.listeners.CategoryDialogListener;
-import com.example.android.tranner.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +39,8 @@ public class CategoryDialogAdapter extends RecyclerView.Adapter<CategoryDialogAd
     public CategoryDialogAdapter(DialogFragment mDialog, CategoryDialogListener mListener) {
         this.mDialog = mDialog;
         this.mListener = mListener;
+
+
     }
 
     @Override
@@ -49,7 +50,7 @@ public class CategoryDialogAdapter extends RecyclerView.Adapter<CategoryDialogAd
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         final Category suggested = mDialogSuggested.get(position);
         holder.dialogItemText.setText(suggested.getCategory());
         holder.itemView.setOnClickListener(new View.OnClickListener() {

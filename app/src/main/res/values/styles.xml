@@ -1,17 +1,17 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppThemeOne" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="item_one">@android:color/holo_green_light</item>
-        <item name="item_two">@android:color/holo_red_light</item>
-        <item name="item_three">@android:color/holo_blue_light</item>
+        <item name="item_one">@color/colorGreen</item>
+        <item name="item_two">@color/colorPink</item>
+        <item name="item_three">@color/colorCyan</item>
     </style>
 
-    <style name="CustomAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppThemeTwo" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -21,7 +21,17 @@
         <item name="item_three">@color/colorYellow</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
+    <style name="AppThemeThree" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="item_one">@color/colorChocolate</item>
+        <item name="item_two">@color/colorSilver</item>
+        <item name="item_three">@color/colorPurple</item>
+    </style>
+
+    <style name="AppThemeOne.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>

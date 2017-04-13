@@ -12,4 +12,9 @@
         android:orderInCategory="100"
         android:title="@string/action_theme_two"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_change_theme_three"
+        android:orderInCategory="100"
+        android:title="@string/action_theme_three"
+        app:showAsAction="never"/>
 </menu>

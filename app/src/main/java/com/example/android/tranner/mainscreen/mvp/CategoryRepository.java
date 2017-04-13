@@ -79,12 +79,9 @@ public class CategoryRepository implements CategoryContract.Repository {
     @Override
     public void deleteCategory(Category category) {
         SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
-        String selection = CategoryEntry.COLUMN_NAME_TITLE + " LIKE ? AND "
-                + CategoryEntry.COLUMN_NAME_URL + " LIKE ?";
-        String[] selectionArgs = {category.getCategory(), category.getImageUrl()};
+        String selection = CategoryEntry.COLUMN_NAME_TITLE + " LIKE ?";
+        String[] selectionArgs = {category.getCategory()};
         db.delete(CategoryEntry.TABLE_NAME, selection, selectionArgs);
-
-
         db.close();
     }
 

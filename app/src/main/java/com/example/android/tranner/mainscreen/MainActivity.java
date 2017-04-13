@@ -3,16 +3,16 @@ package com.example.android.tranner.mainscreen;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
@@ -30,15 +30,12 @@ import com.example.android.tranner.mainscreen.mvp.CategoryContract;
 import com.example.android.tranner.mainscreen.mvp.CategoryPresenter;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import jp.wasabeef.recyclerview.animators.FlipInTopXAnimator;
-import jp.wasabeef.recyclerview.animators.ScaleInAnimator;
 
 public class MainActivity extends AppCompatActivity implements CategoryDialogListener,
         MainActivityAdapterListener,
@@ -51,30 +48,60 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
     FloatingActionButton fab;
     @BindView(R.id.main_recycler_view)
     RecyclerView mRecyclerView;
-    @Inject CategoryPresenter mPresenter;
+
+    @Inject
+    CategoryPresenter mPresenter;
+
     private List<Category> mCategoryList;
     private MainActivityAdapter mAdapter;
     private CategoryDialog mCategoryDialog;
     private WebImageDialog mWebDialog;
 
-
+    /**
+     * Method that handles click on floating action button.
+     * This method gets new instance of CategoryDialog class
+     * and displays it.
+     *
+     * @param view
+     */
     public void fabClick(View view) {
         FragmentManager manager = getSupportFragmentManager();
         mCategoryDialog = CategoryDialog.newInstance();
         mCategoryDialog.show(manager, "category_dialog");
     }
 
+    /**
+     * Method responsible for theme change depending on
+     * option selected from action bar by the user.
+     *
+     * @param preference denotes number of item in list of available themes.
+     */
+    private void changeTheme(int preference) {
+        switch (preference) {
+            case 0:
+                setTheme(R.style.AppThemeOne);
+                break;
+            case 1:
+                setTheme(R.style.AppThemeTwo);
+                break;
+            case 2:
+                setTheme(R.style.AppThemeThree);
+                break;
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        int preference = getPreferences(MODE_PRIVATE).getInt("theme", 0);
-        changeTheme(preference);
-
+        //change item theme depending on last user choice stored in activity shared preferences
+        //invoked necessarily before setting view
+        changeTheme(getPreferences(MODE_PRIVATE).getInt("theme", 0));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //provide CategoryPresenter object instance with help of dependency injection
         DaggerMainActivityComponent.builder()
                 .mainActivityModule(new MainActivityModule(this))
                 .build()
@@ -87,19 +114,6 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
         mRecyclerView.setAdapter(mAdapter);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(manager);
-
-
-    }
-
-    private void changeTheme(int preference) {
-        switch(preference) {
-            case 0:
-                setTheme(R.style.AppTheme);
-                break;
-            case 1:
-                setTheme(R.style.CustomAppTheme);
-                break;
-        }
     }
 
     @Override
@@ -130,6 +144,12 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
                 editor.apply();
                 this.recreate();
                 return true;
+            case R.id.action_change_theme_three:
+                editor.putInt("theme", 2);
+                editor.apply();
+                this.recreate();
+                return true;
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -150,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
     @Override
     public void onCategoryDeleted(Category category) {
         mPresenter.deleteCategory(category);
-        Toast.makeText(this, "Category " + category.getCategory() + " deleted.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Category " + category.getCategory() + " proceeded to deletion.", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -173,13 +193,13 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
     @Override
     public void onCategoryAdded() {
         mPresenter.loadCategories();
-        Toast.makeText(this, "New category successfully added!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Categories loaded after insertion.", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onCategoryDeleted() {
         mPresenter.loadCategories();
-        Toast.makeText(this, "Category deleted.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Categories loaded after deletion.", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -187,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
         mCategoryList.clear();
         mCategoryList.addAll(categoryList);
         mAdapter.notifyDataSetChanged();
-        Toast.makeText(this, "Categories successfully loaded!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Categories loaded from database.", Toast.LENGTH_SHORT).show();
     }
 
     @Override
