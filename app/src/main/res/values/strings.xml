@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Tranner</string>
-    <string name="action_settings">Themes</string>
+    <string name="action_theme_one">Theme one</string>
     <string name="enter_category_name">Custom category...</string>
     <string name="item_delete">delete</string>
     <string name="add_backdrop">backdrop</string>
+    <string name="action_theme_two">Theme two</string>
 </resources>

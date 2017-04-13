@@ -1,6 +1,9 @@
 package com.example.android.tranner.mainscreen;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -63,6 +66,9 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        int preference = getPreferences(MODE_PRIVATE).getInt("theme", 0);
+        changeTheme(preference);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
@@ -85,6 +91,17 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
 
     }
 
+    private void changeTheme(int preference) {
+        switch(preference) {
+            case 0:
+                setTheme(R.style.AppTheme);
+                break;
+            case 1:
+                setTheme(R.style.CustomAppTheme);
+                break;
+        }
+    }
+
     @Override
     protected void onDestroy() {
         mPresenter.closeDatabase();
@@ -99,9 +116,19 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_change_theme:
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
 
+        switch (item.getItemId()) {
+            case R.id.action_change_theme_one:
+                editor.putInt("theme", 0);
+                editor.apply();
+                this.recreate();
+                return true;
+            case R.id.action_change_theme_two:
+                editor.putInt("theme", 1);
+                editor.apply();
+                this.recreate();
                 return true;
         }
         return super.onOptionsItemSelected(item);

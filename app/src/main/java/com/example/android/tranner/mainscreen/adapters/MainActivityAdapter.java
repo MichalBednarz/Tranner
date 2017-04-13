@@ -2,10 +2,14 @@ package com.example.android.tranner.mainscreen.adapters;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.os.Build;
+import android.support.annotation.ColorInt;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -72,16 +76,23 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
         });
 
 
-        //provides item animation respectively for down scroll and up scrool
+        provideAnimation(holder, position);
+
+        setItemBackdrop(holder, position);
+    }
+
+    /**
+     * Provides item animation respectively for down scroll and up scrool.
+     * @param holder
+     * @param position
+     */
+    private void provideAnimation(ViewHolder holder, int position) {
         if(position > mPreviousPosition) {
             AnimationUtil.animate(holder, true);
         }else {
             AnimationUtil.animate(holder, false);
         }
         mPreviousPosition = position;
-
-        //
-        setItemBackdrop(holder, position);
     }
 
     /**
@@ -92,12 +103,30 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
      * @param position
      */
     private void setItemBackdrop(ViewHolder holder, int position) {
+
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = mContext.getTheme();
+
         if (position % 3 == 0) {
-            holder.itemView.setBackgroundColor(Color.GREEN);
+            theme.resolveAttribute(R.attr.item_one, typedValue, true);
+            @ColorInt int color = typedValue.data;
+            holder.itemView.setBackgroundColor(color);
         } else if (position % 2 == 0) {
-            holder.itemView.setBackgroundColor(Color.CYAN);
+            theme.resolveAttribute(R.attr.item_two, typedValue, true);
+            @ColorInt int color = typedValue.data;
+            holder.itemView.setBackgroundColor(color);
         } else {
-            holder.itemView.setBackgroundColor(Color.MAGENTA);
+            theme.resolveAttribute(R.attr.item_three, typedValue, true);
+            @ColorInt int color = typedValue.data;
+            holder.itemView.setBackgroundColor(color);
+        }
+    }
+
+    public static int getColor(Context context, int id) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return context.getColor(id);
+        } else {
+            return context.getResources().getColor(id);
         }
     }
 
