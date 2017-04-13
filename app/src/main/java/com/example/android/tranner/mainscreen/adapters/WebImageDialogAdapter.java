@@ -50,13 +50,10 @@ public class WebImageDialogAdapter extends RecyclerView.Adapter<WebImageDialogAd
     public void onBindViewHolder(ViewHolder holder, int position) {
         final String url = mUrls.get(position);
         Picasso.with(mDialog.getContext()).load(url).into(holder.webDialogImage);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCategory.setImageUrl(url);
-                mListener.onPickImageUrl(mCategory);
-                mDialog.dismiss();
-            }
+        holder.itemView.setOnClickListener(v -> {
+            mCategory.setImageUrl(url);
+            mListener.onPickImageUrl(mCategory);
+            mDialog.dismiss();
         });
     }
 

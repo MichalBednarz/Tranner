@@ -72,7 +72,7 @@ public class CategoryRepository implements CategoryContract.Repository {
         ContentValues contentValues = new ContentValues();
         contentValues.put(CategoryEntry.COLUMN_NAME_TITLE, category.getCategory());
         contentValues.put(CategoryEntry.COLUMN_NAME_URL, (byte[]) null);
-        long newRowId = db.insert(CategoryEntry.TABLE_NAME, null, contentValues);
+        db.insert(CategoryEntry.TABLE_NAME, null, contentValues);
         db.close();
     }
 
@@ -88,21 +88,16 @@ public class CategoryRepository implements CategoryContract.Repository {
     @Override
     public void updateCategory(Category category) {
         SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
-
         ContentValues values = new ContentValues();
         values.put(CategoryEntry.COLUMN_NAME_URL, category.getImageUrl());
-
         String selection = CategoryEntry.COLUMN_NAME_TITLE + " LIKE ?";
         String[] selectionArgs = {category.getCategory()};
-
-        int count = db.update(
+        db.update(
                 CategoryEntry.TABLE_NAME,
                 values,
                 selection,
                 selectionArgs);
-
         db.close();
-
     }
 
     @Override

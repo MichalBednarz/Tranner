@@ -1,13 +1,17 @@
 package com.example.android.tranner.mainscreen.adapters;
 
+import android.content.res.Resources;
+import android.support.annotation.ColorInt;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.tranner.R;
+import com.example.android.tranner.mainscreen.MainActivity;
 import com.example.android.tranner.mainscreen.data.Category;
 import com.example.android.tranner.mainscreen.listeners.CategoryDialogListener;
 
@@ -39,8 +43,6 @@ public class CategoryDialogAdapter extends RecyclerView.Adapter<CategoryDialogAd
     public CategoryDialogAdapter(DialogFragment mDialog, CategoryDialogListener mListener) {
         this.mDialog = mDialog;
         this.mListener = mListener;
-
-
     }
 
     @Override
@@ -53,16 +55,10 @@ public class CategoryDialogAdapter extends RecyclerView.Adapter<CategoryDialogAd
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final Category suggested = mDialogSuggested.get(position);
         holder.dialogItemText.setText(suggested.getCategory());
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onNewCategoryCreated(suggested);
-                mDialogSuggested.remove(position);
-                notifyDataSetChanged();
-                mDialog.dismiss();
-            }
+        holder.itemView.setOnClickListener(v -> {
+            mListener.onNewCategoryCreated(suggested);
+            mDialog.dismiss();
         });
-
     }
 
     @Override

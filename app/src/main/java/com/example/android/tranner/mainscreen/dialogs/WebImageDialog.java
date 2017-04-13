@@ -68,12 +68,7 @@ public class WebImageDialog extends android.support.v4.app.DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Pick your favorite backdrop!")
                 .setView(v)
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
         return builder.create();
     }
 }

@@ -6,6 +6,7 @@
         android:id="@+id/dialog_item_text"
         android:textSize="@dimen/dialog_list_font"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:padding="8dp"/>
 
 </RelativeLayout>

@@ -63,18 +63,10 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
         if (category.getImageUrl() != null) {
             Picasso.with(mContext).load(category.getImageUrl()).into(holder.mainItemImage);
         }
-        holder.mainItemButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showPopupMenu(view, category, holder);
-            }
-        });
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                showPopupMenu(v, category, holder);
-                return true;
-            }
+        holder.mainItemButton.setOnClickListener(view -> showPopupMenu(view, category, holder));
+        holder.itemView.setOnLongClickListener(v -> {
+            showPopupMenu(v, category, holder);
+            return true;
         });
 
         provideAnimation(holder, position);
@@ -135,31 +127,19 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
         PopupMenu popup = new PopupMenu(view.getContext(), view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_main_item, popup.getMenu());
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.item_delete:
-                        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                        builder.setTitle("Delete category?")
-                                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-
-                                    }
-                                }).setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        mListener.onCategoryDeleted(category);
-                                    }
-                                }).create().show();
-                        return true;
-                    case R.id.item_backdrop:
-                        mListener.onChangeBackdropClicked(category);
-                        return true;
-                }
-                return false;
+        popup.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.item_delete:
+                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                    builder.setTitle("Delete category?")
+                            .setNegativeButton("CANCEL", (dialog, which) -> {
+                            }).setPositiveButton("DELETE", (dialog, which) -> mListener.onCategoryDeleted(category)).create().show();
+                    return true;
+                case R.id.item_backdrop:
+                    mListener.onChangeBackdropClicked(category);
+                    return true;
             }
+            return false;
         });
         popup.show();
     }
