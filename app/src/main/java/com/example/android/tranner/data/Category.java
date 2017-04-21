@@ -9,10 +9,13 @@ import java.io.Serializable;
 public class Category implements Serializable {
     private String mCategory;
     private String mImageUrl;
+    private int mId;
 
     public Category(String mCategory) {
         this.mCategory = mCategory;
     }
+
+    public Category() {}
 
     public String getCategory() {
         return mCategory;
@@ -28,5 +31,13 @@ public class Category implements Serializable {
 
     public void setImageUrl(String mImageUrl) {
         this.mImageUrl = mImageUrl;
+    }
+
+    public void setId(int mId) {
+        this.mId = mId;
+    }
+
+    public int getId() {
+        return mId;
     }
 }

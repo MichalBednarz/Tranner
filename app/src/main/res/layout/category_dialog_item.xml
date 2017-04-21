@@ -6,6 +6,7 @@
     android:clickable="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:src="@drawable/transition"
     card_view:cardCornerRadius="8dp">
     <TextView
         android:id="@+id/dialog_item_text"
