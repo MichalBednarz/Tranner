@@ -18,7 +18,7 @@ import com.example.android.tranner.R;
 import com.example.android.tranner.mainscreen.adapters.MainActivityAdapter;
 import com.example.android.tranner.mainscreen.dagger2.DaggerMainActivityComponent;
 import com.example.android.tranner.mainscreen.dagger2.MainActivityModule;
-import com.example.android.tranner.mainscreen.data.Category;
+import com.example.android.tranner.data.Category;
 import com.example.android.tranner.mainscreen.dialogs.CategoryDialog;
 import com.example.android.tranner.mainscreen.dialogs.WebImageDialog;
 import com.example.android.tranner.mainscreen.listeners.CategoryDialogListener;
@@ -89,6 +89,41 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
     }
 
     @Override
+    public void onCategoryLoaded(List<Category> categoryList) {
+        mCategoryList.clear();
+        mCategoryList.addAll(categoryList);
+        mAdapter.notifyDataSetChanged();
+        Toast.makeText(this, "Categories loaded from database.", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onNoCategoryLoaded() {
+        mCategoryList.clear();
+        mAdapter.notifyDataSetChanged();
+        Toast.makeText(this, "No category loaded...", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onCategoryLoadError() {
+        Toast.makeText(this, "Category load error...", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onNoCategoryAdded() {
+
+    }
+
+    @Override
+    public void onNoCategoryDeleted() {
+
+    }
+
+    @Override
+    public void onNoCategoryUpdated() {
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         //change item theme depending on last user choice stored in activity shared preferences
         //invoked necessarily before setting view
@@ -115,9 +150,18 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
     }
 
     @Override
-    protected void onDestroy() {
-        mPresenter.closeDatabase();
-        super.onDestroy();
+    public void onCategoryUpdatedError() {
+
+    }
+
+    @Override
+    public void onCategoryDeletedError() {
+        Toast.makeText(this, "Category Deleted Error", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onCategoryAddedError() {
+        Toast.makeText(this, "Category Added Error", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -198,25 +242,5 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
     public void onCategoryDeleted() {
         mPresenter.loadCategories();
         Toast.makeText(this, "Categories loaded after deletion.", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onCategoryLoaded(List<Category> categoryList) {
-        mCategoryList.clear();
-        mCategoryList.addAll(categoryList);
-        mAdapter.notifyDataSetChanged();
-        Toast.makeText(this, "Categories loaded from database.", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onNoCategoryLoaded() {
-        mCategoryList.clear();
-        mAdapter.notifyDataSetChanged();
-        Toast.makeText(this, "No category loaded...", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onCategoryLoadError() {
-        Toast.makeText(this, "Category load error...", Toast.LENGTH_SHORT).show();
     }
 }

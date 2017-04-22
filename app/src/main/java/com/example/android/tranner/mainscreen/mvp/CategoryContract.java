@@ -1,8 +1,10 @@
 package com.example.android.tranner.mainscreen.mvp;
 
-import com.example.android.tranner.mainscreen.data.Category;
+import com.example.android.tranner.data.Category;
 
 import java.util.List;
+
+import io.reactivex.Single;
 
 /**
  * Created by Michał on 2017-04-11.
@@ -14,8 +16,14 @@ public class CategoryContract {
         void onNoCategoryLoaded();
         void onCategoryLoadError();
         void onCategoryAdded();
+        void onNoCategoryAdded();
+        void onCategoryAddedError();
         void onCategoryDeleted();
+        void onNoCategoryDeleted();
+        void onCategoryDeletedError();
         void onCategoryUpdated();
+        void onNoCategoryUpdated();
+        void onCategoryUpdatedError();
     }
 
     public interface Actions {
@@ -23,14 +31,12 @@ public class CategoryContract {
         void addCategory(Category category);
         void deleteCategory(Category category);
         void updateCategory(Category category);
-        void closeDatabase();
     }
 
     public interface Repository {
-        List<Category> loadCategories();
-        void addCategory(Category category);
-        void deleteCategory(Category category);
-        void updateCategory(Category category);
-        void closeDatabase();
+        Single<List<Category>> loadCategories();
+        Single<Long> addCategory(Category category);
+        Single<Integer> deleteCategory(Category category);
+        Single<Integer> updateCategory(Category category);
     }
 }

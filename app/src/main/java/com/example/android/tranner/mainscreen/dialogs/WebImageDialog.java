@@ -3,20 +3,18 @@ package com.example.android.tranner.mainscreen.dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 
 import com.example.android.tranner.R;
 import com.example.android.tranner.mainscreen.adapters.WebImageDialogAdapter;
-import com.example.android.tranner.mainscreen.data.Category;
-import com.example.android.tranner.mainscreen.data.WebImageDialogList;
+import com.example.android.tranner.data.Category;
+import com.example.android.tranner.data.WebImageDialogList;
 import com.example.android.tranner.mainscreen.listeners.WebImageDialogAdapterListener;
 
 import java.util.List;

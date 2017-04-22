@@ -1,106 +1,128 @@
 package com.example.android.tranner.mainscreen.mvp;
 
-import android.app.ProgressDialog;
-import android.os.AsyncTask;
-
-import com.example.android.tranner.mainscreen.data.Category;
+import com.example.android.tranner.data.Category;
 
 import java.util.List;
+
+import io.reactivex.Scheduler;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
+
+import static com.example.android.tranner.mainscreen.mvp.CategoryContract.Actions;
+import static com.example.android.tranner.mainscreen.mvp.CategoryContract.Repository;
+import static com.example.android.tranner.mainscreen.mvp.CategoryContract.View;
 
 /**
  * Created by Michał on 2017-04-11.
  */
 
-public class CategoryPresenter implements CategoryContract.Actions {
-    private CategoryContract.View mView;
-    private CategoryContract.Repository mRepository;
+public class CategoryPresenter implements Actions {
+    private View mView;
+    private Repository mRepository;
+    private Scheduler mainScheduler;
+    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
-    public CategoryPresenter(CategoryContract.View view, CategoryContract.Repository repository) {
+    public CategoryPresenter(View view, Repository repository, Scheduler mainScheduler) {
         this.mView = view;
         this.mRepository = repository;
+        this.mainScheduler = mainScheduler;
     }
 
     @Override
     public void loadCategories() {
-        new AsyncTask<Void, Void, List<Category>>() {
-            @Override
-            protected List<Category> doInBackground(Void... params) {
-                return mRepository.loadCategories();
-            }
-
-            @Override
-            protected void onPostExecute(List<Category> categoryList) {
-                super.onPostExecute(categoryList);
-                try {
-                    if (categoryList.isEmpty()) {
-                        mView.onNoCategoryLoaded();
-                    } else {
-                        mView.onCategoryLoaded(categoryList);
+        mCompositeDisposable.add(mRepository.loadCategories()
+                .subscribeOn(Schedulers.io())
+                .observeOn(mainScheduler)
+                .subscribeWith(new DisposableSingleObserver<List<Category>>() {
+                    @Override
+                    public void onSuccess(@NonNull List<Category> audioDataList) {
+                        if (audioDataList.isEmpty()) {
+                            mView.onNoCategoryLoaded();
+                        } else {
+                            mView.onCategoryLoaded(audioDataList);
+                        }
                     }
-                } catch (NullPointerException e) {
-                    mView.onCategoryLoadError();
-                }
 
-            }
-
-        }.execute();
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        mView.onCategoryLoadError();
+                    }
+                }));
     }
 
     @Override
     public void addCategory(final Category category) {
-        new AsyncTask<Void, Void, Void>() {
+        mCompositeDisposable.add(mRepository.addCategory(category)
+                .subscribeOn(Schedulers.io())
+                .observeOn(mainScheduler)
+                .subscribeWith(new DisposableSingleObserver<Long>() {
             @Override
-            protected Void doInBackground(Void... params) {
-                mRepository.addCategory(category);
-                return null;
+            public void onSuccess(Long num) {
+                //database insertion returns -1 if failed
+                //else returns id number of inserted element
+                if (num == -1) {
+                    mView.onNoCategoryAdded();
+                } else {
+                    mView.onCategoryAdded();
+                }
             }
 
             @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                mView.onCategoryAdded();
+            public void onError(Throwable e) {
+                mView.onCategoryAddedError();
             }
-        }.execute();
+        }));
     }
 
     @Override
     public void deleteCategory(final Category category) {
-        new AsyncTask<Void, Void, Void>() {
+        mCompositeDisposable.add(mRepository.deleteCategory(category)
+                .subscribeOn(Schedulers.io())
+                .observeOn(mainScheduler)
+                .subscribeWith(new DisposableSingleObserver<Integer>() {
             @Override
-            protected Void doInBackground(Void... params) {
-                mRepository.deleteCategory(category);
-                return null;
+            public void onSuccess(@NonNull Integer rowNum) {
+                //database delete method returns number of deleted rows
+                if (rowNum == 0) {
+                    mView.onNoCategoryDeleted();
+                } else {
+                    mView.onCategoryDeleted();
+                }
             }
 
             @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                mView.onCategoryDeleted();
+            public void onError(@NonNull Throwable e) {
+                mView.onCategoryDeletedError();
             }
-        }.execute();
+        }));
     }
 
     @Override
     public void updateCategory(final Category category) {
-        new AsyncTask<Void, Void, Void>() {
+        mCompositeDisposable.add(mRepository.updateCategory(category)
+                .subscribeOn(Schedulers.io())
+                .observeOn(mainScheduler)
+                .subscribeWith(new DisposableSingleObserver<Integer>() {
             @Override
-            protected Void doInBackground(Void... params) {
-                mRepository.updateCategory(category);
-                return null;
+            public void onSuccess(@NonNull Integer rowNum) {
+                //database update returns number of rows affected
+                if (rowNum == 0) {
+                    mView.onNoCategoryUpdated();
+                } else {
+                    mView.onCategoryUpdated();
+                }
             }
 
             @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                mView.onCategoryUpdated();
+            public void onError(@NonNull Throwable e) {
+                mView.onCategoryUpdatedError();
             }
-        }.execute();
+        }));
     }
 
-    @Override
-    public void closeDatabase() {
-        mRepository.closeDatabase();
+    public void unsubscribe() {
+        mCompositeDisposable.clear();
     }
-
-
 }

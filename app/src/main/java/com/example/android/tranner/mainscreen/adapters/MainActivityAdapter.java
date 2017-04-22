@@ -1,11 +1,10 @@
 package com.example.android.tranner.mainscreen.adapters;
 
-import android.app.ActionBar;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Color;
-import android.os.Build;
+import android.os.Bundle;
+import android.provider.SyncStateContract;
 import android.support.annotation.ColorInt;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
@@ -13,16 +12,15 @@ import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.android.tranner.mainscreen.data.Category;
+import com.example.android.tranner.categoryscreen.CategoryActivity;
+import com.example.android.tranner.data.Category;
+import com.example.android.tranner.data.ConstantKeys;
 import com.example.android.tranner.mainscreen.listeners.MainActivityAdapterListener;
 import com.example.android.tranner.R;
 import com.squareup.picasso.Picasso;
@@ -41,7 +39,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
     private Context mContext;
     private List<Category> mCategoryList;
     private MainActivityAdapterListener mListener;
-    //field used for animation purpose to detect whether down or up scrooling
+    //field used for animation purpose to detect whether down or up scrolling
     private int mPreviousPosition = 0;
 
     public MainActivityAdapter(Context mContext, List<Category> mCategoryList) {
@@ -67,6 +65,13 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
         holder.itemView.setOnLongClickListener(v -> {
             showPopupMenu(v, category, holder);
             return true;
+        });
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(mContext, CategoryActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(ConstantKeys.CATEGORY_INTENT, category);
+            intent.putExtras(bundle);
+            mContext.startActivity(intent);
         });
 
         provideAnimation(holder, position);

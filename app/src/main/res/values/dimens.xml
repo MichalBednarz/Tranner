@@ -1,8 +1,8 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="dialog_padding">24dp</dimen>
-    <dimen name="dialog_hint_font">18sp</dimen>
-    <dimen name="dialog_list_font">24sp</dimen>
+    <dimen name="dialog_hint_font">20sp</dimen>
+    <dimen name="dialog_list_font">20sp</dimen>
     <dimen name="card_view">8dp</dimen>
 
 </resources>

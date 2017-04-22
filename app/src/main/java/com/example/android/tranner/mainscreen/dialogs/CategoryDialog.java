@@ -22,20 +22,22 @@ import android.widget.EditText;
 import com.example.android.tranner.R;
 import com.example.android.tranner.mainscreen.adapters.CategoryDialogAdapter;
 import com.example.android.tranner.mainscreen.adapters.CategoryDialogAdapterDecoration;
-import com.example.android.tranner.mainscreen.data.Category;
+import com.example.android.tranner.data.Category;
+import com.example.android.tranner.mainscreen.listeners.CategoryDialogAdapterListener;
 import com.example.android.tranner.mainscreen.listeners.CategoryDialogListener;
 
 /**
  * Created by Michał on 2017-04-14.
  */
 
-public class CategoryDialog extends DialogFragment {
+public class CategoryDialog extends DialogFragment implements CategoryDialogAdapterListener {
     private static final String TAG = "AKDialogFragment";
 
     private RecyclerView mRecyclerview;
     private EditText mDialogEdit;
     private CategoryDialogAdapter mAdapter;
     private CategoryDialogListener mListener;
+    private Category mCategoryHighlighted = null;
 
     public static CategoryDialog newInstance() {
         Bundle args = new Bundle();
@@ -71,14 +73,22 @@ public class CategoryDialog extends DialogFragment {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setHomeAsUpIndicator(android.R.drawable.ic_menu_close_clear_cancel);
         }
-        
+        setHasOptionsMenu(true);
+
         mAdapter = new CategoryDialogAdapter(this, mListener);
         mRecyclerview.setAdapter(mAdapter);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity());
         mRecyclerview.setLayoutManager(manager);
         mRecyclerview.addItemDecoration(new CategoryDialogAdapterDecoration(getActivity()));
 
-        setHasOptionsMenu(true);
+        mDialogEdit.setOnTouchListener((v, event) -> {
+            mDialogEdit.setHint("");
+            mDialogEdit.setCursorVisible(true);
+            mAdapter.mSelected = -1;
+            mAdapter.notifyDataSetChanged();
+            return false;
+        });
+
         return rootView;
     }
 
@@ -101,15 +111,25 @@ public class CategoryDialog extends DialogFragment {
         int id = item.getItemId();
 
         if (id == R.id.action_save) {
-            Category category = new Category(mDialogEdit.getText().toString());
-            mListener.onNewCategoryCreated(category);
+            if(mCategoryHighlighted != null){
+                mListener.onNewCategoryCreated(mCategoryHighlighted);
+            }else {
+                Category category = new Category(mDialogEdit.getText().toString());
+                mListener.onNewCategoryCreated(category);
+            }
+            dismiss();
             return true;
         } else if (id == android.R.id.home) {
-
             dismiss();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    public void onCategorySelected(Category category) {
+        mCategoryHighlighted = category;
     }
 }

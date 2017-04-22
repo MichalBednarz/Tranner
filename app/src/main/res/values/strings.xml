@@ -6,4 +6,6 @@
     <string name="add_backdrop">backdrop</string>
     <string name="action_theme_two">YellowBlack</string>
     <string name="action_theme_three">Soft</string>
+    <string name="title_activity_category">CategoryActivity</string>
+    <string name="category_activity">category_activity</string>
 </resources>

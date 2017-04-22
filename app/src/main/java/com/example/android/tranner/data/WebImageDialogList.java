@@ -1,4 +1,4 @@
-package com.example.android.tranner.mainscreen.data;
+package com.example.android.tranner.data;
 
 import java.util.ArrayList;
 import java.util.List;

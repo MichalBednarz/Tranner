@@ -1,18 +1,20 @@
 package com.example.android.tranner.mainscreen.adapters;
 
-import android.content.res.Resources;
-import android.support.annotation.ColorInt;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.TransitionDrawable;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.RecyclerView;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.tranner.R;
-import com.example.android.tranner.mainscreen.MainActivity;
-import com.example.android.tranner.mainscreen.data.Category;
+import com.example.android.tranner.data.Category;
+import com.example.android.tranner.mainscreen.listeners.CategoryDialogAdapterListener;
 import com.example.android.tranner.mainscreen.listeners.CategoryDialogListener;
 
 import java.util.ArrayList;
@@ -35,30 +37,50 @@ public class CategoryDialogAdapter extends RecyclerView.Adapter<CategoryDialogAd
                 add(new Category("Cooking"));
                 add(new Category("Passion"));
                 add(new Category("Reading"));
+                add(new Category("Cars"));
+                add(new Category("Mountains"));
+                add(new Category("Travelling"));
+                add(new Category("Cycling"));
             }};
 
-    private CategoryDialogListener mListener;
+    private CategoryDialogAdapterListener mListener;
     private DialogFragment mDialog;
+    public int mSelected = -1;
 
     public CategoryDialogAdapter(DialogFragment mDialog, CategoryDialogListener mListener) {
         this.mDialog = mDialog;
-        this.mListener = mListener;
+        this.mListener = (CategoryDialogAdapterListener) mDialog;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_dialog_item, null);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_dialog_item, parent, false);
         return new ViewHolder(v);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final Category suggested = mDialogSuggested.get(position);
         holder.dialogItemText.setText(suggested.getCategory());
         holder.itemView.setOnClickListener(v -> {
-            mListener.onNewCategoryCreated(suggested);
-            mDialog.dismiss();
+            mSelected = position;
+            notifyDataSetChanged();
+            mListener.onCategorySelected(suggested);
         });
+
+        ColorDrawable[] color = {
+                new ColorDrawable(Color.WHITE),
+                new ColorDrawable(mDialog.getResources().getColor(R.color.colorPink))
+        };
+        TransitionDrawable trans = new TransitionDrawable(color);
+        holder.itemView.setBackground(trans);
+
+        if(mSelected == position) {
+            trans.startTransition(1500);
+        } else {
+            trans.resetTransition();
+        }
     }
 
     @Override

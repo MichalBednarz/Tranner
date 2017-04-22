@@ -4,11 +4,13 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.example.android.tranner.mainscreen.data.Category;
+import com.example.android.tranner.data.Category;
 import com.example.android.tranner.mainscreen.mvp.repository.CategoryDatabaseHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.Single;
 
 import static com.example.android.tranner.mainscreen.mvp.repository.CategoryEntryContract.CategoryEntry;
 
@@ -25,7 +27,7 @@ public class CategoryRepository implements CategoryContract.Repository {
     }
 
     @Override
-    public List<Category> loadCategories() {
+    public Single<List<Category>> loadCategories() {
         List<Category> categoryList = new ArrayList<>();
         SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
         String[] projection = {
@@ -63,47 +65,46 @@ public class CategoryRepository implements CategoryContract.Repository {
         cursor.close();
         db.close();
 
-        return categoryList;
+        return Single.just(categoryList);
     }
 
     @Override
-    public void addCategory(Category category) {
+    public Single<Long> addCategory(Category category) {
         SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(CategoryEntry.COLUMN_NAME_TITLE, category.getCategory());
         contentValues.put(CategoryEntry.COLUMN_NAME_URL, (byte[]) null);
-        db.insert(CategoryEntry.TABLE_NAME, null, contentValues);
+        long id = db.insert(CategoryEntry.TABLE_NAME, null, contentValues);
         db.close();
+
+        return Single.just(id);
     }
 
     @Override
-    public void deleteCategory(Category category) {
+    public Single<Integer> deleteCategory(Category category) {
         SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
         String selection = CategoryEntry.COLUMN_NAME_TITLE + " LIKE ?";
         String[] selectionArgs = {category.getCategory()};
-        db.delete(CategoryEntry.TABLE_NAME, selection, selectionArgs);
+        int rowNum = db.delete(CategoryEntry.TABLE_NAME, selection, selectionArgs);
         db.close();
+
+        return Single.just(rowNum);
     }
 
     @Override
-    public void updateCategory(Category category) {
+    public Single<Integer> updateCategory(Category category) {
         SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
         ContentValues values = new ContentValues();
         values.put(CategoryEntry.COLUMN_NAME_URL, category.getImageUrl());
         String selection = CategoryEntry.COLUMN_NAME_TITLE + " LIKE ?";
         String[] selectionArgs = {category.getCategory()};
-        db.update(
+        int rowNum = db.update(
                 CategoryEntry.TABLE_NAME,
                 values,
                 selection,
                 selectionArgs);
         db.close();
-    }
 
-    @Override
-    public void closeDatabase() {
-        if (mDatabaseHelper != null) {
-            mDatabaseHelper.close();
-        }
+        return Single.just(rowNum);
     }
 }

@@ -3,16 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.android.tranner">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        tools:node="replace"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppThemeOne">
+        android:theme="@style/AppThemeOne"
+        tools:node="replace">
         <activity
             android:name=".mainscreen.MainActivity"
             android:label="@string/app_name"
@@ -22,6 +22,16 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".categoryscreen.CategoryActivity"
+            android:label="@string/category_activity"
+            android:parentActivityName="com.example.android.tranner.mainscreen.MainActivity"
+            android:theme="@style/AppThemeOne.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.android.tranner.mainscreen.MainActivity">
+            </meta-data>
         </activity>
     </application>
 
