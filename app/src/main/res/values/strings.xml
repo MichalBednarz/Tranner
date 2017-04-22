@@ -8,4 +8,7 @@
     <string name="action_theme_three">Soft</string>
     <string name="title_activity_category">CategoryActivity</string>
     <string name="category_activity">category_activity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

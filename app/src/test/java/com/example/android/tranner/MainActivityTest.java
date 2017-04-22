@@ -1,16 +1,10 @@
 package com.example.android.tranner;
 
-import android.content.ComponentName;
-import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.MenuItem;
-import android.view.View;
 
-import com.example.android.tranner.categoryscreen.CategoryActivity;
 import com.example.android.tranner.data.Category;
 import com.example.android.tranner.mainscreen.MainActivity;
 import com.example.android.tranner.mainscreen.adapters.MainActivityAdapter;
@@ -19,21 +13,15 @@ import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.robolectric.Robolectric;
-import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
-import org.robolectric.fakes.RoboMenuItem;
-import org.robolectric.shadows.ShadowActivity;
 
 import java.util.Arrays;
 import java.util.List;
 
 
-import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.when;
 
 
 /**

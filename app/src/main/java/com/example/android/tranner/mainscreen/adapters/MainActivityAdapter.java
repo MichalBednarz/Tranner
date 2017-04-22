@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.provider.SyncStateContract;
 import android.support.annotation.ColorInt;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
@@ -18,7 +17,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.android.tranner.categoryscreen.CategoryActivity;
+import com.example.android.tranner.categoryscreen.activities.CategoryActivity;
 import com.example.android.tranner.data.Category;
 import com.example.android.tranner.data.ConstantKeys;
 import com.example.android.tranner.mainscreen.listeners.MainActivityAdapterListener;

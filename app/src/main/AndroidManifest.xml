@@ -25,7 +25,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".categoryscreen.CategoryActivity"
+            android:name=".categoryscreen.activities.CategoryActivity"
             android:label="@string/category_activity"
             android:parentActivityName="com.example.android.tranner.mainscreen.MainActivity"
             android:theme="@style/AppThemeOne.NoActionBar">
