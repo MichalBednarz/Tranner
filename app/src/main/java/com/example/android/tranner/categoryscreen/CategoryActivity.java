@@ -29,12 +29,12 @@ public class CategoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_category);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        ActionBar bar = getActionBar();
-        bar.setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         Bundle bundle = getIntent().getExtras();
         mCategory = (Category) bundle.get(CATEGORY_INTENT);
+        this.setTitle(mCategory.getCategory());
 
 
     }

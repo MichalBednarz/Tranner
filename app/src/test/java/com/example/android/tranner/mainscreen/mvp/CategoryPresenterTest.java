@@ -42,7 +42,8 @@ public class CategoryPresenterTest {
 
     @Before
     public void setUp() {
-        presenter = new CategoryPresenter(view, repository, Schedulers.trampoline());
+        presenter = new CategoryPresenter(repository, Schedulers.trampoline());
+        presenter.setView(view);
         RxJavaPlugins.setIoSchedulerHandler(scheduler -> Schedulers.trampoline());
     }
 

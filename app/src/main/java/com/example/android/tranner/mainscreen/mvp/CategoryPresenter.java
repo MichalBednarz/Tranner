@@ -24,10 +24,13 @@ public class CategoryPresenter implements Actions {
     private Scheduler mainScheduler;
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
-    public CategoryPresenter(View view, Repository repository, Scheduler mainScheduler) {
-        this.mView = view;
+    public CategoryPresenter(Repository repository, Scheduler mainScheduler) {
         this.mRepository = repository;
         this.mainScheduler = mainScheduler;
+    }
+
+    public void setView(View view) {
+        this.mView = view;
     }
 
     @Override

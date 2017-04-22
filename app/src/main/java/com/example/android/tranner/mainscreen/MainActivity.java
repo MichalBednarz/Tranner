@@ -15,10 +15,10 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.android.tranner.R;
+import com.example.android.tranner.TrannerApp;
 import com.example.android.tranner.mainscreen.adapters.MainActivityAdapter;
-import com.example.android.tranner.mainscreen.dagger2.DaggerMainActivityComponent;
-import com.example.android.tranner.mainscreen.dagger2.MainActivityModule;
 import com.example.android.tranner.data.Category;
+import com.example.android.tranner.mainscreen.dagger2.components.DaggerPresenterComponent;
 import com.example.android.tranner.mainscreen.dialogs.CategoryDialog;
 import com.example.android.tranner.mainscreen.dialogs.WebImageDialog;
 import com.example.android.tranner.mainscreen.listeners.CategoryDialogListener;
@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
     private MainActivityAdapter mAdapter;
     private CategoryDialog mCategoryDialog;
     private WebImageDialog mWebDialog;
+    private TrannerApp mTrannerApp;
 
     /**
      * Method that handles click on floating action button.
@@ -134,11 +135,16 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //provide CategoryPresenter object instance with help of dependency injection
-        DaggerMainActivityComponent.builder()
-                .mainActivityModule(new MainActivityModule(this))
+        mTrannerApp = (TrannerApp) getApplication();
+
+        //Dependency injection providing CategoryPresenter
+        DaggerPresenterComponent.builder()
+                .appComponent(mTrannerApp.getComponent())
                 .build()
                 .inject(this);
+
+        mPresenter.setView(this);
+
 
         mCategoryList = new ArrayList<>();
         mPresenter.loadCategories();
