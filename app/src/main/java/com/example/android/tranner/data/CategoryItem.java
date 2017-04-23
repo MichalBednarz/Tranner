@@ -8,12 +8,25 @@ public class CategoryItem {
 
     private String mName;
     private String mDescription;
+    private int mId;
 
     public CategoryItem() {
     }
 
     public CategoryItem(String name) {
         mName = name;
+    }
+
+    /*
+     * getters and setters
+     */
+
+    public int getId() {
+        return mId;
+    }
+
+    public void setId(int id) {
+        this.mId = id;
     }
 
     public String getName() {

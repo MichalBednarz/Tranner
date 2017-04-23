@@ -17,6 +17,10 @@ public class Category implements Serializable {
 
     public Category() {}
 
+    /*
+     * getters and setters
+     */
+
     public String getCategory() {
         return mCategory;
     }
