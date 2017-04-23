@@ -1,6 +1,7 @@
 package com.example.android.tranner.mainscreen.dagger2.modules;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.example.android.tranner.TrannerApp;
 
@@ -23,7 +24,14 @@ public class AppModule {
     }
 
     @Provides
+    @Singleton
     public TrannerApp providesApplication() {
+        return mApp;
+    }
+
+    @Provides
+    @Singleton
+    public Context providesApplicationContext() {
         return mApp;
     }
 }
