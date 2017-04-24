@@ -1,8 +1,8 @@
 package com.example.android.tranner.mainscreen.dagger2.modules;
 
 import com.example.android.tranner.TrannerApp;
-import com.example.android.tranner.mainscreen.mvp.CategoryRepository;
-import com.example.android.tranner.mainscreen.mvp.repository.CategoryDatabaseHelper;
+import com.example.android.tranner.data.providers.categoryprovider.CategoryRepository;
+import com.example.android.tranner.data.providers.CategoryDatabaseHelper;
 
 import dagger.Module;
 import dagger.Provides;

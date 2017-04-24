@@ -1,6 +1,8 @@
-package com.example.android.tranner.mainscreen.mvp.repository;
+package com.example.android.tranner.data.providers;
 
 import android.provider.BaseColumns;
+
+import com.example.android.tranner.data.CategoryItem;
 
 /**
  * Created by Michał on 2017-04-11.
@@ -22,6 +24,7 @@ public final class CategoryDatabaseContract {
         public static final String TABLE_ITEM = "items";
         public static final String TITLE_ITEM = "item";
         public static final String DESCRIPTION_ITEM = "description";
+        public static final String PARENT_CATEGORY_ITEM = "parent_category";
     }
 
     public static class CategoryItemEntry implements BaseColumns {
@@ -40,7 +43,10 @@ public final class CategoryDatabaseContract {
             "CREATE TABLE " + ItemEntry.TABLE_ITEM + " (" +
             ItemEntry._ID + " INTEGER PRIMARY KEY," +
             ItemEntry.TITLE_ITEM + " TEXT," +
-            ItemEntry.DESCRIPTION_ITEM + " TEXT)";
+            ItemEntry.DESCRIPTION_ITEM + " TEX)" +
+            ItemEntry.PARENT_CATEGORY_ITEM + " INTEGER NOT NULL," + " FOREIGN KEY (" +
+            ItemEntry.PARENT_CATEGORY_ITEM + ") REFERENCES " + CategoryEntry.TABLE_CATEGORY +  "(" +
+            ItemEntry.PARENT_CATEGORY_ITEM + ")";
 
     public static final String CREATE_TABLE_CATEGORY_ITEM =
             "CREATE TABLE " + CategoryItemEntry.TABLE_CATEGORY_ITEM + " (" +

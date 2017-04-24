@@ -1,6 +1,8 @@
 package com.example.android.tranner.mainscreen.mvp;
 
 import com.example.android.tranner.data.Category;
+import com.example.android.tranner.data.providers.categoryprovider.CategoryContract;
+import com.example.android.tranner.data.providers.categoryprovider.CategoryPresenter;
 
 import org.junit.After;
 import org.junit.Before;
@@ -28,6 +30,7 @@ import static org.mockito.Mockito.when;
 public class CategoryPresenterTest {
 
     private final List<Category> MANY_DATA = Arrays.asList(new Category(), new Category(), new Category());
+    private final Category SINGLE_DATA = new Category();
 
     private CategoryPresenter presenter;
 
@@ -37,8 +40,6 @@ public class CategoryPresenterTest {
     CategoryContract.Repository repository;
     @Mock
     CategoryContract.View view;
-    @Mock
-    Category category;
 
     @Before
     public void setUp() {
@@ -81,27 +82,27 @@ public class CategoryPresenterTest {
 
     @Test
     public void shouldAddCategory() {
-        when(repository.addCategory(category)).thenReturn(Single.just(0L));
+        when(repository.addCategory(SINGLE_DATA)).thenReturn(Single.just(0L));
 
-        presenter.addCategory(category);
+        presenter.addCategory(SINGLE_DATA);
 
         verify(view).onCategoryAdded();
     }
 
     @Test
     public void shouldAddNoCategory() {
-        when(repository.addCategory(category)).thenReturn(Single.just(-1L));
+        when(repository.addCategory(SINGLE_DATA)).thenReturn(Single.just(-1L));
 
-        presenter.addCategory(category);
+        presenter.addCategory(SINGLE_DATA);
 
         verify(view).onNoCategoryAdded();
     }
 
     @Test
     public void shouldHandleAddCategoryError() {
-        when(repository.addCategory(category)).thenReturn(Single.error(new Throwable("exception")));
+        when(repository.addCategory(SINGLE_DATA)).thenReturn(Single.error(new Throwable("exception")));
 
-        presenter.addCategory(category);
+        presenter.addCategory(SINGLE_DATA);
 
         verify(view).onCategoryAddedError();
     }
@@ -109,54 +110,54 @@ public class CategoryPresenterTest {
 
     @Test
     public void shouldDeleteCategory() {
-        when(repository.deleteCategory(category)).thenReturn(Single.just(1));
+        when(repository.deleteCategory(SINGLE_DATA)).thenReturn(Single.just(1));
 
-        presenter.deleteCategory(category);
+        presenter.deleteCategory(SINGLE_DATA);
 
         verify(view).onCategoryDeleted();
     }
 
     @Test
     public void shouldDeleteNoCategory() {
-        when(repository.deleteCategory(category)).thenReturn(Single.just(0));
+        when(repository.deleteCategory(SINGLE_DATA)).thenReturn(Single.just(0));
 
-        presenter.deleteCategory(category);
+        presenter.deleteCategory(SINGLE_DATA);
 
         verify(view).onNoCategoryDeleted();
     }
 
     @Test
     public void shouldHandleDeleteCategoryError() {
-        when(repository.deleteCategory(category)).thenReturn(Single.error(new Throwable("exception")));
+        when(repository.deleteCategory(SINGLE_DATA)).thenReturn(Single.error(new Throwable("exception")));
 
-        presenter.deleteCategory(category);
+        presenter.deleteCategory(SINGLE_DATA);
 
         verify(view).onCategoryDeletedError();
     }
 
     @Test
     public void shouldUpdateCategory() {
-        when(repository.updateCategory(category)).thenReturn(Single.just(1));
+        when(repository.updateCategory(SINGLE_DATA)).thenReturn(Single.just(1));
 
-        presenter.updateCategory(category);
+        presenter.updateCategory(SINGLE_DATA);
 
         verify(view).onCategoryUpdated();
     }
 
     @Test
     public void shouldUpdateNoCategory() {
-        when(repository.updateCategory(category)).thenReturn(Single.just(0));
+        when(repository.updateCategory(SINGLE_DATA)).thenReturn(Single.just(0));
 
-        presenter.updateCategory(category);
+        presenter.updateCategory(SINGLE_DATA);
 
         verify(view).onNoCategoryUpdated();
     }
 
     @Test
     public void shouldHandleCategoryUpdateError() {
-        when(repository.updateCategory(category)).thenReturn(Single.error(new Throwable("exception")));
+        when(repository.updateCategory(SINGLE_DATA)).thenReturn(Single.error(new Throwable("exception")));
 
-        presenter.updateCategory(category);
+        presenter.updateCategory(SINGLE_DATA);
 
         verify(view).onCategoryUpdatedError();
     }

@@ -8,25 +8,44 @@ public class CategoryItem {
 
     private String mName;
     private String mDescription;
-    private int mId;
+    private String mTab;
+    private int mItemId;
+    private int mParentCategoryId;
 
     public CategoryItem() {
     }
 
-    public CategoryItem(String name) {
-        mName = name;
+    public CategoryItem(String name, int parentCategoryId) {
+        this.mName = name;
+        this.mParentCategoryId = parentCategoryId;
     }
 
     /*
      * getters and setters
      */
 
+    public void setParentCategoryId(int parentCategoryId) {
+        this.mParentCategoryId = parentCategoryId;
+    }
+
+    public int getParentCategoryId() {
+        return mParentCategoryId;
+    }
+
+    public String getTab() {
+        return mTab;
+    }
+
+    public void setTab(String tab) {
+        this.mTab = tab;
+    }
+
     public int getId() {
-        return mId;
+        return mItemId;
     }
 
     public void setId(int id) {
-        this.mId = id;
+        this.mItemId = id;
     }
 
     public String getName() {

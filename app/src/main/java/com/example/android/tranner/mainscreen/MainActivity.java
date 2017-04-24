@@ -24,8 +24,8 @@ import com.example.android.tranner.mainscreen.dialogs.WebImageDialog;
 import com.example.android.tranner.mainscreen.listeners.CategoryDialogListener;
 import com.example.android.tranner.mainscreen.listeners.MainActivityAdapterListener;
 import com.example.android.tranner.mainscreen.listeners.WebImageDialogAdapterListener;
-import com.example.android.tranner.mainscreen.mvp.CategoryContract;
-import com.example.android.tranner.mainscreen.mvp.CategoryPresenter;
+import com.example.android.tranner.data.providers.categoryprovider.CategoryContract;
+import com.example.android.tranner.data.providers.categoryprovider.CategoryPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
