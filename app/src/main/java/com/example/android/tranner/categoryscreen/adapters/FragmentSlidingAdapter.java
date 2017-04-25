@@ -6,8 +6,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.example.android.tranner.categoryscreen.activities.CategoryActivity;
-import com.example.android.tranner.categoryscreen.fragments.FragmentFamiliar;
-import com.example.android.tranner.categoryscreen.fragments.FragmentNew;
 
 /**
  * Created by Michał on 2017-04-22.
@@ -16,19 +14,18 @@ import com.example.android.tranner.categoryscreen.fragments.FragmentNew;
 public class FragmentSlidingAdapter extends FragmentPagerAdapter {
 
     final int PAGE_COUNT = 2;
-    private String mTabTitles[] = new String[] { "New", "Familiar" };
+    private String mTabTitles[] = new String[]{"New", "Familiar"};
 
     private CategoryActivity mActivity;
 
     public FragmentSlidingAdapter(Context context, FragmentManager fm) {
         super(fm);
         this.mActivity = (CategoryActivity) context;
-
     }
 
     @Override
     public Fragment getItem(int position) {
-        switch(position) {
+        switch (position) {
             case 0:
                 return mActivity.getFragmentNew();
             case 1:

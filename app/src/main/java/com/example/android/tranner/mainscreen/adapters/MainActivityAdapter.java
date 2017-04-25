@@ -17,11 +17,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.android.tranner.categoryscreen.activities.CategoryActivity;
-import com.example.android.tranner.data.Category;
-import com.example.android.tranner.data.ConstantKeys;
-import com.example.android.tranner.mainscreen.listeners.MainActivityAdapterListener;
 import com.example.android.tranner.R;
+import com.example.android.tranner.categoryscreen.activities.CategoryActivity;
+import com.example.android.tranner.data.ConstantKeys;
+import com.example.android.tranner.data.providers.categoryprovider.Category;
+import com.example.android.tranner.mainscreen.listeners.MainActivityAdapterListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -80,13 +80,14 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
 
     /**
      * Provides item animation respectively for down scroll and up scrool.
+     *
      * @param holder
      * @param position
      */
     private void provideAnimation(ViewHolder holder, int position) {
-        if(position > mPreviousPosition) {
+        if (position > mPreviousPosition) {
             AnimationUtil.animate(holder, true);
-        }else {
+        } else {
             AnimationUtil.animate(holder, false);
         }
         mPreviousPosition = position;
@@ -124,7 +125,6 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
      * for displaying menu and handling each menu item click.
      *
      * @param view
-     * @param position
      * @param holder
      */
     private void showPopupMenu(View view, final Category category, final ViewHolder holder) {

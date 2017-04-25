@@ -1,6 +1,6 @@
 package com.example.android.tranner.mainscreen.mvp;
 
-import com.example.android.tranner.data.Category;
+import com.example.android.tranner.data.providers.categoryprovider.Category;
 import com.example.android.tranner.data.providers.categoryprovider.CategoryContract;
 import com.example.android.tranner.data.providers.categoryprovider.CategoryPresenter;
 
@@ -32,14 +32,16 @@ public class CategoryPresenterTest {
     private final List<Category> MANY_DATA = Arrays.asList(new Category(), new Category(), new Category());
     private final Category SINGLE_DATA = new Category();
 
-    private CategoryPresenter presenter;
-
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
+
     @Mock
     CategoryContract.Repository repository;
+
     @Mock
     CategoryContract.View view;
+
+    private CategoryPresenter presenter;
 
     @Before
     public void setUp() {

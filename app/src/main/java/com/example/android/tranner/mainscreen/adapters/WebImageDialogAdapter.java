@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.android.tranner.R;
-import com.example.android.tranner.data.Category;
+import com.example.android.tranner.data.providers.categoryprovider.Category;
 import com.example.android.tranner.mainscreen.dialogs.WebImageDialog;
 import com.example.android.tranner.mainscreen.listeners.WebImageDialogAdapterListener;
 import com.squareup.picasso.Picasso;

@@ -1,7 +1,5 @@
 package com.example.android.tranner.data.providers.categoryprovider;
 
-import com.example.android.tranner.data.Category;
-
 import java.util.List;
 
 import io.reactivex.Scheduler;
@@ -15,6 +13,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class CategoryPresenter implements CategoryContract.Actions {
+
     private CategoryContract.View mView;
     private CategoryContract.Repository mRepository;
     private Scheduler mMainScheduler;
@@ -122,6 +121,6 @@ public class CategoryPresenter implements CategoryContract.Actions {
     }
 
     public void unsubscribe() {
-        mCompositeDisposable.clear();
+        mCompositeDisposable.dispose();
     }
 }

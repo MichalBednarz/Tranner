@@ -1,4 +1,4 @@
-package com.example.android.tranner.mainscreen.dagger2.scopes;
+package com.example.android.tranner.dagger.scopes;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

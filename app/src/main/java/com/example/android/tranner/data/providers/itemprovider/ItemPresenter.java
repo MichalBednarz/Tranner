@@ -1,7 +1,6 @@
 package com.example.android.tranner.data.providers.itemprovider;
 
-import com.example.android.tranner.data.Category;
-import com.example.android.tranner.data.CategoryItem;
+import com.example.android.tranner.data.providers.categoryprovider.Category;
 
 import java.util.List;
 
@@ -11,7 +10,9 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.example.android.tranner.data.providers.itemprovider.ItemContract.*;
+import static com.example.android.tranner.data.providers.itemprovider.ItemContract.Actions;
+import static com.example.android.tranner.data.providers.itemprovider.ItemContract.Repository;
+import static com.example.android.tranner.data.providers.itemprovider.ItemContract.View;
 
 /**
  * Created by Michał on 2017-04-23.
@@ -34,8 +35,8 @@ public class ItemPresenter implements Actions {
     }
 
     @Override
-    public void loadItems(Category category) {
-        mCompositeDisposable.add(mRepository.loadItems(category)
+    public void loadItems(Category parentCategory) {
+        mCompositeDisposable.add(mRepository.loadItems(parentCategory)
                 .subscribeOn(Schedulers.io())
                 .observeOn(mMainScheduler)
                 .subscribeWith(new DisposableSingleObserver<List<CategoryItem>>() {
@@ -129,6 +130,6 @@ public class ItemPresenter implements Actions {
     }
 
     public void unsubscribe() {
-        mCompositeDisposable.clear();
+        mCompositeDisposable.dispose();
     }
 }

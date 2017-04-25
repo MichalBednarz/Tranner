@@ -1,7 +1,6 @@
 package com.example.android.tranner.data.providers.itemprovider;
 
-import com.example.android.tranner.data.Category;
-import com.example.android.tranner.data.CategoryItem;
+import com.example.android.tranner.data.providers.categoryprovider.Category;
 
 import java.util.List;
 
@@ -14,30 +13,47 @@ import io.reactivex.Single;
 public class ItemContract {
     public interface View {
         void onItemLoaded(List<CategoryItem> categoryList);
+
         void onNoItemLoaded();
+
         void onItemLoadError();
+
         void onItemAdded();
+
         void onNoItemAdded();
+
         void onItemAddedError();
+
         void onItemDeleted();
+
         void onNoItemDeleted();
+
         void onItemDeletedError();
+
         void onItemUpdated();
+
         void onNoItemUpdated();
+
         void onItemUpdatedError();
     }
 
     public interface Actions {
-        void loadItems(Category category);
+        void loadItems(Category parentCategory);
+
         void addItem(CategoryItem item);
+
         void deleteItem(CategoryItem item);
+
         void updateItem(CategoryItem item);
     }
 
     public interface Repository {
-        Single<List<CategoryItem>> loadItems(Category category);
+        Single<List<CategoryItem>> loadItems(Category parentCategory);
+
         Single<Long> addItem(CategoryItem item);
+
         Single<Integer> deleteItem(CategoryItem item);
+
         Single<Integer> updateItem(CategoryItem item);
     }
 }

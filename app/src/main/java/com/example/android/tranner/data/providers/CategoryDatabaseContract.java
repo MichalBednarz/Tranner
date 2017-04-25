@@ -2,65 +2,46 @@ package com.example.android.tranner.data.providers;
 
 import android.provider.BaseColumns;
 
-import com.example.android.tranner.data.CategoryItem;
-
 /**
  * Created by Michał on 2017-04-11.
  */
 
 public final class CategoryDatabaseContract {
 
+    public static final String CREATE_TABLE_CATEGORY =
+            "CREATE TABLE " + CategoryEntry.CATEGORY_TABLE + " (" +
+                    CategoryEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    CategoryEntry.CATEGORY_TITLE + " TEXT," +
+                    CategoryEntry.CATEGORY_URL + " TEXT)";
+
+    public static final String CREATE_TABLE_ITEM =
+            "CREATE TABLE " + ItemEntry.ITEM_TABLE + " (" +
+                    ItemEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    ItemEntry.ITEM_TITLE + " TEXT, " +
+                    ItemEntry.ITEM_DESCRIPTION + " TEXT " +
+                    ItemEntry.ITEM_PARENT_CATEGORY + " INTEGER NOT NULL REFERENCES " + CategoryEntry.CATEGORY_TABLE + " (" +
+                    CategoryEntry._ID + "))";
+
+    public static final String SQL_DELETE_CATEGORY =
+            "DROP TABLE IF EXISTS " + CategoryEntry.CATEGORY_TABLE;
+
+    public static final String SQL_DELETE_ITEM =
+            "DROP TABLE IF EXISTS " + ItemEntry.ITEM_TABLE;
 
     private CategoryDatabaseContract() {
     }
 
     public static class CategoryEntry implements BaseColumns {
-        public static final String TABLE_CATEGORY = "categories";
-        public static final String TITLE_CATEGORY = "category";
-        public static final String URL_CATEGORY = "url";
+        public static final String CATEGORY_TABLE = "category_table";
+        public static final String CATEGORY_TITLE = "category_title";
+        public static final String CATEGORY_URL = "category_url";
     }
 
     public static class ItemEntry implements BaseColumns {
-        public static final String TABLE_ITEM = "items";
-        public static final String TITLE_ITEM = "item";
-        public static final String DESCRIPTION_ITEM = "description";
-        public static final String PARENT_CATEGORY_ITEM = "parent_category";
+        public static final String ITEM_TABLE = "item_table";
+        public static final String ITEM_TITLE = "item_title";
+        public static final String ITEM_DESCRIPTION = "item_description";
+        public static final String ITEM_PARENT_CATEGORY = "item_parent_category";
     }
 
-    public static class CategoryItemEntry implements BaseColumns {
-        public static final String TABLE_CATEGORY_ITEM = "category_item";
-        public static final String CATEGORY_ID = "table_id";
-        public static final String ITEM_ID = "category_id";
-    }
-
-    public static final String CREATE_TABLE_CATEGORY =
-            "CREATE TABLE " + CategoryEntry.TABLE_CATEGORY + " (" +
-            CategoryEntry._ID + " INTEGER PRIMARY KEY," +
-            CategoryEntry.TITLE_CATEGORY + " TEXT," +
-            CategoryEntry.URL_CATEGORY + " TEXT)";
-
-    public static final String CREATE_TABLE_ITEM =
-            "CREATE TABLE " + ItemEntry.TABLE_ITEM + " (" +
-            ItemEntry._ID + " INTEGER PRIMARY KEY," +
-            ItemEntry.TITLE_ITEM + " TEXT," +
-            ItemEntry.DESCRIPTION_ITEM + " TEX)" +
-            ItemEntry.PARENT_CATEGORY_ITEM + " INTEGER NOT NULL," + " FOREIGN KEY (" +
-            ItemEntry.PARENT_CATEGORY_ITEM + ") REFERENCES " + CategoryEntry.TABLE_CATEGORY +  "(" +
-            ItemEntry.PARENT_CATEGORY_ITEM + ")";
-
-    public static final String CREATE_TABLE_CATEGORY_ITEM =
-            "CREATE TABLE " + CategoryItemEntry.TABLE_CATEGORY_ITEM + " (" +
-                    CategoryItemEntry._ID + " INTEGER PRIMARY KEY," +
-                    CategoryItemEntry.CATEGORY_ID + " INTEGER" +
-                    CategoryItemEntry.ITEM_ID + " INTEGER)";
-
-
-    public static final String SQL_DELETE_CATEGORY =
-            "DROP TABLE IF EXISTS " + CategoryEntry.TABLE_CATEGORY;
-
-    public static final String SQL_DELETE_ITEM =
-            "DROP TABLE IF EXISTS " + ItemEntry.TABLE_ITEM;
-
-    public static final String SQL_DELETE_CATEGORY_ITEM =
-            "DROP TABLE IF EXISTS " + CategoryItemEntry.TABLE_CATEGORY_ITEM;
 }

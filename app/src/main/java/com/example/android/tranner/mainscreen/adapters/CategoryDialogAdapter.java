@@ -13,15 +13,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.tranner.R;
-import com.example.android.tranner.data.Category;
+import com.example.android.tranner.data.providers.categoryprovider.Category;
 import com.example.android.tranner.mainscreen.listeners.CategoryDialogAdapterListener;
-import com.example.android.tranner.mainscreen.listeners.CategoryDialogListener;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.example.android.tranner.data.DialogSuggestedList.SUGGESTED_CATEGORIES;
 
 /**
  * Created by Michał on 2017-04-10.
@@ -29,25 +27,13 @@ import butterknife.ButterKnife;
 
 public class CategoryDialogAdapter extends RecyclerView.Adapter<CategoryDialogAdapter.ViewHolder> {
 
-    public List<Category> mDialogSuggested =
-            new ArrayList<Category>() {{
-                add(new Category("Hobby"));
-                add(new Category("Work"));
-                add(new Category("Sport"));
-                add(new Category("Cooking"));
-                add(new Category("Passion"));
-                add(new Category("Reading"));
-                add(new Category("Cars"));
-                add(new Category("Mountains"));
-                add(new Category("Travelling"));
-                add(new Category("Cycling"));
-            }};
+
+    public int mSelected = -1;
 
     private CategoryDialogAdapterListener mListener;
     private DialogFragment mDialog;
-    public int mSelected = -1;
 
-    public CategoryDialogAdapter(DialogFragment mDialog, CategoryDialogListener mListener) {
+    public CategoryDialogAdapter(DialogFragment mDialog) {
         this.mDialog = mDialog;
         this.mListener = (CategoryDialogAdapterListener) mDialog;
     }
@@ -55,13 +41,14 @@ public class CategoryDialogAdapter extends RecyclerView.Adapter<CategoryDialogAd
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_dialog_item, parent, false);
+
         return new ViewHolder(v);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        final Category suggested = mDialogSuggested.get(position);
+        final Category suggested = SUGGESTED_CATEGORIES.get(position);
         holder.dialogItemText.setText(suggested.getCategory());
         holder.itemView.setOnClickListener(v -> {
             mSelected = position;
@@ -76,7 +63,7 @@ public class CategoryDialogAdapter extends RecyclerView.Adapter<CategoryDialogAd
         TransitionDrawable trans = new TransitionDrawable(color);
         holder.itemView.setBackground(trans);
 
-        if(mSelected == position) {
+        if (mSelected == position) {
             trans.startTransition(1500);
         } else {
             trans.resetTransition();
@@ -85,14 +72,14 @@ public class CategoryDialogAdapter extends RecyclerView.Adapter<CategoryDialogAd
 
     @Override
     public int getItemCount() {
-        return mDialogSuggested.size();
+        return SUGGESTED_CATEGORIES.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.dialog_item_text)
         TextView dialogItemText;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }

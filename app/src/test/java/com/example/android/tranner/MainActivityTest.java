@@ -5,7 +5,7 @@ import android.os.Looper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.example.android.tranner.data.Category;
+import com.example.android.tranner.data.providers.categoryprovider.Category;
 import com.example.android.tranner.mainscreen.MainActivity;
 import com.example.android.tranner.mainscreen.adapters.MainActivityAdapter;
 
@@ -19,9 +19,7 @@ import org.robolectric.annotation.Config;
 import java.util.Arrays;
 import java.util.List;
 
-
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 
 
 /**
@@ -40,6 +38,7 @@ public class MainActivityTest {
         activity = Robolectric.buildActivity(MainActivity.class).create().get();
         mainActivityAdapter = new MainActivityAdapter(activity, categoryList);
     }
+
     @Test
     public void checkActivityNotNull() throws Exception {
         assertNotNull(activity);
@@ -49,8 +48,6 @@ public class MainActivityTest {
     public void shouldStartCategoryActivity() {
         RecyclerView recycler = (RecyclerView) activity.findViewById(R.id.main_recycler_view);
 
-      /*  recycler.measure(0, 0);
-        recycler.layout(0, 0, 100, 1000);*/
         recycler.setLayoutManager(new LinearLayoutManager(activity));
         recycler.setAdapter(mainActivityAdapter);
 

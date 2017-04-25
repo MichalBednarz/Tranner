@@ -13,27 +13,11 @@ public class CategoryDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String TAG = "CategoryDatabaseHelper";
 
-    public static final int DATABASE_VERSION = 1;
-    public static final String DATABASE_NAME = "Category.db";
+    private static final int DATABASE_VERSION = 1;
+    private static final String DATABASE_NAME = "Category.db";
 
     public CategoryDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-    }
-
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-        db.execSQL(CategoryDatabaseContract.CREATE_TABLE_CATEGORY);
-        db.execSQL(CategoryDatabaseContract.CREATE_TABLE_ITEM);
-        db.execSQL(CategoryDatabaseContract.CREATE_TABLE_CATEGORY_ITEM);
-    }
-
-
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(CategoryDatabaseContract.SQL_DELETE_CATEGORY);
-        db.execSQL(CategoryDatabaseContract.SQL_DELETE_ITEM);
-        db.execSQL(CategoryDatabaseContract.SQL_DELETE_CATEGORY_ITEM);
-        onCreate(db);
     }
 
     @Override
@@ -47,5 +31,19 @@ public class CategoryDatabaseHelper extends SQLiteOpenHelper {
                 db.execSQL("PRAGMA foreign_keys = ON;");
             }
         }
+    }
+
+
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL(CategoryDatabaseContract.CREATE_TABLE_CATEGORY);
+        db.execSQL(CategoryDatabaseContract.CREATE_TABLE_ITEM);
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL(CategoryDatabaseContract.SQL_DELETE_CATEGORY);
+        db.execSQL(CategoryDatabaseContract.SQL_DELETE_ITEM);
+        onCreate(db);
     }
 }

@@ -1,7 +1,6 @@
 package com.example.android.tranner.categoryscreen.fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -14,23 +13,7 @@ import com.example.android.tranner.R;
 import com.example.android.tranner.categoryscreen.adapters.FragmentLayoutAdapter;
 import com.example.android.tranner.categoryscreen.adapters.OnCategoryItemClickListener;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment_new must implement the
- * {@link FragmentFamiliar.OnFamiliarFragmentListener} interface
- * to handle interaction events.
- * Use the {@link FragmentFamiliar#newInstance} factory method to
- * create an instance of this fragment_new.
- */
-public class FragmentFamiliar extends Fragment implements OnCategoryItemClickListener{
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment_new initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+public class FragmentFamiliar extends Fragment implements OnCategoryItemClickListener {
 
     private OnFamiliarFragmentListener mListener;
     private RecyclerView mRecyclerView;
@@ -46,7 +29,6 @@ public class FragmentFamiliar extends Fragment implements OnCategoryItemClickLis
      *
      * @return A new instance of fragment_new FragmentFamiliar.
      */
-    // TODO: Rename and change types and number of parameters
     public static FragmentFamiliar newInstance() {
         FragmentFamiliar fragment = new FragmentFamiliar();
         Bundle args = new Bundle();
@@ -57,13 +39,10 @@ public class FragmentFamiliar extends Fragment implements OnCategoryItemClickLis
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-        }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_familiar, container, false);
         setUpRecyclerView(view);
 
@@ -80,9 +59,8 @@ public class FragmentFamiliar extends Fragment implements OnCategoryItemClickLis
     }
 
     public void onFabClicked(View v) {
-        switch(v.getId()) {
+        switch (v.getId()) {
             case R.id.fragment_familiar_fab:
-
                 break;
         }
 
@@ -115,13 +93,10 @@ public class FragmentFamiliar extends Fragment implements OnCategoryItemClickLis
      * fragment_new to allow an interaction in this fragment_new to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFamiliarFragmentListener {
-        void onFamiliarItemAdded(Uri uri);
+        void onFamiliarItemAdded();
+
         void onFamiliarItemOpened();
     }
 }

@@ -10,6 +10,10 @@ import org.robolectric.res.FileFsFile;
  * Created by Michał on 2017-04-22.
  */
 
+/**
+ * Class created to substitute original RobolectricTestRunner.
+ * Usage of original RobolectricTestRunner was reason of issues concerning AndroidManifest.
+ */
 public class CustomTestRunner extends RobolectricTestRunner {
     public CustomTestRunner(Class<?> klass) throws InitializationError {
         super(klass);

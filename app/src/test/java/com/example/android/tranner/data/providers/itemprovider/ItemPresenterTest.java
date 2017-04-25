@@ -1,28 +1,25 @@
 package com.example.android.tranner.data.providers.itemprovider;
 
-import com.example.android.tranner.data.Category;
-import com.example.android.tranner.data.CategoryItem;
+import com.example.android.tranner.data.providers.categoryprovider.Category;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.Single;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.schedulers.Schedulers;
 
-import static java.util.Collections.*;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static java.util.Collections.EMPTY_LIST;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by Michał on 2017-04-24.
@@ -33,15 +30,13 @@ public class ItemPresenterTest {
     private final List<CategoryItem> MANY_DATA = Arrays.asList(new CategoryItem(), new CategoryItem(), new CategoryItem());
     private final CategoryItem SINGLE_DATA = new CategoryItem();
     private final Category CATEGORY = new Category();
-
-    private ItemPresenter presenter;
-
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
     @Mock
     ItemContract.Repository repository;
     @Mock
     ItemContract.View view;
+    private ItemPresenter presenter;
 
     @Before
     public void setUp() {

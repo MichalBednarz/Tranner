@@ -1,35 +1,38 @@
-package com.example.android.tranner.data;
+package com.example.android.tranner.data.providers.itemprovider;
 
 /**
  * Created by Michał on 2017-04-23.
  */
 
+/**
+ * CategoryItem POJO.
+ */
 public class CategoryItem {
 
     private String mName;
     private String mDescription;
     private String mTab;
     private int mItemId;
-    private int mParentCategoryId;
+    private long mParentId;
 
     public CategoryItem() {
     }
 
-    public CategoryItem(String name, int parentCategoryId) {
+    public CategoryItem(String name) {
         this.mName = name;
-        this.mParentCategoryId = parentCategoryId;
     }
 
     /*
      * getters and setters
+     *
      */
 
-    public void setParentCategoryId(int parentCategoryId) {
-        this.mParentCategoryId = parentCategoryId;
+    public long getParentCategoryId() {
+        return mParentId;
     }
 
-    public int getParentCategoryId() {
-        return mParentCategoryId;
+    public void setParentCategoryId(long parentId) {
+        this.mParentId = parentId;
     }
 
     public String getTab() {
@@ -60,8 +63,8 @@ public class CategoryItem {
         return mDescription;
     }
 
-    public void setDescription(String mDescription) {
-        this.mDescription = mDescription;
+    public void setDescription(String description) {
+        this.mDescription = description;
     }
 
 

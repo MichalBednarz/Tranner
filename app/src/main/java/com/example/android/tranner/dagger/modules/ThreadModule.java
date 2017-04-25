@@ -1,4 +1,6 @@
-package com.example.android.tranner.mainscreen.dagger2.modules;
+package com.example.android.tranner.dagger.modules;
+
+import com.example.android.tranner.dagger.scopes.ActivityScope;
 
 import dagger.Module;
 import dagger.Provides;
@@ -12,6 +14,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 public class ThreadModule {
 
     @Provides
+    @ActivityScope
     public Scheduler providesMainScheduler() {
         return AndroidSchedulers.mainThread();
     }

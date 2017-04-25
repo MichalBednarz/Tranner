@@ -14,23 +14,7 @@ import com.example.android.tranner.R;
 import com.example.android.tranner.categoryscreen.adapters.FragmentLayoutAdapter;
 import com.example.android.tranner.categoryscreen.adapters.OnCategoryItemClickListener;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment_new must implement the
- * {@link OnNewFragmentListener} interface
- * to handle interaction events.
- * Use the {@link FragmentNew#newInstance} factory method to
- * create an instance of this fragment_new.
- */
 public class FragmentNew extends Fragment implements OnCategoryItemClickListener {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment_new initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private OnNewFragmentListener mListener;
     private RecyclerView mRecyclerView;
@@ -57,14 +41,10 @@ public class FragmentNew extends Fragment implements OnCategoryItemClickListener
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-
-        }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_new, container, false);
         setUpRecyclerView(view);
 
@@ -81,9 +61,8 @@ public class FragmentNew extends Fragment implements OnCategoryItemClickListener
     }
 
     public void onFabClicked(View v) {
-        switch(v.getId()) {
+        switch (v.getId()) {
             case R.id.fragment_new_fab:
-
                 break;
         }
     }
@@ -116,13 +95,10 @@ public class FragmentNew extends Fragment implements OnCategoryItemClickListener
      * fragment_new to allow an interaction in this fragment_new to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnNewFragmentListener {
         void onNewItemAdded();
+
         void onNewItemOpened();
     }
 }

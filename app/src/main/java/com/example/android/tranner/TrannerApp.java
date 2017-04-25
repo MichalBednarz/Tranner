@@ -2,9 +2,10 @@ package com.example.android.tranner;
 
 import android.app.Application;
 
-import com.example.android.tranner.mainscreen.dagger2.components.AppComponent;
-import com.example.android.tranner.mainscreen.dagger2.components.DaggerAppComponent;
-import com.example.android.tranner.mainscreen.dagger2.modules.AppModule;
+import com.example.android.tranner.dagger.components.AppComponent;
+import com.example.android.tranner.dagger.components.DaggerAppComponent;
+import com.example.android.tranner.dagger.modules.AppModule;
+import com.facebook.stetho.Stetho;
 
 
 /**
@@ -18,6 +19,7 @@ public class TrannerApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Stetho.initializeWithDefaults(this);
 
         mComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))

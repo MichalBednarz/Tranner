@@ -7,6 +7,9 @@ import java.util.List;
  * Created by Michał on 2017-04-11.
  */
 
+/**
+ * Class responsible for storage of links used by Picasso library in mainscreen WebImageDialog.
+ */
 public class WebImageDialogList {
 
     public List<String> initializeWebLinkList() {

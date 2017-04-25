@@ -16,16 +16,16 @@ import android.widget.Toast;
 
 import com.example.android.tranner.R;
 import com.example.android.tranner.TrannerApp;
+import com.example.android.tranner.dagger.components.DaggerCategoryPresenterComponent;
+import com.example.android.tranner.data.providers.categoryprovider.Category;
+import com.example.android.tranner.data.providers.categoryprovider.CategoryContract;
+import com.example.android.tranner.data.providers.categoryprovider.CategoryPresenter;
 import com.example.android.tranner.mainscreen.adapters.MainActivityAdapter;
-import com.example.android.tranner.data.Category;
-import com.example.android.tranner.mainscreen.dagger2.components.DaggerPresenterComponent;
 import com.example.android.tranner.mainscreen.dialogs.CategoryDialog;
 import com.example.android.tranner.mainscreen.dialogs.WebImageDialog;
 import com.example.android.tranner.mainscreen.listeners.CategoryDialogListener;
 import com.example.android.tranner.mainscreen.listeners.MainActivityAdapterListener;
 import com.example.android.tranner.mainscreen.listeners.WebImageDialogAdapterListener;
-import com.example.android.tranner.data.providers.categoryprovider.CategoryContract;
-import com.example.android.tranner.data.providers.categoryprovider.CategoryPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,15 +46,83 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
     FloatingActionButton fab;
     @BindView(R.id.main_recycler_view)
     RecyclerView mRecyclerView;
-
     @Inject
     CategoryPresenter mPresenter;
-
-    public List<Category> mCategoryList;
     private MainActivityAdapter mAdapter;
     private CategoryDialog mCategoryDialog;
     private WebImageDialog mWebDialog;
     private TrannerApp mTrannerApp;
+    public List<Category> mCategoryList;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        //change item theme depending on last user choice stored in activity shared preferences
+        //invoked necessarily before setting view
+        changeTheme(getPreferences(MODE_PRIVATE).getInt("theme", 0));
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        mTrannerApp = (TrannerApp) getApplication();
+
+        //Dependency injection providing CategoryPresenter
+        DaggerCategoryPresenterComponent.builder()
+                .appComponent(mTrannerApp.getComponent())
+                .build()
+                .inject(this);
+
+        mPresenter.setView(this);
+
+
+        mCategoryList = new ArrayList<>();
+        mPresenter.loadCategories();
+        mAdapter = new MainActivityAdapter(this, mCategoryList);
+
+        mRecyclerView.setAdapter(mAdapter);
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(manager);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.unsubscribe();
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        switch (item.getItemId()) {
+            case R.id.action_change_theme_one:
+                editor.putInt("theme", 0);
+                editor.apply();
+                this.recreate();
+                return true;
+            case R.id.action_change_theme_two:
+                editor.putInt("theme", 1);
+                editor.apply();
+                this.recreate();
+                return true;
+            case R.id.action_change_theme_three:
+                editor.putInt("theme", 2);
+                editor.apply();
+                this.recreate();
+                return true;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     /**
      * Method that handles click on floating action button.
@@ -90,6 +158,19 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
     }
 
     @Override
+    public void onChangeBackdropClicked(Category category) {
+        FragmentManager manager = getSupportFragmentManager();
+        mWebDialog = WebImageDialog.newInstance(category);
+        mWebDialog.show(manager, "web_dialog");
+    }
+
+    @Override
+    public void onCategoryDeleted(Category category) {
+        mPresenter.deleteCategory(category);
+        Toast.makeText(this, "Category " + category.getCategory() + " proceeded to deletion.", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     public void onCategoryLoaded(List<Category> categoryList) {
         mCategoryList.clear();
         mCategoryList.addAll(categoryList);
@@ -99,8 +180,6 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
 
     @Override
     public void onNoCategoryLoaded() {
-        mCategoryList.clear();
-        mAdapter.notifyDataSetChanged();
         Toast.makeText(this, "No category loaded...", Toast.LENGTH_SHORT).show();
     }
 
@@ -111,95 +190,32 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
 
     @Override
     public void onNoCategoryAdded() {
-
+        Toast.makeText(this, "No category added...", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onNoCategoryDeleted() {
-
+        Toast.makeText(this, "No category deleted...", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onNoCategoryUpdated() {
-
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        //change item theme depending on last user choice stored in activity shared preferences
-        //invoked necessarily before setting view
-        changeTheme(getPreferences(MODE_PRIVATE).getInt("theme", 0));
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        mTrannerApp = (TrannerApp) getApplication();
-
-        //Dependency injection providing CategoryPresenter
-        DaggerPresenterComponent.builder()
-                .appComponent(mTrannerApp.getComponent())
-                .build()
-                .inject(this);
-
-        mPresenter.setView(this);
-
-
-        mCategoryList = new ArrayList<>();
-        mPresenter.loadCategories();
-        mAdapter = new MainActivityAdapter(this, mCategoryList);
-
-        mRecyclerView.setAdapter(mAdapter);
-        RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(manager);
+        Toast.makeText(this, "No category updated...", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onCategoryUpdatedError() {
-
+        Toast.makeText(this, "Category update error...", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onCategoryDeletedError() {
-        Toast.makeText(this, "Category Deleted Error", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Category deletion error...", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onCategoryAddedError() {
-        Toast.makeText(this, "Category Added Error", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-
-        switch (item.getItemId()) {
-            case R.id.action_change_theme_one:
-                editor.putInt("theme", 0);
-                editor.apply();
-                this.recreate();
-                return true;
-            case R.id.action_change_theme_two:
-                editor.putInt("theme", 1);
-                editor.apply();
-                this.recreate();
-                return true;
-            case R.id.action_change_theme_three:
-                editor.putInt("theme", 2);
-                editor.apply();
-                this.recreate();
-                return true;
-
-        }
-        return super.onOptionsItemSelected(item);
+        Toast.makeText(this, "Category insertion error...", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -211,21 +227,8 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
                 Toast.makeText(this, "No category added...", Toast.LENGTH_SHORT).show();
             }
         } catch (NullPointerException e) {
-            Toast.makeText(this, "Failed to add category...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Category insertion error...", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    @Override
-    public void onCategoryDeleted(Category category) {
-        mPresenter.deleteCategory(category);
-        Toast.makeText(this, "Category " + category.getCategory() + " proceeded to deletion.", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onChangeBackdropClicked(Category category) {
-        FragmentManager manager = getSupportFragmentManager();
-        mWebDialog = WebImageDialog.newInstance(category);
-        mWebDialog.show(manager, "web_dialog");
     }
 
     @Override
