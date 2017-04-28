@@ -12,12 +12,17 @@ import android.view.ViewGroup;
 import com.example.android.tranner.R;
 import com.example.android.tranner.categoryscreen.adapters.FragmentLayoutAdapter;
 import com.example.android.tranner.categoryscreen.adapters.OnCategoryItemClickListener;
+import com.example.android.tranner.data.providers.itemprovider.CategoryItem;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class FragmentFamiliar extends Fragment implements OnCategoryItemClickListener {
 
     private OnFamiliarFragmentListener mListener;
     private RecyclerView mRecyclerView;
     private FragmentLayoutAdapter mAdapter;
+    private List<CategoryItem> mItemList = new ArrayList<>();
 
     public FragmentFamiliar() {
         // Required empty public constructor
@@ -53,7 +58,7 @@ public class FragmentFamiliar extends Fragment implements OnCategoryItemClickLis
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_familiar_fragment);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
         mRecyclerView.setLayoutManager(layoutManager);
-        mAdapter = new FragmentLayoutAdapter();
+        mAdapter = new FragmentLayoutAdapter(mItemList);
         mAdapter.setListener(this);
         mRecyclerView.setAdapter(mAdapter);
     }

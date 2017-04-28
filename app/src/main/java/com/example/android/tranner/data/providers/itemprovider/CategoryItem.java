@@ -4,22 +4,41 @@ package com.example.android.tranner.data.providers.itemprovider;
  * Created by Michał on 2017-04-23.
  */
 
+import com.example.android.tranner.data.providers.CategoryDatabaseContract;
+import com.example.android.tranner.data.providers.categoryprovider.Category;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+import static com.example.android.tranner.data.providers.CategoryDatabaseContract.*;
+
 /**
  * CategoryItem POJO.
  */
+@DatabaseTable(tableName = ItemEntry.ITEM_TABLE)
 public class CategoryItem {
 
+    @DatabaseField(columnName = ItemEntry._ID, generatedId = true)
+    private int mId;
+
+    @DatabaseField(columnName = ItemEntry.ITEM_TITLE)
     private String mName;
+
+    @DatabaseField(columnName = ItemEntry.ITEM_DESCRIPTION)
     private String mDescription;
-    private String mTab;
-    private int mItemId;
+
+    @DatabaseField(columnName = ItemEntry.ITEM_PARENT_CATEGORY)
     private long mParentId;
+
+    @DatabaseField(columnName = ItemEntry.ITEM_TAB)
+    private String mTab;
+
 
     public CategoryItem() {
     }
 
-    public CategoryItem(String name) {
+    public CategoryItem(String name, long parentCategoryId) {
         this.mName = name;
+        this.mParentId = parentCategoryId;
     }
 
     /*
@@ -44,11 +63,11 @@ public class CategoryItem {
     }
 
     public int getId() {
-        return mItemId;
+        return mId;
     }
 
     public void setId(int id) {
-        this.mItemId = id;
+        this.mId = id;
     }
 
     public String getName() {

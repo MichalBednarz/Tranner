@@ -1,6 +1,11 @@
 package com.example.android.tranner.data.providers.categoryprovider;
 
+import com.example.android.tranner.data.providers.CategoryDatabaseContract;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 import java.io.Serializable;
+
 
 /**
  * Created by Michał on 2017-04-11.
@@ -9,16 +14,24 @@ import java.io.Serializable;
 /**
  * Category POJO.
  */
-public class Category implements Serializable {
-    private String mCategory;
+@DatabaseTable(tableName = CategoryDatabaseContract.CategoryEntry.CATEGORY_TABLE)
+public class Category implements Serializable{
+
+    @DatabaseField(columnName = CategoryDatabaseContract.CategoryEntry._ID, generatedId = true)
+    private int mId;
+
+    @DatabaseField(columnName = CategoryDatabaseContract.CategoryEntry.CATEGORY_TITLE)
+    private String mName;
+
+    @DatabaseField(columnName = CategoryDatabaseContract.CategoryEntry.CATEGORY_URL)
     private String mImageUrl;
-    private long mId;
 
     public Category() {
+        // Don't forget the empty constructor, needed by ORMLite.
     }
 
-    public Category(String mCategory) {
-        this.mCategory = mCategory;
+    public Category(String name) {
+        this.mName = name;
     }
 
     /*
@@ -27,11 +40,11 @@ public class Category implements Serializable {
      */
 
     public String getCategory() {
-        return mCategory;
+        return mName;
     }
 
     public void setCategory(String category) {
-        this.mCategory = category;
+        this.mName = category;
     }
 
     public String getImageUrl() {
@@ -46,7 +59,7 @@ public class Category implements Serializable {
         return mId;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.mId = id;
     }
 }

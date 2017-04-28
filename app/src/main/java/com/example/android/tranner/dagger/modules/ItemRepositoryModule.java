@@ -15,7 +15,7 @@ public class ItemRepositoryModule {
 
     @Provides
     @ActivityScope
-    public ItemRepository providesItemPresenter(CategoryDatabaseHelper databaseHelper) {
-        return new ItemRepository(databaseHelper);
+    public ItemRepository providesItemRepository(CategoryDatabaseHelper helper) {
+        return new ItemRepository(helper);
     }
 }

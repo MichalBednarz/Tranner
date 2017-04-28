@@ -29,4 +29,5 @@ public class TrannerApp extends Application {
     public AppComponent getComponent() {
         return mComponent;
     }
+
 }

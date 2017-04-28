@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,7 +24,7 @@ import java.util.List;
  * Created by Michał on 2017-04-10.
  */
 
-public class WebImageDialog extends android.support.v4.app.DialogFragment {
+public class WebImageDialog extends DialogFragment {
 
     private static final String TAG = "WebImageDialog";
 

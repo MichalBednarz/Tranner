@@ -3,6 +3,7 @@ apply plugin: 'android-apt'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'me.tatarka.retrolambda'
 
+
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
@@ -57,4 +58,6 @@ dependencies {
     apt 'com.google.dagger:dagger-compiler:2.10'
     provided 'javax.annotation:jsr250-api:1.0'
     compile 'com.facebook.stetho:stetho:1.5.0'
+    compile 'com.j256.ormlite:ormlite-android:5.0'
+    compile 'org.greenrobot:eventbus:3.0.0'
 }

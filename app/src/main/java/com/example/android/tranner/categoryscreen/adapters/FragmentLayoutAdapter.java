@@ -7,6 +7,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.tranner.R;
+import com.example.android.tranner.data.providers.itemprovider.CategoryItem;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -18,9 +21,10 @@ import butterknife.ButterKnife;
 public class FragmentLayoutAdapter extends RecyclerView.Adapter<FragmentLayoutAdapter.ViewHolder> {
 
     private OnCategoryItemClickListener mListener;
+    private List<CategoryItem> mItemList;
 
-    public FragmentLayoutAdapter() {
-        super();
+    public FragmentLayoutAdapter(List<CategoryItem> itemList) {
+        this.mItemList = itemList;
     }
 
     public void setListener(OnCategoryItemClickListener listener) {
@@ -35,12 +39,15 @@ public class FragmentLayoutAdapter extends RecyclerView.Adapter<FragmentLayoutAd
 
     @Override
     public void onBindViewHolder(FragmentLayoutAdapter.ViewHolder holder, int position) {
+        CategoryItem item = mItemList.get(position);
+        holder.mName.setText(item.getName());
+        holder.mDescription.setText(item.getDescription());
         holder.itemView.setOnClickListener(v -> mListener.onCategoryItemOpened());
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return mItemList.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

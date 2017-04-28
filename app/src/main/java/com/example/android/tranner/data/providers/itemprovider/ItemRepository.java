@@ -1,122 +1,83 @@
 package com.example.android.tranner.data.providers.itemprovider;
 
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-
+import com.example.android.tranner.data.ConstantKeys;
+import com.example.android.tranner.data.providers.CategoryDatabaseContract;
 import com.example.android.tranner.data.providers.CategoryDatabaseHelper;
 import com.example.android.tranner.data.providers.categoryprovider.Category;
+import com.j256.ormlite.dao.Dao;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Single;
 
-import static com.example.android.tranner.data.providers.CategoryDatabaseContract.CategoryEntry;
-import static com.example.android.tranner.data.providers.CategoryDatabaseContract.ItemEntry;
-
+import static com.example.android.tranner.data.providers.CategoryDatabaseContract.*;
 
 /**
- * Created by Michał on 2017-04-23.
+ * Created by Michał on 2017-04-27.
  */
 
 public class ItemRepository implements ItemContract.Repository {
 
-    private static final String TAG = "ItemRepository";
-
     private CategoryDatabaseHelper mDatabaseHelper;
+    private Dao<CategoryItem, Integer> mItemDao = null;
 
-    public ItemRepository(CategoryDatabaseHelper databaseHelper) {
-        this.mDatabaseHelper = databaseHelper;
+    public ItemRepository(CategoryDatabaseHelper categoryDatabaseHelper) {
+        this.mDatabaseHelper = categoryDatabaseHelper;
     }
 
     @Override
     public Single<List<CategoryItem>> loadItems(Category parentCategory) {
-        List<CategoryItem> itemList = new ArrayList<>();
-
-        SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
-
-        String[] projection = {
-                ItemEntry._ID,
-                ItemEntry.ITEM_TITLE,
-                ItemEntry.ITEM_DESCRIPTION,
-                CategoryEntry._ID
-        };
-
-        String selection = CategoryEntry._ID + " LIKE ?";
-
-        String[] selectionArgs = {String.valueOf(parentCategory.getId())};
-
-        Cursor cursor = db.query(
-                ItemEntry.ITEM_TABLE,
-                projection,
-                selection,
-                selectionArgs,
-                null,
-                null,
-                null
-        );
-
-        int indexTitle = cursor.getColumnIndex(ItemEntry.ITEM_TITLE);
-        int indexDescription = cursor.getColumnIndex(ItemEntry.ITEM_DESCRIPTION);
-
-        cursor.moveToFirst();
-        while (cursor.moveToNext()) {
-            String name = cursor.getString(indexTitle);
-            String description = cursor.getString(indexDescription);
-            CategoryItem item = new CategoryItem(name);
-            if (description != null) {
-                item.setDescription(description);
-            }
-            itemList.add(item);
+        List<CategoryItem> categoryList = new ArrayList<>();
+        try {
+            mItemDao = mDatabaseHelper.getItemDao();
+            categoryList = mItemDao.queryBuilder()
+                    .where()
+                    .eq(ItemEntry.ITEM_PARENT_CATEGORY, parentCategory.getId())
+                    .and()
+                    .eq(ItemEntry.ITEM_TAB, ConstantKeys.ITEM_TAB_NEW)
+                    .query();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        cursor.close();
-        db.close();
 
-        return Single.just(itemList);
+        return Single.just(categoryList);
     }
 
     @Override
     public Single<Long> addItem(CategoryItem item) {
-        SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(ItemEntry.ITEM_TITLE, item.getName());
-        contentValues.put(ItemEntry.ITEM_DESCRIPTION, item.getDescription());
-        contentValues.put(CategoryEntry._ID, item.getParentCategoryId());
-        long id = db.insert(ItemEntry.ITEM_TABLE, null, contentValues);
-
-        db.close();
-
-        return Single.just(id);
+        long rowNum = 0;
+        try {
+            mItemDao = mDatabaseHelper.getItemDao();
+            rowNum = mItemDao.create(item);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Single.just(rowNum);
     }
 
     @Override
     public Single<Integer> deleteItem(CategoryItem item) {
-        SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
-        String selection = ItemEntry.ITEM_TITLE + " LIKE ?";
-        String[] selectionArgs = {item.getName()};
-        int rowNum = db.delete(ItemEntry.ITEM_TABLE, selection, selectionArgs);
-
-        db.close();
-
+        int rowNum = 0;
+        try {
+            mItemDao = mDatabaseHelper.getItemDao();
+            rowNum = mItemDao.delete(item);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return Single.just(rowNum);
     }
 
     @Override
     public Single<Integer> updateItem(CategoryItem item) {
-        SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(ItemEntry.ITEM_DESCRIPTION, item.getDescription());
-        String selection = ItemEntry.ITEM_TITLE + " LIKE ?";
-        String[] selectionArgs = {item.getName()};
-        int rowNum = db.update(
-                ItemEntry.ITEM_TABLE,
-                values,
-                selection,
-                selectionArgs);
-
-        db.close();
-
+        int rowNum = 0;
+        try {
+            mItemDao = mDatabaseHelper.getItemDao();
+            rowNum = mItemDao.update(item);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return Single.just(rowNum);
     }
 }

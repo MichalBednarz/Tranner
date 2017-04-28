@@ -8,25 +8,7 @@ import android.provider.BaseColumns;
 
 public final class CategoryDatabaseContract {
 
-    public static final String CREATE_TABLE_CATEGORY =
-            "CREATE TABLE " + CategoryEntry.CATEGORY_TABLE + " (" +
-                    CategoryEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    CategoryEntry.CATEGORY_TITLE + " TEXT," +
-                    CategoryEntry.CATEGORY_URL + " TEXT)";
 
-    public static final String CREATE_TABLE_ITEM =
-            "CREATE TABLE " + ItemEntry.ITEM_TABLE + " (" +
-                    ItemEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    ItemEntry.ITEM_TITLE + " TEXT, " +
-                    ItemEntry.ITEM_DESCRIPTION + " TEXT " +
-                    ItemEntry.ITEM_PARENT_CATEGORY + " INTEGER NOT NULL REFERENCES " + CategoryEntry.CATEGORY_TABLE + " (" +
-                    CategoryEntry._ID + "))";
-
-    public static final String SQL_DELETE_CATEGORY =
-            "DROP TABLE IF EXISTS " + CategoryEntry.CATEGORY_TABLE;
-
-    public static final String SQL_DELETE_ITEM =
-            "DROP TABLE IF EXISTS " + ItemEntry.ITEM_TABLE;
 
     private CategoryDatabaseContract() {
     }
@@ -42,6 +24,7 @@ public final class CategoryDatabaseContract {
         public static final String ITEM_TITLE = "item_title";
         public static final String ITEM_DESCRIPTION = "item_description";
         public static final String ITEM_PARENT_CATEGORY = "item_parent_category";
+        public static final String ITEM_TAB = "item_tab";
     }
 
 }

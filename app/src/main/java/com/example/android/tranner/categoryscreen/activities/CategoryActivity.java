@@ -1,7 +1,6 @@
 package com.example.android.tranner.categoryscreen.activities;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -16,7 +15,9 @@ import com.example.android.tranner.TrannerApp;
 import com.example.android.tranner.categoryscreen.adapters.FragmentSlidingAdapter;
 import com.example.android.tranner.categoryscreen.fragments.FragmentFamiliar;
 import com.example.android.tranner.categoryscreen.fragments.FragmentNew;
+import com.example.android.tranner.categoryscreen.listeners.OnNewFragmentListener;
 import com.example.android.tranner.dagger.components.DaggerItemPresenterComponent;
+import com.example.android.tranner.data.ConstantKeys;
 import com.example.android.tranner.data.providers.categoryprovider.Category;
 import com.example.android.tranner.data.providers.itemprovider.CategoryItem;
 import com.example.android.tranner.data.providers.itemprovider.ItemContract;
@@ -35,7 +36,7 @@ import static com.example.android.tranner.data.ConstantKeys.CATEGORY_INTENT;
 public class CategoryActivity extends AppCompatActivity implements
         ItemContract.View,
         FragmentFamiliar.OnFamiliarFragmentListener,
-        FragmentNew.OnNewFragmentListener {
+        OnNewFragmentListener {
 
     private static final String TAG = "CategoryActivity";
 
@@ -47,12 +48,12 @@ public class CategoryActivity extends AppCompatActivity implements
     Toolbar mToolbar;
     @Inject
     ItemPresenter mPresenter;
-    private Category mCategory;
+    private Category mParentCategory;
     private FragmentSlidingAdapter mAdapter;
-    private FragmentNew mFragmentNew;
-    private FragmentFamiliar mFragmentFamiliar;
     private TrannerApp mTrannerApp;
-    private List<CategoryItem> mItemList;
+    private List<CategoryItem> mNewItemList;
+    private List<CategoryItem> mFamiliarItemList;
+    private CategoryItem mNewItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,17 +63,14 @@ public class CategoryActivity extends AppCompatActivity implements
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mFragmentNew = FragmentNew.newInstance();
-        mFragmentFamiliar = FragmentFamiliar.newInstance();
-
         //handle Category instance passed from MainActivity
         //category instance is specific Category opened by the user
         Intent intent = getIntent();
         if (intent.hasExtra(CATEGORY_INTENT)) {
             Bundle bundle = intent.getExtras();
-            mCategory = (Category) bundle.get(CATEGORY_INTENT);
-            if (mCategory != null) {
-                this.setTitle(mCategory.getCategory());
+            mParentCategory = (Category) bundle.get(CATEGORY_INTENT);
+            if (mParentCategory != null) {
+                this.setTitle(mParentCategory.getCategory());
             }
         } else {
             Log.d(TAG, "onCreate: Category instance hasn't been passed");
@@ -85,15 +83,18 @@ public class CategoryActivity extends AppCompatActivity implements
                 .build()
                 .inject(this);
 
-        //read from database
-        mItemList = new ArrayList<>();
-        mPresenter.loadItems(mCategory);
-        mPresenter.setView(this);
-
-        mAdapter = new FragmentSlidingAdapter(this, getSupportFragmentManager());
+        mAdapter = new FragmentSlidingAdapter(getSupportFragmentManager());
         mViewpager.setAdapter(mAdapter);
         mSlidingTabs.setupWithViewPager(mViewpager);
+
+        //read from database
+        mNewItemList = new ArrayList<>();
+        mFamiliarItemList = new ArrayList<>();
+        mPresenter.setView(this);
+        mPresenter.loadItems(mParentCategory);
     }
+
+
 
     @Override
     protected void onDestroy() {
@@ -104,20 +105,12 @@ public class CategoryActivity extends AppCompatActivity implements
     public void onFabClicked(View v) {
         switch (v.getId()) {
             case R.id.fragment_new_fab:
-                mFragmentNew.onFabClicked(v);
+                ((FragmentNew) mAdapter.getRegisteredFragment(0)).onFabClicked(v);
                 break;
             case R.id.fragment_familiar_fab:
-                mFragmentFamiliar.onFabClicked(v);
+                ((FragmentFamiliar) mAdapter.getRegisteredFragment(0)).onFabClicked(v);
                 break;
         }
-    }
-
-    public FragmentNew getFragmentNew() {
-        return mFragmentNew;
-    }
-
-    public FragmentFamiliar getFragmentFamiliar() {
-        return mFragmentFamiliar;
     }
 
 
@@ -131,21 +124,36 @@ public class CategoryActivity extends AppCompatActivity implements
 
     }
 
+    /**
+     * This method is component of {@link OnNewFragmentListener}
+     * listener implemented by {@link FragmentNew} class. It sends callbacks when usere clicks on subcategory item.
+     */
     @Override
-    public void onNewItemAdded() {
-
+    public void onNewItemAdded(String name) {
+        if (name != null && name.length() > 0) {
+            mNewItem = new CategoryItem(name, mParentCategory.getId());
+            mNewItem.setTab(ConstantKeys.ITEM_TAB_NEW);
+            mPresenter.addItem(mNewItem);
+        } else {
+            Toast.makeText(this, "No title typed...", Toast.LENGTH_SHORT).show();
+        }
     }
 
+    /**
+     * This method is component of {@link OnNewFragmentListener}
+     * listener implemented by {@link FragmentNew}. It sends callbacks when usere clicks on subcategory item.
+     */
     @Override
     public void onNewItemOpened() {
 
     }
 
     @Override
-    public void onItemLoaded(List<CategoryItem> categoryList) {
-        mItemList.clear();
-        mItemList.addAll(categoryList);
-        mAdapter.notifyDataSetChanged();
+    public void onItemLoaded(List<CategoryItem> itemList) {
+        mNewItemList.clear();
+        mNewItemList.addAll(itemList);
+        mAdapter.updateNewFragment(itemList);
+
         Toast.makeText(this, "Items loaded from database.", Toast.LENGTH_SHORT).show();
     }
 
@@ -161,7 +169,7 @@ public class CategoryActivity extends AppCompatActivity implements
 
     @Override
     public void onItemAdded() {
-        mPresenter.loadItems(mCategory);
+        mPresenter.loadItems(mParentCategory);
         Toast.makeText(this, "Item successfully added!", Toast.LENGTH_SHORT).show();
     }
 
@@ -177,7 +185,7 @@ public class CategoryActivity extends AppCompatActivity implements
 
     @Override
     public void onItemDeleted() {
-        mPresenter.loadItems(mCategory);
+        mPresenter.loadItems(mParentCategory);
         Toast.makeText(this, "Item deleted...", Toast.LENGTH_SHORT).show();
     }
 
@@ -193,7 +201,7 @@ public class CategoryActivity extends AppCompatActivity implements
 
     @Override
     public void onItemUpdated() {
-        mPresenter.loadItems(mCategory);
+        mPresenter.loadItems(mParentCategory);
         Toast.makeText(this, "Item successfully updated!", Toast.LENGTH_SHORT).show();
     }
 

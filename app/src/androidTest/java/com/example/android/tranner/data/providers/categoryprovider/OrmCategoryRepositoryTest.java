@@ -3,8 +3,6 @@ package com.example.android.tranner.data.providers.categoryprovider;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.example.android.tranner.data.providers.CategoryDatabaseHelper;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +17,7 @@ import static org.junit.Assert.assertTrue;
  * Created by Michał on 2017-04-24.
  */
 @RunWith(AndroidJUnit4.class)
-public class CategoryRepositoryTest {
+public class OrmCategoryRepositoryTest {
 
     private CategoryDatabaseHelper mDatabaseHelper;
     private CategoryRepository mRepository;

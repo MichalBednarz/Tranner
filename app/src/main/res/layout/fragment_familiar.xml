@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.example.android.tranner.categoryscreen.fragments.FragmentNew">
 
     <android.support.v7.widget.RecyclerView
@@ -14,7 +15,12 @@
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fragment_familiar_fab"
         android:onClick="onFabClicked"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        app:fabSize="normal"
+        app:srcCompat="@android:drawable/ic_menu_add"
+        app:layout_anchor="@id/recyclerview_familiar_fragment"
+        app:layout_anchorGravity="bottom|right"/>
 
 </android.support.design.widget.CoordinatorLayout>

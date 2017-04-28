@@ -11,7 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.example.android.tranner.R;
@@ -34,6 +33,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity implements CategoryDialogListener,
         MainActivityAdapterListener,
@@ -128,10 +128,9 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
      * Method that handles click on floating action button.
      * This method gets new instance of CategoryDialog class
      * and displays it.
-     *
-     * @param view
      */
-    public void fabClick(View view) {
+    @OnClick(R.id.fab)
+    public void showCategoryDialog() {
         FragmentManager manager = getSupportFragmentManager();
         mCategoryDialog = CategoryDialog.newInstance();
         mCategoryDialog.show(manager, "category_dialog");
@@ -190,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
 
     @Override
     public void onNoCategoryAdded() {
-        Toast.makeText(this, "No category added...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Category already exists...", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -252,4 +251,6 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
         mPresenter.loadCategories();
         Toast.makeText(this, "Categories loaded after deletion.", Toast.LENGTH_SHORT).show();
     }
+
+
 }
