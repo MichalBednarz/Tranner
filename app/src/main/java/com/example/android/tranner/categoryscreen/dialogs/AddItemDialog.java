@@ -10,27 +10,29 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.example.android.tranner.R;
-import com.example.android.tranner.categoryscreen.listeners.OnNewFragmentListener;
+import com.example.android.tranner.categoryscreen.listeners.OnAddItemDialogListener;
+
+import static com.example.android.tranner.data.ConstantKeys.*;
 
 /**
  * Created by Michał on 2017-04-26.
  */
 
-public class NewDialog extends DialogFragment {
+public class AddItemDialog extends DialogFragment {
 
-    private OnNewFragmentListener mDialogListener;
+    private OnAddItemDialogListener mDialogListener;
     private EditText mEditText;
 
-    public NewDialog() {
+    public AddItemDialog() {
 
     }
 
-    public static NewDialog newInstance() {
-
+    public static AddItemDialog newInstance(String title) {
         Bundle args = new Bundle();
-
-        NewDialog fragment = new NewDialog();
+        args.putString(DIALOG_KEY, title);
+        AddItemDialog fragment = new AddItemDialog();
         fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -38,9 +40,9 @@ public class NewDialog extends DialogFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            mDialogListener = (OnNewFragmentListener) context;
+            mDialogListener = (OnAddItemDialogListener) getParentFragment();
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + "must implement NewDialogtListener");
+            throw new ClassCastException(context.toString() + "must implement NewDialogListener");
         }
     }
 
@@ -50,13 +52,18 @@ public class NewDialog extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View v = inflater.inflate(R.layout.new_dialog, null);
         mEditText = (EditText) v.findViewById(R.id.new_dialog_edit);
+        Bundle bundle = getArguments();
+        String title = new String();
+        if(bundle != null) {
+            title = bundle.getString(DIALOG_KEY);
+        }
 
 
         android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
-        builder.setTitle("Add SUBCATEGORY")
+        builder.setTitle(title)
                 .setView(v)
                 .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
-                .setPositiveButton("Create", (dialog, which) -> mDialogListener.onNewItemAdded(mEditText.getText().toString()));
+                .setPositiveButton("Create", (dialog, which) -> mDialogListener.onDialogAddItem(mEditText.getText().toString()));
 
         return builder.create();
     }

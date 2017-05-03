@@ -11,12 +11,13 @@ import io.reactivex.Single;
  */
 
 public class ItemContract {
-    public interface View {
-        void onItemLoaded(List<CategoryItem> categoryList);
 
-        void onNoItemLoaded();
+    public interface NewView {
+        void onNewItemLoaded(List<CategoryItem> newItemList);
 
-        void onItemLoadError();
+        void onNoNewItemLoaded();
+
+        void onNewItemLoadError();
 
         void onItemAdded();
 
@@ -37,18 +38,58 @@ public class ItemContract {
         void onItemUpdatedError();
     }
 
-    public interface Actions {
-        void loadItems(Category parentCategory);
+    public interface FamiliarView {
+        void onFamiliarItemLoaded(List<CategoryItem> familiarItemList);
 
-        void addItem(CategoryItem item);
+        void onNoFamiliarItemLoaded();
 
-        void deleteItem(CategoryItem item);
+        void onFamiliarItemLoadError();
 
-        void updateItem(CategoryItem item);
+        void onItemAdded();
+
+        void onNoItemAdded();
+
+        void onItemAddedError();
+
+        void onItemDeleted();
+
+        void onNoItemDeleted();
+
+        void onItemDeletedError();
+
+        void onItemUpdated();
+
+        void onNoItemUpdated();
+
+        void onItemUpdatedError();
+    }
+
+
+    public interface NewPresenter {
+        void loadNewItems(Category parentCategory);
+
+        void addNewItem(CategoryItem item);
+
+        void deleteNewItem(CategoryItem item);
+
+        void updateNewItem(CategoryItem item);
+    }
+
+    public interface FamiliarPresenter {
+        void loadFamiliarItems(Category parentCategory);
+
+        void addFamiliarItem(CategoryItem item);
+
+        void deleteFamiliarItem(CategoryItem item);
+
+        void updateFamiliarItem(CategoryItem item);
+
     }
 
     public interface Repository {
-        Single<List<CategoryItem>> loadItems(Category parentCategory);
+        Single<List<CategoryItem>> loadNewItems(Category parentCategory);
+
+        Single<List<CategoryItem>> loadFamiliarItems(Category parentCategory);
 
         Single<Long> addItem(CategoryItem item);
 

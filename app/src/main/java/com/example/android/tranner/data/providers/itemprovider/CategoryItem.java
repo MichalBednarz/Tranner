@@ -36,9 +36,10 @@ public class CategoryItem {
     public CategoryItem() {
     }
 
-    public CategoryItem(String name, long parentCategoryId) {
+    public CategoryItem(String name, long parentCategoryId, String tab) {
         this.mName = name;
         this.mParentId = parentCategoryId;
+        this.mTab = tab;
     }
 
     /*

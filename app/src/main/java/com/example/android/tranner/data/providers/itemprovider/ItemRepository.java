@@ -12,6 +12,7 @@ import java.util.List;
 
 import io.reactivex.Single;
 
+import static com.example.android.tranner.data.ConstantKeys.*;
 import static com.example.android.tranner.data.providers.CategoryDatabaseContract.*;
 
 /**
@@ -28,7 +29,7 @@ public class ItemRepository implements ItemContract.Repository {
     }
 
     @Override
-    public Single<List<CategoryItem>> loadItems(Category parentCategory) {
+    public Single<List<CategoryItem>> loadNewItems(Category parentCategory) {
         List<CategoryItem> categoryList = new ArrayList<>();
         try {
             mItemDao = mDatabaseHelper.getItemDao();
@@ -36,7 +37,25 @@ public class ItemRepository implements ItemContract.Repository {
                     .where()
                     .eq(ItemEntry.ITEM_PARENT_CATEGORY, parentCategory.getId())
                     .and()
-                    .eq(ItemEntry.ITEM_TAB, ConstantKeys.ITEM_TAB_NEW)
+                    .eq(ItemEntry.ITEM_TAB, ITEM_TAB_NEW)
+                    .query();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return Single.just(categoryList);
+    }
+
+    @Override
+    public Single<List<CategoryItem>> loadFamiliarItems(Category parentCategory) {
+        List<CategoryItem> categoryList = new ArrayList<>();
+        try {
+            mItemDao = mDatabaseHelper.getItemDao();
+            categoryList = mItemDao.queryBuilder()
+                    .where()
+                    .eq(ItemEntry.ITEM_PARENT_CATEGORY, parentCategory.getId())
+                    .and()
+                    .eq(ItemEntry.ITEM_TAB, ITEM_TAB_FAMILIAR)
                     .query();
         } catch (SQLException e) {
             e.printStackTrace();

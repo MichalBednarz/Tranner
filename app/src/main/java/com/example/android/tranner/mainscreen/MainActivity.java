@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.example.android.tranner.R;
 import com.example.android.tranner.TrannerApp;
-import com.example.android.tranner.dagger.components.DaggerCategoryPresenterComponent;
+import com.example.android.tranner.dagger.components.DaggerMainActivityComponent;
 import com.example.android.tranner.data.providers.categoryprovider.Category;
 import com.example.android.tranner.data.providers.categoryprovider.CategoryContract;
 import com.example.android.tranner.data.providers.categoryprovider.CategoryPresenter;
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
         mTrannerApp = (TrannerApp) getApplication();
 
         //Dependency injection providing CategoryPresenter
-        DaggerCategoryPresenterComponent.builder()
+        DaggerMainActivityComponent.builder()
                 .appComponent(mTrannerApp.getComponent())
                 .build()
                 .inject(this);

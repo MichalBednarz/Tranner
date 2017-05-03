@@ -18,15 +18,14 @@ import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.schedulers.Schedulers;
 
 import static java.util.Collections.EMPTY_LIST;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * Created by Michał on 2017-04-24.
+ * Created by Michał on 2017-05-03.
  */
-
-public class ItemPresenterTest {
-
+public class FamiliarItemPresenterTest {
     private final List<CategoryItem> MANY_DATA = Arrays.asList(new CategoryItem(), new CategoryItem(), new CategoryItem());
     private final CategoryItem SINGLE_DATA = new CategoryItem();
     private final Category CATEGORY = new Category();
@@ -35,12 +34,12 @@ public class ItemPresenterTest {
     @Mock
     ItemContract.Repository repository;
     @Mock
-    ItemContract.View view;
-    private ItemPresenter presenter;
+    ItemContract.FamiliarView view;
+    private FamiliarItemPresenter presenter;
 
     @Before
     public void setUp() {
-        presenter = new ItemPresenter(repository, Schedulers.trampoline());
+        presenter = new FamiliarItemPresenter(repository, Schedulers.trampoline());
         presenter.setView(view);
         RxJavaPlugins.setIoSchedulerHandler(scheduler -> Schedulers.trampoline());
     }
@@ -51,37 +50,37 @@ public class ItemPresenterTest {
     }
 
     @Test
-    public void shouldPassItemsToView() {
-        when(repository.loadItems(CATEGORY)).thenReturn(Single.just(MANY_DATA));
+    public void shouldPassFamiliarItemsToView() {
+        when(repository.loadFamiliarItems(CATEGORY)).thenReturn(Single.just(MANY_DATA));
 
-        presenter.loadItems(CATEGORY);
+        presenter.loadFamiliarItems(CATEGORY);
 
-        verify(view).onItemLoaded(MANY_DATA);
+        verify(view).onFamiliarItemLoaded(MANY_DATA);
     }
 
     @Test
-    public void shouldPassNoItemsToView() {
-        when(repository.loadItems(CATEGORY)).thenReturn(Single.just(EMPTY_LIST));
+    public void shouldPassNoFamiliarItemsToView() {
+        when(repository.loadFamiliarItems(CATEGORY)).thenReturn(Single.just(EMPTY_LIST));
 
-        presenter.loadItems(CATEGORY);
+        presenter.loadFamiliarItems(CATEGORY);
 
-        verify(view).onNoItemLoaded();
+        verify(view).onNoFamiliarItemLoaded();
     }
 
     @Test
-    public void shouldHandlePassItemsToViewError() {
-        when(repository.loadItems(CATEGORY)).thenReturn(Single.error(new Throwable("exception")));
+    public void shouldHandlePassFamiliarItemsToViewError() {
+        when(repository.loadFamiliarItems(CATEGORY)).thenReturn(Single.error(new Throwable("exception")));
 
-        presenter.loadItems(CATEGORY);
+        presenter.loadFamiliarItems(CATEGORY);
 
-        verify(view).onItemLoadError();
+        verify(view).onFamiliarItemLoadError();
     }
 
     @Test
     public void shouldAddItemToDatabase() {
         when(repository.addItem(SINGLE_DATA)).thenReturn(Single.just(0L));
 
-        presenter.addItem(SINGLE_DATA);
+        presenter.addFamiliarItem(SINGLE_DATA);
 
         verify(view).onItemAdded();
     }
@@ -90,7 +89,7 @@ public class ItemPresenterTest {
     public void shouldAddNoItemToDatabase() {
         when(repository.addItem(SINGLE_DATA)).thenReturn(Single.just(-1L));
 
-        presenter.addItem(SINGLE_DATA);
+        presenter.addFamiliarItem(SINGLE_DATA);
 
         verify(view).onNoItemAdded();
     }
@@ -99,63 +98,62 @@ public class ItemPresenterTest {
     public void shouldHandleAddItemToDatabaseError() {
         when(repository.addItem(SINGLE_DATA)).thenReturn(Single.error(new Throwable("exception")));
 
-        presenter.addItem(SINGLE_DATA);
+        presenter.addFamiliarItem(SINGLE_DATA);
 
         verify(view).onItemAddedError();
     }
 
     @Test
-    public void shouldDeleteCategory() {
+    public void shouldDeleteItem() {
         when(repository.deleteItem(SINGLE_DATA)).thenReturn(Single.just(1));
 
-        presenter.deleteItem(SINGLE_DATA);
+        presenter.deleteFamiliarItem(SINGLE_DATA);
 
         verify(view).onItemDeleted();
     }
 
     @Test
-    public void shouldDeleteNoCategory() {
+    public void shouldDeleteNoItem() {
         when(repository.deleteItem(SINGLE_DATA)).thenReturn(Single.just(0));
 
-        presenter.deleteItem(SINGLE_DATA);
+        presenter.deleteFamiliarItem(SINGLE_DATA);
 
         verify(view).onNoItemDeleted();
     }
 
     @Test
-    public void shouldHandleDeleteCategoryError() {
+    public void shouldHandleDeleteItemError() {
         when(repository.deleteItem(SINGLE_DATA)).thenReturn(Single.error(new Throwable("exception")));
 
-        presenter.deleteItem(SINGLE_DATA);
+        presenter.deleteFamiliarItem(SINGLE_DATA);
 
         verify(view).onItemDeletedError();
     }
 
     @Test
-    public void shouldUpdateCategory() {
+    public void shouldUpdateItem() {
         when(repository.updateItem(SINGLE_DATA)).thenReturn(Single.just(1));
 
-        presenter.updateItem(SINGLE_DATA);
+        presenter.updateFamiliarItem(SINGLE_DATA);
 
         verify(view).onItemUpdated();
     }
 
     @Test
-    public void shouldUpdateNoCategory() {
+    public void shouldUpdateNoItem() {
         when(repository.updateItem(SINGLE_DATA)).thenReturn(Single.just(0));
 
-        presenter.updateItem(SINGLE_DATA);
+        presenter.updateFamiliarItem(SINGLE_DATA);
 
         verify(view).onNoItemUpdated();
     }
 
     @Test
-    public void shouldHandleCategoryUpdateError() {
+    public void shouldHandleItemUpdateError() {
         when(repository.updateItem(SINGLE_DATA)).thenReturn(Single.error(new Throwable("exception")));
 
-        presenter.updateItem(SINGLE_DATA);
+        presenter.updateFamiliarItem(SINGLE_DATA);
 
         verify(view).onItemUpdatedError();
     }
-
 }

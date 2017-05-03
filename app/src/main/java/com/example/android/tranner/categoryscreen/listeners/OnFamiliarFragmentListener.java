@@ -1,10 +1,8 @@
 package com.example.android.tranner.categoryscreen.listeners;
 
 /**
- * Created by Michał on 2017-04-26.
+ * Created by Michał on 2017-04-28.
  */
-
-import com.example.android.tranner.data.providers.itemprovider.CategoryItem;
 
 /**
  * This interface must be implemented by activities that contain this
@@ -12,7 +10,8 @@ import com.example.android.tranner.data.providers.itemprovider.CategoryItem;
  * to the activity and potentially other fragments contained in that
  * activity.
  */
-public interface OnNewFragmentListener {
+public interface OnFamiliarFragmentListener {
+    void onFamiliarItemAdded(String name);
 
-    void onNewItemOpened(CategoryItem item);
+    void onFamiliarItemOpened();
 }

@@ -4,7 +4,9 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.example.android.tranner.data.providers.CategoryDatabaseHelper;
 import com.example.android.tranner.data.providers.categoryprovider.Category;
+import com.example.android.tranner.data.providers.categoryprovider.CategoryRepository;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -111,7 +113,7 @@ public class ItemRepositoryTest {
         mContext.deleteDatabase(CategoryEntry.CATEGORY_TABLE);
         Category category = CATEGORY;
         long categoryId = mCategoryRepository.addCategory(category).blockingGet();
-        category.setId(categoryId);
+        category.setId((int)categoryId);
 
         //when
         CategoryItem item = ITEM;
@@ -120,7 +122,7 @@ public class ItemRepositoryTest {
         long itemId = mItemRepository.addItem(item).blockingGet();
 
         //TODO test doesn't pass first time after table creation
-        List<CategoryItem> itemList = mItemRepository.loadItems(category).blockingGet();
+        List<CategoryItem> itemList = mItemRepository.loadNewItems(category).blockingGet();
 
         //then
         assertFalse(itemList.isEmpty());

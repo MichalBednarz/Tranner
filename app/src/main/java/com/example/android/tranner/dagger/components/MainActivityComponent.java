@@ -15,6 +15,6 @@ import dagger.Component;
 @ActivityScope
 @Component(modules = {CategoryPresenterModule.class, CategoryRepositoryModule.class, ThreadModule.class, DatabaseHelperModule.class},
         dependencies = AppComponent.class)
-public interface CategoryPresenterComponent {
+public interface MainActivityComponent {
     void inject(MainActivity activity);
 }

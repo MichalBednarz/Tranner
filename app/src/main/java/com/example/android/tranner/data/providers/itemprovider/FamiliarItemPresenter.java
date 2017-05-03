@@ -10,54 +10,49 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.example.android.tranner.data.providers.itemprovider.ItemContract.Actions;
-import static com.example.android.tranner.data.providers.itemprovider.ItemContract.Repository;
-import static com.example.android.tranner.data.providers.itemprovider.ItemContract.View;
-
 /**
- * Created by Michał on 2017-04-23.
+ * Created by Michał on 2017-05-03.
  */
 
-public class ItemPresenter implements Actions {
-
-    private Repository mRepository;
+public class FamiliarItemPresenter implements ItemContract.FamiliarPresenter {
+    private ItemContract.Repository mRepository;
     private Scheduler mMainScheduler;
-    private View mView;
+    private ItemContract.FamiliarView mView;
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
-    public ItemPresenter(Repository repository, Scheduler mainScheduler) {
+    public FamiliarItemPresenter(ItemContract.Repository repository, Scheduler mainScheduler) {
         this.mRepository = repository;
         this.mMainScheduler = mainScheduler;
     }
 
-    public void setView(View view) {
+    public void setView(ItemContract.FamiliarView view) {
         this.mView = view;
     }
 
     @Override
-    public void loadItems(Category parentCategory) {
-        mCompositeDisposable.add(mRepository.loadItems(parentCategory)
+    public void loadFamiliarItems(Category parentCategory) {
+        mCompositeDisposable.add(mRepository.loadFamiliarItems(parentCategory)
                 .subscribeOn(Schedulers.io())
                 .observeOn(mMainScheduler)
                 .subscribeWith(new DisposableSingleObserver<List<CategoryItem>>() {
                     @Override
                     public void onSuccess(@NonNull List<CategoryItem> categoryItems) {
                         if (categoryItems.isEmpty()) {
-                            mView.onNoItemLoaded();
+                            mView.onNoFamiliarItemLoaded();
                         } else {
-                            mView.onItemLoaded(categoryItems);
+                            mView.onFamiliarItemLoaded(categoryItems);
                         }
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        mView.onItemLoadError();
+                        mView.onFamiliarItemLoadError();
                     }
                 }));
     }
 
     @Override
-    public void addItem(CategoryItem item) {
+    public void addFamiliarItem(CategoryItem item) {
         mCompositeDisposable.add(mRepository.addItem(item)
                 .subscribeOn(Schedulers.io())
                 .observeOn(mMainScheduler)
@@ -82,7 +77,7 @@ public class ItemPresenter implements Actions {
     }
 
     @Override
-    public void deleteItem(CategoryItem item) {
+    public void deleteFamiliarItem(CategoryItem item) {
         mCompositeDisposable.add(mRepository.deleteItem(item)
                 .subscribeOn(Schedulers.io())
                 .observeOn(mMainScheduler)
@@ -106,7 +101,7 @@ public class ItemPresenter implements Actions {
     }
 
     @Override
-    public void updateItem(CategoryItem item) {
+    public void updateFamiliarItem(CategoryItem item) {
         mCompositeDisposable.add(mRepository.updateItem(item)
                 .subscribeOn(Schedulers.io())
                 .observeOn(mMainScheduler)
