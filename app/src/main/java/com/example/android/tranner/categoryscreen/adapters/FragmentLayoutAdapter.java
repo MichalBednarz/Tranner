@@ -1,10 +1,11 @@
 package com.example.android.tranner.categoryscreen.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.android.tranner.R;
 import com.example.android.tranner.categoryscreen.listeners.OnListItemClickListener;
 import com.example.android.tranner.data.providers.itemprovider.CategoryItem;
@@ -20,6 +22,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * Created by Michał on 2017-04-22.
@@ -51,10 +54,20 @@ public class FragmentLayoutAdapter extends RecyclerView.Adapter<FragmentLayoutAd
     public void onBindViewHolder(FragmentLayoutAdapter.ViewHolder holder, int position) {
         CategoryItem item = mItemList.get(position);
         holder.mName.setText(item.getName());
+        holder.mName.setOnClickListener(v -> new MaterialDialog.Builder(mContext)
+                .title("New TITLE")
+                .inputType(InputType.TYPE_CLASS_TEXT)
+                .input(null, null, (dialog, input) -> {
+                    item.setName(input.toString());
+                    mListener.onListUpdateItem(item);
+                })
+                .widgetColor(Color.CYAN)
+                .positiveColor(Color.CYAN)
+                .show());
         holder.mDescription.setText(item.getDescription());
         holder.itemView.setOnClickListener(v -> mListener.onListOpenItem(item));
         holder.mButton.setOnClickListener(v -> showPopupMenu(v, item, holder));
-        holder.itemView.setOnClickListener(v -> mListener.onListOpenItem(item));
+
     }
 
     private void showPopupMenu(View view, final CategoryItem item, final FragmentLayoutAdapter.ViewHolder holder) {
@@ -64,10 +77,18 @@ public class FragmentLayoutAdapter extends RecyclerView.Adapter<FragmentLayoutAd
         popup.setOnMenuItemClickListener(menuItem -> {
             switch (menuItem.getItemId()) {
                 case R.id.item_delete:
-                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                    builder.setTitle("Delete item?")
-                            .setNegativeButton("CANCEL", (dialog, which) -> {
-                            }).setPositiveButton("DELETE", (dialog, which) -> mListener.onListDeleteItem(item)).create().show();
+                    new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("Are you sure?")
+                            .setContentText("Won't be able to recover this file!")
+                            .setCancelText("No, cancel plx!")
+                            .setConfirmText("Yes, delete it!")
+                            .showCancelButton(true)
+                            .setCancelClickListener(SweetAlertDialog::cancel)
+                            .setConfirmClickListener(sDialog -> {
+                                mListener.onListDeleteItem(item);
+                                sDialog.cancel();
+                            })
+                            .show();
                     return true;
                 case R.id.item_move:
                     mListener.onListMoveItem(item);

@@ -86,7 +86,7 @@ public class FragmentNew extends Fragment implements OnListItemClickListener, On
 
     @Subscribe
     public void onEvent(ReloadEvent event) {
-        if(event.getMessage().equals(RELOAD_EVENT)) {
+        if (event.getMessage().equals(RELOAD_EVENT)) {
             mNewItemPresenter.loadNewItems(mParentCategory);
         }
     }
@@ -193,6 +193,12 @@ public class FragmentNew extends Fragment implements OnListItemClickListener, On
         ReloadEvent event = new ReloadEvent();
         event.setMessage(RELOAD_EVENT);
         EventBus.getDefault().post(event);
+    }
+
+    @Override
+    public void onListUpdateItem(CategoryItem item) {
+        mNewItemPresenter.updateNewItem(item);
+        mNewItemPresenter.loadNewItems(mParentCategory);
     }
 
     /**

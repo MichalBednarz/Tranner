@@ -1,11 +1,11 @@
 package com.example.android.tranner.categoryscreen.fragments;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,7 +17,6 @@ import com.example.android.tranner.R;
 import com.example.android.tranner.categoryscreen.ReloadEvent;
 import com.example.android.tranner.categoryscreen.activities.CategoryActivity;
 import com.example.android.tranner.categoryscreen.adapters.FragmentLayoutAdapter;
-import com.example.android.tranner.categoryscreen.dialogs.AddItemDialog;
 import com.example.android.tranner.categoryscreen.listeners.OnAddItemDialogListener;
 import com.example.android.tranner.categoryscreen.listeners.OnFamiliarFragmentListener;
 import com.example.android.tranner.categoryscreen.listeners.OnListItemClickListener;
@@ -39,9 +38,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
-import static com.example.android.tranner.data.ConstantKeys.*;
-import static com.example.android.tranner.data.ConstantKeys.DIALOG_TITLE_FAMILIAR;
+import static com.example.android.tranner.data.ConstantKeys.ITEM_TAB_FAMILIAR;
+import static com.example.android.tranner.data.ConstantKeys.ITEM_TAB_NEW;
+import static com.example.android.tranner.data.ConstantKeys.RELOAD_EVENT;
 
 public class FragmentFamiliar extends Fragment implements OnListItemClickListener, OnAddItemDialogListener, ItemContract.FamiliarView {
 
@@ -60,7 +61,7 @@ public class FragmentFamiliar extends Fragment implements OnListItemClickListene
     private FragmentLayoutAdapter mAdapter;
     private List<CategoryItem> mItemList = new ArrayList<>();
     private Category mParentCategory;
-    private AddItemDialog mAddDialog;
+    private CategoryItem mRawItem;
 
     public FragmentFamiliar() {
         // Required empty public constructor
@@ -81,7 +82,7 @@ public class FragmentFamiliar extends Fragment implements OnListItemClickListene
 
     @Subscribe
     public void onEvent(ReloadEvent event) {
-        if(event.getMessage().equals(RELOAD_EVENT)) {
+        if (event.getMessage().equals(RELOAD_EVENT)) {
             mFamiliarItemPresenter.loadFamiliarItems(mParentCategory);
         }
     }
@@ -122,6 +123,8 @@ public class FragmentFamiliar extends Fragment implements OnListItemClickListene
         mFamiliarItemPresenter.setView(this);
 
         mParentCategory = ((CategoryActivity) getActivity()).getParentCategory();
+
+        mRawItem = new CategoryItem("your title...", mParentCategory.getId(), ITEM_TAB_FAMILIAR);
 
         mFamiliarItemPresenter.loadFamiliarItems(mParentCategory);
 
@@ -164,9 +167,17 @@ public class FragmentFamiliar extends Fragment implements OnListItemClickListene
 
     @OnClick(R.id.fragment_familiar_fab)
     public void onFabClicked() {
-        FragmentManager manager = getChildFragmentManager();
-        mAddDialog = AddItemDialog.newInstance(DIALOG_TITLE_FAMILIAR);
-        mAddDialog.show(manager, "familiar_dialog");
+        new SweetAlertDialog(getActivity(), SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+                .setTitleText("Add FAMILIAR")
+                .setCancelText("Go back")
+                .setCancelClickListener(Dialog::dismiss)
+                .setConfirmText("Lets add it!")
+                .setConfirmClickListener(sweetAlertDialog -> {
+                    mFamiliarItemPresenter.addFamiliarItem(mRawItem);
+                    mFamiliarItemPresenter.loadFamiliarItems(mParentCategory);
+                    sweetAlertDialog.dismiss();
+                })
+                .show();
     }
 
     /**
@@ -196,6 +207,12 @@ public class FragmentFamiliar extends Fragment implements OnListItemClickListene
         mListener.onFamiliarItemOpened();
     }
 
+    @Override
+    public void onListUpdateItem(CategoryItem item) {
+        mFamiliarItemPresenter.updateFamiliarItem(item);
+        mFamiliarItemPresenter.loadFamiliarItems(mParentCategory);
+    }
+
     /**
      * OnAddItemDialog implementation.
      */
@@ -218,7 +235,6 @@ public class FragmentFamiliar extends Fragment implements OnListItemClickListene
         mAdapter.notifyDataSetChanged();
         Toast.makeText(getActivity(), "Familiar items loaded from database.", Toast.LENGTH_SHORT).show();
     }
-
 
 
     @Override

@@ -1,6 +1,7 @@
 package com.example.android.tranner.mainscreen.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * Created by Michał on 2017-04-09.
@@ -134,10 +136,18 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
         popup.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case R.id.item_delete:
-                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                    builder.setTitle("Delete category?")
-                            .setNegativeButton("CANCEL", (dialog, which) -> {
-                            }).setPositiveButton("DELETE", (dialog, which) -> mListener.onCategoryDeleted(category)).create().show();
+                    new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("Are you sure?")
+                            .setContentText("Won't be able to recover this file!")
+                            .setCancelText("No, cancel plx!")
+                            .setConfirmText("Yes, delete it!")
+                            .showCancelButton(true)
+                            .setCancelClickListener(sDialog -> sDialog.cancel())
+                            .setConfirmClickListener(sDialog -> {
+                                mListener.onCategoryDeleted(category);
+                                sDialog.cancel();
+                            })
+                            .show();
                     return true;
                 case R.id.item_backdrop:
                     mListener.onChangeBackdropClicked(category);
