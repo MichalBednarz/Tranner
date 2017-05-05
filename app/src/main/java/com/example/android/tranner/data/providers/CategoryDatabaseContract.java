@@ -8,8 +8,6 @@ import android.provider.BaseColumns;
 
 public final class CategoryDatabaseContract {
 
-
-
     private CategoryDatabaseContract() {
     }
 

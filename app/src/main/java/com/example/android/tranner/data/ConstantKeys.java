@@ -14,4 +14,7 @@ public class ConstantKeys {
     public static final String DIALOG_TITLE_NEW = "Add NEW";
     public static final String DIALOG_TITLE_FAMILIAR = "Add FAMILIAR";
     public static final String DIALOG_KEY = "dialog_key";
+    public static final String RELOAD_EVENT = "reload_event";
+    public static final String BASE_URL = "https://pixabay.com/";
+    public static final String API_KEY = "5276259-2a6a273e3ba97fc84d504c065";
 }

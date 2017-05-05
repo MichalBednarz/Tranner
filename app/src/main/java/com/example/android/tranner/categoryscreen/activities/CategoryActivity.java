@@ -71,8 +71,8 @@ public class CategoryActivity extends AppCompatActivity implements
         mAdapter = new FragmentSlidingAdapter(getSupportFragmentManager());
         mViewpager.setAdapter(mAdapter);
         mSlidingTabs.setupWithViewPager(mViewpager);
-
     }
+
 
     public CategoryActivityComponent getComponent() {
         return mComponent;
@@ -86,10 +86,6 @@ public class CategoryActivity extends AppCompatActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
-    }
-
-    @Override
-    public void onFamiliarItemAdded(String name) {
     }
 
     @Override

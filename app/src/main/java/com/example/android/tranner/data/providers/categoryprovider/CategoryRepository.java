@@ -1,7 +1,11 @@
 package com.example.android.tranner.data.providers.categoryprovider;
 
+import com.example.android.tranner.data.providers.CategoryDatabaseContract;
 import com.example.android.tranner.data.providers.CategoryDatabaseHelper;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.stmt.DeleteBuilder;
+import com.j256.ormlite.stmt.Where;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

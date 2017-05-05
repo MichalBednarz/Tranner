@@ -15,4 +15,6 @@ import com.example.android.tranner.data.providers.itemprovider.CategoryItem;
 public interface OnNewFragmentListener {
 
     void onNewItemOpened(CategoryItem item);
+
+
 }

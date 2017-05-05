@@ -54,12 +54,13 @@ public class FragmentLayoutAdapter extends RecyclerView.Adapter<FragmentLayoutAd
         holder.mDescription.setText(item.getDescription());
         holder.itemView.setOnClickListener(v -> mListener.onListOpenItem(item));
         holder.mButton.setOnClickListener(v -> showPopupMenu(v, item, holder));
+        holder.itemView.setOnClickListener(v -> mListener.onListOpenItem(item));
     }
 
     private void showPopupMenu(View view, final CategoryItem item, final FragmentLayoutAdapter.ViewHolder holder) {
         PopupMenu popup = new PopupMenu(view.getContext(), view);
         MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.menu_main_item, popup.getMenu());
+        inflater.inflate(R.menu.menu_fragment_item, popup.getMenu());
         popup.setOnMenuItemClickListener(menuItem -> {
             switch (menuItem.getItemId()) {
                 case R.id.item_delete:

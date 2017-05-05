@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.android.tranner.R;
+import com.example.android.tranner.categoryscreen.ReloadEvent;
 import com.example.android.tranner.categoryscreen.activities.CategoryActivity;
 import com.example.android.tranner.categoryscreen.adapters.FragmentLayoutAdapter;
 import com.example.android.tranner.categoryscreen.dialogs.AddItemDialog;
@@ -25,6 +26,9 @@ import com.example.android.tranner.data.providers.categoryprovider.Category;
 import com.example.android.tranner.data.providers.itemprovider.CategoryItem;
 import com.example.android.tranner.data.providers.itemprovider.FamiliarItemPresenter;
 import com.example.android.tranner.data.providers.itemprovider.ItemContract;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,6 +79,13 @@ public class FragmentFamiliar extends Fragment implements OnListItemClickListene
         return fragment;
     }
 
+    @Subscribe
+    public void onEvent(ReloadEvent event) {
+        if(event.getMessage().equals(RELOAD_EVENT)) {
+            mFamiliarItemPresenter.loadFamiliarItems(mParentCategory);
+        }
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -122,12 +133,25 @@ public class FragmentFamiliar extends Fragment implements OnListItemClickListene
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        mFamiliarItemPresenter.unsubscribe();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
     }
 
     private void setUpRecyclerView() {
@@ -160,6 +184,10 @@ public class FragmentFamiliar extends Fragment implements OnListItemClickListene
         item.setTab(ITEM_TAB_NEW);
         mFamiliarItemPresenter.updateFamiliarItem(item);
         mFamiliarItemPresenter.loadFamiliarItems(mParentCategory);
+
+        ReloadEvent event = new ReloadEvent();
+        event.setMessage(RELOAD_EVENT);
+        EventBus.getDefault().post(event);
     }
 
 

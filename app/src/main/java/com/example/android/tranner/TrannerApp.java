@@ -4,8 +4,13 @@ import android.app.Application;
 
 import com.example.android.tranner.dagger.components.AppComponent;
 import com.example.android.tranner.dagger.components.DaggerAppComponent;
+import com.example.android.tranner.dagger.components.DaggerNetworkComponent;
+import com.example.android.tranner.dagger.components.NetworkComponent;
 import com.example.android.tranner.dagger.modules.AppModule;
+import com.example.android.tranner.dagger.modules.NetworkModule;
 import com.facebook.stetho.Stetho;
+
+import static com.example.android.tranner.data.ConstantKeys.*;
 
 
 /**
@@ -15,6 +20,7 @@ import com.facebook.stetho.Stetho;
 public class TrannerApp extends Application {
 
     private AppComponent mComponent;
+    private NetworkComponent mNetworkComponent;
 
     @Override
     public void onCreate() {
@@ -24,10 +30,19 @@ public class TrannerApp extends Application {
         mComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))
                 .build();
+
+        mNetworkComponent = DaggerNetworkComponent.builder()
+                .appModule(new AppModule(this))
+                .networkModule(new NetworkModule(BASE_URL))
+                .build();
     }
 
     public AppComponent getComponent() {
         return mComponent;
+    }
+
+    public NetworkComponent getNetworkingComponent() {
+        return mNetworkComponent;
     }
 
 }

@@ -179,6 +179,8 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
 
     @Override
     public void onNoCategoryLoaded() {
+        mCategoryList.clear();
+        mAdapter.notifyDataSetChanged();
         Toast.makeText(this, "No category loaded...", Toast.LENGTH_SHORT).show();
     }
 

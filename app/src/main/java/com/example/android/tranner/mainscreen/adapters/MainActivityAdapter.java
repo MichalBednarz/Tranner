@@ -57,7 +57,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final Category category = mCategoryList.get(position);
         holder.textView.setText(category.getCategory());
-        if (category.getImageUrl() != null) {
+        if (category.getImageUrl() != null && !category.getImageUrl().equals("")) {
             Picasso.with(mContext).load(category.getImageUrl()).into(holder.mainItemImage);
         }
         holder.mainItemButton.setOnClickListener(view -> showPopupMenu(view, category, holder));

@@ -11,7 +11,8 @@ package com.example.android.tranner.categoryscreen.listeners;
  * activity.
  */
 public interface OnFamiliarFragmentListener {
-    void onFamiliarItemAdded(String name);
 
     void onFamiliarItemOpened();
+
+
 }

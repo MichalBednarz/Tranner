@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.android.tranner.R;
+import com.example.android.tranner.categoryscreen.ReloadEvent;
 import com.example.android.tranner.categoryscreen.activities.CategoryActivity;
 import com.example.android.tranner.categoryscreen.adapters.FragmentLayoutAdapter;
 import com.example.android.tranner.categoryscreen.dialogs.AddItemDialog;
@@ -27,6 +28,9 @@ import com.example.android.tranner.data.providers.itemprovider.CategoryItem;
 import com.example.android.tranner.data.providers.itemprovider.ItemContract;
 import com.example.android.tranner.data.providers.itemprovider.NewItemPresenter;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +42,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static com.example.android.tranner.data.ConstantKeys.DIALOG_TITLE_NEW;
+import static com.example.android.tranner.data.ConstantKeys.RELOAD_EVENT;
 
 public class FragmentNew extends Fragment implements OnListItemClickListener, OnAddItemDialogListener,
         ItemContract.NewView {
@@ -77,6 +82,13 @@ public class FragmentNew extends Fragment implements OnListItemClickListener, On
         fragment.setArguments(args);
 
         return fragment;
+    }
+
+    @Subscribe
+    public void onEvent(ReloadEvent event) {
+        if(event.getMessage().equals(RELOAD_EVENT)) {
+            mNewItemPresenter.loadNewItems(mParentCategory);
+        }
     }
 
     @Override
@@ -144,6 +156,18 @@ public class FragmentNew extends Fragment implements OnListItemClickListener, On
         unbinder.unbind();
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+    }
+
     /**
      * OnListItemClickListener implementation
      */
@@ -165,6 +189,10 @@ public class FragmentNew extends Fragment implements OnListItemClickListener, On
 
         mNewItemPresenter.updateNewItem(item);
         mNewItemPresenter.loadNewItems(mParentCategory);
+
+        ReloadEvent event = new ReloadEvent();
+        event.setMessage(RELOAD_EVENT);
+        EventBus.getDefault().post(event);
     }
 
     /**
@@ -205,22 +233,22 @@ public class FragmentNew extends Fragment implements OnListItemClickListener, On
 
     @Override
     public void onItemAdded() {
-
+        Toast.makeText(getActivity(), "Item added.", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onNoItemAdded() {
-
+        Toast.makeText(getActivity(), "No item added.", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onItemAddedError() {
-
+        Toast.makeText(getActivity(), "Item add error.", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onItemDeleted() {
-
+        Toast.makeText(getActivity(), "Item deleted.", Toast.LENGTH_SHORT).show();
     }
 
     @Override

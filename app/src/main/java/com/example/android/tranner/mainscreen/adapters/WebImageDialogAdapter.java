@@ -8,6 +8,7 @@ import android.widget.ImageView;
 
 import com.example.android.tranner.R;
 import com.example.android.tranner.data.providers.categoryprovider.Category;
+import com.example.android.tranner.data.providers.imageprovider.ImageHit;
 import com.example.android.tranner.mainscreen.dialogs.WebImageDialog;
 import com.example.android.tranner.mainscreen.listeners.WebImageDialogAdapterListener;
 import com.squareup.picasso.Picasso;
@@ -23,16 +24,15 @@ import butterknife.ButterKnife;
 
 public class WebImageDialogAdapter extends RecyclerView.Adapter<WebImageDialogAdapter.ViewHolder> {
 
-
     private WebImageDialog mDialog;
-    private List<String> mUrls;
+    private List<ImageHit> mImageList;
     private Category mCategory;
 
     private WebImageDialogAdapterListener mListener;
 
-    public WebImageDialogAdapter(WebImageDialog mDialog, List<String> mUrls, Category category) {
+    public WebImageDialogAdapter(WebImageDialog mDialog, List<ImageHit> imageList, Category category) {
         this.mDialog = mDialog;
-        this.mUrls = mUrls;
+        this.mImageList = imageList;
         this.mCategory = category;
     }
 
@@ -42,16 +42,16 @@ public class WebImageDialogAdapter extends RecyclerView.Adapter<WebImageDialogAd
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.web_dialog_item, parent, false);
-        return new ViewHolder(v);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.web_dialog_item, parent, false);
+        return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final String url = mUrls.get(position);
-        Picasso.with(mDialog.getContext()).load(url).into(holder.webDialogImage);
+        final String imageURL = mImageList.get(position).getWebformatURL();
+        Picasso.with(mDialog.getContext()).load(imageURL).into(holder.webDialogImage);
         holder.itemView.setOnClickListener(v -> {
-            mCategory.setImageUrl(url);
+            mCategory.setImageUrl(imageURL);
             mListener.onPickImageUrl(mCategory);
             mDialog.dismiss();
         });
@@ -59,7 +59,7 @@ public class WebImageDialogAdapter extends RecyclerView.Adapter<WebImageDialogAd
 
     @Override
     public int getItemCount() {
-        return mUrls.size();
+        return mImageList.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

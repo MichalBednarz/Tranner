@@ -1,5 +1,6 @@
 package com.example.android.tranner.dagger.modules;
 
+import android.app.Application;
 import android.content.Context;
 
 import com.example.android.tranner.TrannerApp;

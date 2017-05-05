@@ -20,7 +20,7 @@ public class Category implements Serializable{
     @DatabaseField(columnName = CategoryDatabaseContract.CategoryEntry._ID, generatedId = true)
     private int mId;
 
-    @DatabaseField(columnName = CategoryDatabaseContract.CategoryEntry.CATEGORY_TITLE)
+    @DatabaseField(columnName = CategoryDatabaseContract.CategoryEntry.CATEGORY_TITLE, unique = true)
     private String mName;
 
     @DatabaseField(columnName = CategoryDatabaseContract.CategoryEntry.CATEGORY_URL)
