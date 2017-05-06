@@ -38,16 +38,13 @@ public class ImagePresenter implements ImageContract.presenter {
                     public void onSuccess(@NonNull PixabayResponse pixabayResponse) {
                         mView.onStopWaiting();
 
-                        if (pixabayResponse == null) {
-                            mView.onNoImagesFetched();
-                        } else {
-                            mView.onImagesFetched(pixabayResponse);
-                        }
+                        mView.onImagesFetched(pixabayResponse);
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
                         mView.onStopWaiting();
+
                         mView.onImageFetchError();
                     }
                 }));

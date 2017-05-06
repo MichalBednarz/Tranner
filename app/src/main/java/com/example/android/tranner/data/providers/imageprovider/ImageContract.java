@@ -1,7 +1,5 @@
 package com.example.android.tranner.data.providers.imageprovider;
 
-import java.util.List;
-
 import io.reactivex.Single;
 
 /**
@@ -15,8 +13,6 @@ public class ImageContract {
         void onStopWaiting();
 
         void onImagesFetched(PixabayResponse pixabayResponse);
-
-        void onNoImagesFetched();
 
         void onImageFetchError();
     }

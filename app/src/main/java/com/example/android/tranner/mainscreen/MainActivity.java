@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -13,13 +14,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.android.tranner.R;
 import com.example.android.tranner.TrannerApp;
 import com.example.android.tranner.dagger.components.DaggerMainActivityComponent;
+import com.example.android.tranner.data.WebImageDialogList;
 import com.example.android.tranner.data.providers.categoryprovider.Category;
 import com.example.android.tranner.data.providers.categoryprovider.CategoryContract;
 import com.example.android.tranner.data.providers.categoryprovider.CategoryPresenter;
+import com.example.android.tranner.data.providers.imageprovider.ImageHit;
 import com.example.android.tranner.mainscreen.adapters.MainActivityAdapter;
+import com.example.android.tranner.mainscreen.adapters.WebImageDialogAdapter;
 import com.example.android.tranner.mainscreen.dialogs.CategoryDialog;
 import com.example.android.tranner.mainscreen.dialogs.WebImageDialog;
 import com.example.android.tranner.mainscreen.listeners.CategoryDialogListener;
@@ -27,6 +32,7 @@ import com.example.android.tranner.mainscreen.listeners.MainActivityAdapterListe
 import com.example.android.tranner.mainscreen.listeners.WebImageDialogAdapterListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;

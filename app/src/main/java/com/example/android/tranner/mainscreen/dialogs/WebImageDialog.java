@@ -8,12 +8,10 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatEditText;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.android.tranner.R;
@@ -36,6 +34,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * Created by Michał on 2017-04-10.
@@ -44,13 +43,11 @@ import butterknife.Unbinder;
 public class WebImageDialog extends DialogFragment implements ImageContract.view {
 
     public static final String ARG_CATEGORY = "arg_category";
-    public static final String TITLE = "Pick your favorite backdrop!";
+    public static final String TITLE = "Pick BACKDROP";
     public static final String NEGATIVE_BUTTON = "CANCEL";
     private static final String TAG = "WebImageDialog";
     @BindView(R.id.web_dialog_recyclerview)
     RecyclerView mRecyclerView;
-    @BindView(R.id.web_progress_bar)
-    ProgressBar mProgressBar;
     @BindView(R.id.web_edit_search)
     AppCompatEditText mEditSearch;
     @BindView(R.id.web_search_button)
@@ -62,6 +59,7 @@ public class WebImageDialog extends DialogFragment implements ImageContract.view
     private WebImageDialogAdapterListener mListener;
     private WebImageDialogAdapter mAdapter;
     private Category mPickedCategory;
+    private SweetAlertDialog mAlertDialog;
 
     public static WebImageDialog newInstance(Category category) {
         Bundle args = new Bundle();
@@ -109,8 +107,8 @@ public class WebImageDialog extends DialogFragment implements ImageContract.view
         //Provide ImagePresenter with class implementing ImageContract.View
         mImagePresenter.init(this);
 
-        //Load sample images
-        mImagePresenter.fetchImages("poodle");
+        mAlertDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE)
+                .setTitleText("Waiting for response...");
 
         setupRecyclerView();
 
@@ -136,10 +134,10 @@ public class WebImageDialog extends DialogFragment implements ImageContract.view
     }
 
     private void setupRecyclerView() {
-        mAdapter = new WebImageDialogAdapter(this, mImageList, mPickedCategory);
+        mAdapter = new WebImageDialogAdapter(this.getContext(), mImageList, mPickedCategory);
         mAdapter.setListener(mListener);
         mRecyclerView.setAdapter(mAdapter);
-        RecyclerView.LayoutManager manager = new GridLayoutManager(getActivity(), 2);
+        RecyclerView.LayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(manager);
     }
 
@@ -149,35 +147,26 @@ public class WebImageDialog extends DialogFragment implements ImageContract.view
 
     @Override
     public void onWaitingForResults() {
+        mAlertDialog.show();
 
-        Log.d(TAG, "onWaitingForResults: " + "visible");
-        mProgressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onStopWaiting() {
-
-        Log.d(TAG, "onStopWaiting: gone");
-        mProgressBar.setVisibility(View.GONE);
+        mAlertDialog.dismiss();
     }
 
     @Override
     public void onImagesFetched(PixabayResponse pixabayResponseList) {
-        Log.d(TAG, "onImagesFetched: fetched");
         mImageList.clear();
         mImageList.addAll(pixabayResponseList.getHits());
         mAdapter.notifyDataSetChanged();
     }
 
     @Override
-    public void onNoImagesFetched() {
-        Log.d(TAG, "onNoImagesFetched: no fetched");
-        Toast.makeText(getActivity(), "chuj", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
     public void onImageFetchError() {
-        Log.d(TAG, "onImageFetchError: error");
-        Toast.makeText(getActivity(), "chuj i gnoj", Toast.LENGTH_SHORT).show();
+        new SweetAlertDialog(getContext(), SweetAlertDialog.ERROR_TYPE)
+                .setTitleText("Ups, something went wrong!")
+                .show();
     }
 }
