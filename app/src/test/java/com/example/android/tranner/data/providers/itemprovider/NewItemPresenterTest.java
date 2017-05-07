@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 public class NewItemPresenterTest {
     private final List<CategoryItem> MANY_DATA = Arrays.asList(new CategoryItem(), new CategoryItem(), new CategoryItem());
     private final CategoryItem SINGLE_DATA = new CategoryItem();
-    private final Category CATEGORY = new Category();
+    private final int CATEGORY = 1;
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
     @Mock

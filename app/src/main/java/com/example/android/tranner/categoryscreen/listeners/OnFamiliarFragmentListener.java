@@ -4,6 +4,8 @@ package com.example.android.tranner.categoryscreen.listeners;
  * Created by Michał on 2017-04-28.
  */
 
+import com.example.android.tranner.data.providers.itemprovider.CategoryItem;
+
 /**
  * This interface must be implemented by activities that contain this
  * fragment_new to allow an interaction in this fragment_new to be communicated
@@ -12,7 +14,7 @@ package com.example.android.tranner.categoryscreen.listeners;
  */
 public interface OnFamiliarFragmentListener {
 
-    void onFamiliarItemOpened();
+    void onFamiliarItemOpened(CategoryItem item);
 
 
 }

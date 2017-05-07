@@ -66,7 +66,7 @@ public class ItemContract {
 
 
     public interface NewPresenter {
-        void loadNewItems(Category parentCategory);
+        void loadNewItems(int parentCategory);
 
         void addNewItem(CategoryItem item);
 
@@ -76,7 +76,7 @@ public class ItemContract {
     }
 
     public interface FamiliarPresenter {
-        void loadFamiliarItems(Category parentCategory);
+        void loadFamiliarItems(int parentCategory);
 
         void addFamiliarItem(CategoryItem item);
 
@@ -87,9 +87,9 @@ public class ItemContract {
     }
 
     public interface Repository {
-        Single<List<CategoryItem>> loadNewItems(Category parentCategory);
+        Single<List<CategoryItem>> loadNewItems(int parentCategory);
 
-        Single<List<CategoryItem>> loadFamiliarItems(Category parentCategory);
+        Single<List<CategoryItem>> loadFamiliarItems(int parentCategory);
 
         Single<Long> addItem(CategoryItem item);
 

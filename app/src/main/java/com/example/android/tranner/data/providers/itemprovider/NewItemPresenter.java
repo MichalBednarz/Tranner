@@ -1,7 +1,5 @@
 package com.example.android.tranner.data.providers.itemprovider;
 
-import com.example.android.tranner.data.providers.categoryprovider.Category;
-
 import java.util.List;
 
 import io.reactivex.Scheduler;
@@ -30,7 +28,7 @@ public class NewItemPresenter implements ItemContract.NewPresenter {
     }
 
     @Override
-    public void loadNewItems(Category parentCategory) {
+    public void loadNewItems(int parentCategory) {
         mCompositeDisposable.add(mRepository.loadNewItems(parentCategory)
                 .subscribeOn(Schedulers.io())
                 .observeOn(mMainScheduler)

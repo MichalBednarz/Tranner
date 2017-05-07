@@ -1,9 +1,6 @@
 package com.example.android.tranner.data.providers.itemprovider;
 
-import com.example.android.tranner.data.ConstantKeys;
-import com.example.android.tranner.data.providers.CategoryDatabaseContract;
 import com.example.android.tranner.data.providers.CategoryDatabaseHelper;
-import com.example.android.tranner.data.providers.categoryprovider.Category;
 import com.j256.ormlite.dao.Dao;
 
 import java.sql.SQLException;
@@ -29,13 +26,13 @@ public class ItemRepository implements ItemContract.Repository {
     }
 
     @Override
-    public Single<List<CategoryItem>> loadNewItems(Category parentCategory) {
+    public Single<List<CategoryItem>> loadNewItems(int parentCategory) {
         List<CategoryItem> categoryList = new ArrayList<>();
         try {
             mItemDao = mDatabaseHelper.getItemDao();
             categoryList = mItemDao.queryBuilder()
                     .where()
-                    .eq(ItemEntry.ITEM_PARENT_CATEGORY, parentCategory.getId())
+                    .eq(ItemEntry.ITEM_PARENT_CATEGORY, parentCategory)
                     .and()
                     .eq(ItemEntry.ITEM_TAB, ITEM_TAB_NEW)
                     .query();
@@ -47,13 +44,13 @@ public class ItemRepository implements ItemContract.Repository {
     }
 
     @Override
-    public Single<List<CategoryItem>> loadFamiliarItems(Category parentCategory) {
+    public Single<List<CategoryItem>> loadFamiliarItems(int parentCategory) {
         List<CategoryItem> categoryList = new ArrayList<>();
         try {
             mItemDao = mDatabaseHelper.getItemDao();
             categoryList = mItemDao.queryBuilder()
                     .where()
-                    .eq(ItemEntry.ITEM_PARENT_CATEGORY, parentCategory.getId())
+                    .eq(ItemEntry.ITEM_PARENT_CATEGORY, parentCategory)
                     .and()
                     .eq(ItemEntry.ITEM_TAB, ITEM_TAB_FAMILIAR)
                     .query();

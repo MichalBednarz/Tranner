@@ -1,5 +1,6 @@
 package com.example.android.tranner.categoryscreen.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -16,30 +17,44 @@ import com.example.android.tranner.categoryscreen.listeners.OnFamiliarFragmentLi
 import com.example.android.tranner.categoryscreen.listeners.OnNewFragmentListener;
 import com.example.android.tranner.dagger.components.CategoryActivityComponent;
 import com.example.android.tranner.dagger.components.DaggerCategoryActivityComponent;
+import com.example.android.tranner.data.ConstantKeys;
+import com.example.android.tranner.data.providers.categorypreferences.PreferenceContract;
+import com.example.android.tranner.data.providers.categorypreferences.PreferencePresenter;
 import com.example.android.tranner.data.providers.categoryprovider.Category;
 import com.example.android.tranner.data.providers.itemprovider.CategoryItem;
+import com.example.android.tranner.mainscreen.DetailActivity;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.example.android.tranner.data.ConstantKeys.CATEGORY_INTENT;
 
 public class CategoryActivity extends AppCompatActivity implements
         OnFamiliarFragmentListener,
-        OnNewFragmentListener {
+        OnNewFragmentListener,
+        PreferenceContract.View {
 
     private static final String TAG = "CategoryActivity";
-
     @BindView(R.id.sliding_tabs)
     TabLayout mSlidingTabs;
     @BindView(R.id.viewpager)
     ViewPager mViewpager;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
-
-    private Category mParentCategory;
+    @Inject
+    PreferencePresenter mPreferencePresenter;
     private FragmentSlidingAdapter mAdapter;
     private CategoryActivityComponent mComponent;
+
+    public static Intent getStartIntent(Context context, Category category) {
+        Intent startIntent = new Intent(context, CategoryActivity.class);
+        startIntent.putExtra(ConstantKeys.CATEGORY_INTENT, category.getId());
+
+        return startIntent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,48 +64,35 @@ public class CategoryActivity extends AppCompatActivity implements
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        //handle Category instance passed from MainActivity
-        //category instance is specific Category opened by the user
-        Intent intent = getIntent();
-        if (intent.hasExtra(CATEGORY_INTENT)) {
-            Bundle bundle = intent.getExtras();
-            mParentCategory = (Category) bundle.get(CATEGORY_INTENT);
-            if (mParentCategory != null) {
-                this.setTitle(mParentCategory.getCategory());
-            }
-        } else {
-            Log.d(TAG, "onCreate: Category instance hasn't been passed");
-        }
-
         //instantiate dependency injection component
         mComponent = DaggerCategoryActivityComponent.builder()
                 .appComponent(((TrannerApp) getApplication()).getComponent())
                 .build();
 
+        mComponent.inject(this);
 
-        mAdapter = new FragmentSlidingAdapter(getSupportFragmentManager());
-        mViewpager.setAdapter(mAdapter);
-        mSlidingTabs.setupWithViewPager(mViewpager);
+        mPreferencePresenter.init(this);
+
+        //handle Category id passed from MainActivity
+        //category instance is specific Category opened by the user
+        if (getIntent().hasExtra(CATEGORY_INTENT)) {
+            int parentId = getIntent().getIntExtra(CATEGORY_INTENT, -1);
+
+            mPreferencePresenter.saveParentId(parentId);
+        }
+
+        //retrieve parent id from shared preferences so that parent Category could be loaded thereafter
+        mPreferencePresenter.retrieveParentId();
     }
-
 
     public CategoryActivityComponent getComponent() {
         return mComponent;
     }
 
-    public Category getParentCategory() {
-        return mParentCategory;
-    }
-
-
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    public void onFamiliarItemOpened() {
-
+    public void onFamiliarItemOpened(CategoryItem item) {
+        Intent startIntent = DetailActivity.getStartIntent(this, item);
+        this.startActivity(startIntent);
     }
 
     /**
@@ -99,7 +101,62 @@ public class CategoryActivity extends AppCompatActivity implements
      */
     @Override
     public void onNewItemOpened(CategoryItem item) {
+        Intent startIntent = DetailActivity.getStartIntent(this, item);
+        this.startActivity(startIntent);
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPreferencePresenter.unsubscribe();
+    }
+
+    /**
+     * CategoryActivity presenter methods responsible for retrieval of
+     * parent category stored in shared preferences.
+     */
+
+    @Override
+    public void onParentCategoryLoaded(Category parentCategory) {
+        setTitle(parentCategory.getCategory());
+        mAdapter = new FragmentSlidingAdapter(getSupportFragmentManager(), parentCategory.getId());
+        mViewpager.setAdapter(mAdapter);
+        mSlidingTabs.setupWithViewPager(mViewpager);
+    }
+
+
+    @Override
+    public void onParentCategoryLoadError() {
+        new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                .setTitleText("Ups, something went wrong!")
+                .show();
+    }
+
+    @Override
+    public void onParentIdSaved() {
+        Log.d(TAG, "onParentIdSaved: ");
+    }
+
+    @Override
+    public void onParentIdSaveError() {
+        Log.d(TAG, "onParentIdSaveError: ");
+    }
+
+    @Override
+    public void onParentIdRetrieved(int parentId) {
+        mPreferencePresenter.loadParentCategory(parentId);
+    }
+
+    @Override
+    public void onNoParentIdRetrieved() {
+        Log.d(TAG, "onNoParentIdRetrieved: ");
+    }
+
+    @Override
+    public void onParentIdRetrieveError() {
+        new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                .setTitleText("Ups, something went wrong!")
+                .show();
+    }
 }

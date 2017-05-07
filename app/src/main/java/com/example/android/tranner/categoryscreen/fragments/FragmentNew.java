@@ -1,5 +1,6 @@
 package com.example.android.tranner.categoryscreen.fragments;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -40,14 +41,18 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.example.android.tranner.data.ConstantKeys.DIALOG_TITLE_NEW;
+import static com.example.android.tranner.data.ConstantKeys.ITEM_TAB_FAMILIAR;
+import static com.example.android.tranner.data.ConstantKeys.ITEM_TAB_NEW;
 import static com.example.android.tranner.data.ConstantKeys.RELOAD_EVENT;
 
 public class FragmentNew extends Fragment implements OnListItemClickListener, OnAddItemDialogListener,
         ItemContract.NewView {
 
     private static final String TAG = "FragmentNew";
+    public static final String ARG_ID = "arg_id";
 
     @BindView(R.id.recyclerview_new_fragment)
     RecyclerView mRecyclerView;
@@ -64,7 +69,7 @@ public class FragmentNew extends Fragment implements OnListItemClickListener, On
     private FragmentLayoutAdapter mAdapter;
     private AddItemDialog mAddItemDialog;
     private List<CategoryItem> mItemList = new ArrayList<>();
-    private Category mParentCategory;
+    private int mParentId;
 
     public FragmentNew() {
         // Required empty public constructor
@@ -76,9 +81,10 @@ public class FragmentNew extends Fragment implements OnListItemClickListener, On
      *
      * @return A new instance of fragment_new FragmentNew.
      */
-    public static FragmentNew newInstance() {
+    public static FragmentNew newInstance(int parentId) {
         FragmentNew fragment = new FragmentNew();
         Bundle args = new Bundle();
+        args.putInt(ARG_ID, parentId);
         fragment.setArguments(args);
 
         return fragment;
@@ -87,7 +93,7 @@ public class FragmentNew extends Fragment implements OnListItemClickListener, On
     @Subscribe
     public void onEvent(ReloadEvent event) {
         if (event.getMessage().equals(RELOAD_EVENT)) {
-            mNewItemPresenter.loadNewItems(mParentCategory);
+            mNewItemPresenter.loadNewItems(mParentId);
         }
     }
 
@@ -121,11 +127,16 @@ public class FragmentNew extends Fragment implements OnListItemClickListener, On
 
         mNewItemPresenter.setView(this);
 
-        mParentCategory = ((CategoryActivity) getActivity()).getParentCategory();
-
-        mNewItemPresenter.loadNewItems(mParentCategory);
-
-        setUpRecyclerView();
+        //mParentCategory = ((CategoryActivity) getActivity()).getParentCategory();
+        if(!getArguments().isEmpty()) {
+            mParentId = getArguments().getInt(ARG_ID);
+            mNewItemPresenter.loadNewItems(mParentId);
+            setUpRecyclerView();
+        } else {
+            new SweetAlertDialog(getContext(), SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText("Ups, something went wrong!")
+                    .show();
+        }
     }
 
     @Override
@@ -145,9 +156,21 @@ public class FragmentNew extends Fragment implements OnListItemClickListener, On
 
     @OnClick(R.id.fragment_new_fab)
     public void onFabClicked() {
-        FragmentManager manager = getChildFragmentManager();
+       /* FragmentManager manager = getChildFragmentManager();
         mAddItemDialog = AddItemDialog.newInstance(DIALOG_TITLE_NEW);
-        mAddItemDialog.show(manager, "new_dialog");
+        mAddItemDialog.show(manager, "new_dialog");*/
+        new SweetAlertDialog(getActivity(), SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+                .setTitleText("Add NEW")
+                .setCancelText("Go back")
+                .setCancelClickListener(Dialog::dismiss)
+                .setConfirmText("Lets add it!")
+                .setConfirmClickListener(sweetAlertDialog -> {
+                    CategoryItem mRawItem = new CategoryItem("your title...", mParentId, ITEM_TAB_NEW);
+                    mNewItemPresenter.addNewItem(mRawItem);
+                    mNewItemPresenter.loadNewItems(mParentId);
+                    sweetAlertDialog.dismiss();
+                })
+                .show();
     }
 
     @Override
@@ -180,7 +203,7 @@ public class FragmentNew extends Fragment implements OnListItemClickListener, On
     @Override
     public void onListDeleteItem(CategoryItem item) {
         mNewItemPresenter.deleteNewItem(item);
-        mNewItemPresenter.loadNewItems(mParentCategory);
+        mNewItemPresenter.loadNewItems(mParentId);
     }
 
     @Override
@@ -188,7 +211,7 @@ public class FragmentNew extends Fragment implements OnListItemClickListener, On
         item.setTab(ConstantKeys.ITEM_TAB_FAMILIAR);
 
         mNewItemPresenter.updateNewItem(item);
-        mNewItemPresenter.loadNewItems(mParentCategory);
+        mNewItemPresenter.loadNewItems(mParentId);
 
         ReloadEvent event = new ReloadEvent();
         event.setMessage(RELOAD_EVENT);
@@ -198,7 +221,7 @@ public class FragmentNew extends Fragment implements OnListItemClickListener, On
     @Override
     public void onListUpdateItem(CategoryItem item) {
         mNewItemPresenter.updateNewItem(item);
-        mNewItemPresenter.loadNewItems(mParentCategory);
+        mNewItemPresenter.loadNewItems(mParentId);
     }
 
     /**
@@ -207,10 +230,10 @@ public class FragmentNew extends Fragment implements OnListItemClickListener, On
 
     @Override
     public void onDialogAddItem(String name) {
-        CategoryItem item = new CategoryItem(name, mParentCategory.getId(), ConstantKeys.ITEM_TAB_NEW);
+        CategoryItem item = new CategoryItem(name, mParentId, ConstantKeys.ITEM_TAB_NEW);
 
         mNewItemPresenter.addNewItem(item);
-        mNewItemPresenter.loadNewItems(mParentCategory);
+        mNewItemPresenter.loadNewItems(mParentId);
     }
 
     /**

@@ -1,7 +1,5 @@
 package com.example.android.tranner.data.providers.itemprovider;
 
-import com.example.android.tranner.data.providers.categoryprovider.Category;
-
 import java.util.List;
 
 import io.reactivex.Scheduler;
@@ -30,7 +28,7 @@ public class FamiliarItemPresenter implements ItemContract.FamiliarPresenter {
     }
 
     @Override
-    public void loadFamiliarItems(Category parentCategory) {
+    public void loadFamiliarItems(int parentCategory) {
         mCompositeDisposable.add(mRepository.loadFamiliarItems(parentCategory)
                 .subscribeOn(Schedulers.io())
                 .observeOn(mMainScheduler)

@@ -9,6 +9,7 @@ package com.example.android.tranner.data;
  */
 public class ConstantKeys {
     public static final String CATEGORY_INTENT = "cateogry_intent";
+    public static final String DETAIL_INTENT = "detail_intent";
     public static final String ITEM_TAB_NEW = "item_tab_new";
     public static final String ITEM_TAB_FAMILIAR = "item_tab_familiar";
     public static final String DIALOG_TITLE_NEW = "Add NEW";

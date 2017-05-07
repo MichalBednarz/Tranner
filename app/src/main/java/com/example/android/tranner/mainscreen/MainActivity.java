@@ -1,12 +1,12 @@
 package com.example.android.tranner.mainscreen;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -14,17 +14,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.android.tranner.R;
 import com.example.android.tranner.TrannerApp;
+import com.example.android.tranner.categoryscreen.activities.CategoryActivity;
 import com.example.android.tranner.dagger.components.DaggerMainActivityComponent;
-import com.example.android.tranner.data.WebImageDialogList;
 import com.example.android.tranner.data.providers.categoryprovider.Category;
 import com.example.android.tranner.data.providers.categoryprovider.CategoryContract;
 import com.example.android.tranner.data.providers.categoryprovider.CategoryPresenter;
-import com.example.android.tranner.data.providers.imageprovider.ImageHit;
 import com.example.android.tranner.mainscreen.adapters.MainActivityAdapter;
-import com.example.android.tranner.mainscreen.adapters.WebImageDialogAdapter;
 import com.example.android.tranner.mainscreen.dialogs.CategoryDialog;
 import com.example.android.tranner.mainscreen.dialogs.WebImageDialog;
 import com.example.android.tranner.mainscreen.listeners.CategoryDialogListener;
@@ -32,7 +29,6 @@ import com.example.android.tranner.mainscreen.listeners.MainActivityAdapterListe
 import com.example.android.tranner.mainscreen.listeners.WebImageDialogAdapterListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -47,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
         CategoryContract.View {
 
     private static final String TAG = "MainActivity";
-
+    public List<Category> mCategoryList;
     @BindView(R.id.fab)
     FloatingActionButton fab;
     @BindView(R.id.main_recycler_view)
@@ -58,7 +54,6 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
     private CategoryDialog mCategoryDialog;
     private WebImageDialog mWebDialog;
     private TrannerApp mTrannerApp;
-    public List<Category> mCategoryList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,6 +162,12 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
         FragmentManager manager = getSupportFragmentManager();
         mWebDialog = WebImageDialog.newInstance(category);
         mWebDialog.show(manager, "web_dialog");
+    }
+
+    @Override
+    public void onCategoryOpened(Category category) {
+        Intent startIntent = CategoryActivity.getStartIntent(this, category);
+        this.startActivity(startIntent);
     }
 
     @Override

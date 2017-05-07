@@ -18,7 +18,6 @@ import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.schedulers.Schedulers;
 
 import static java.util.Collections.EMPTY_LIST;
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -28,7 +27,7 @@ import static org.mockito.Mockito.when;
 public class FamiliarItemPresenterTest {
     private final List<CategoryItem> MANY_DATA = Arrays.asList(new CategoryItem(), new CategoryItem(), new CategoryItem());
     private final CategoryItem SINGLE_DATA = new CategoryItem();
-    private final Category CATEGORY = new Category();
+    private final int CATEGORY_ID = 1;
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
     @Mock
@@ -51,27 +50,27 @@ public class FamiliarItemPresenterTest {
 
     @Test
     public void shouldPassFamiliarItemsToView() {
-        when(repository.loadFamiliarItems(CATEGORY)).thenReturn(Single.just(MANY_DATA));
+        when(repository.loadFamiliarItems(CATEGORY_ID)).thenReturn(Single.just(MANY_DATA));
 
-        presenter.loadFamiliarItems(CATEGORY);
+        presenter.loadFamiliarItems(CATEGORY_ID);
 
         verify(view).onFamiliarItemLoaded(MANY_DATA);
     }
 
     @Test
     public void shouldPassNoFamiliarItemsToView() {
-        when(repository.loadFamiliarItems(CATEGORY)).thenReturn(Single.just(EMPTY_LIST));
+        when(repository.loadFamiliarItems(CATEGORY_ID)).thenReturn(Single.just(EMPTY_LIST));
 
-        presenter.loadFamiliarItems(CATEGORY);
+        presenter.loadFamiliarItems(CATEGORY_ID);
 
         verify(view).onNoFamiliarItemLoaded();
     }
 
     @Test
     public void shouldHandlePassFamiliarItemsToViewError() {
-        when(repository.loadFamiliarItems(CATEGORY)).thenReturn(Single.error(new Throwable("exception")));
+        when(repository.loadFamiliarItems(CATEGORY_ID)).thenReturn(Single.error(new Throwable("exception")));
 
-        presenter.loadFamiliarItems(CATEGORY);
+        presenter.loadFamiliarItems(CATEGORY_ID);
 
         verify(view).onFamiliarItemLoadError();
     }

@@ -55,7 +55,7 @@ public class Category implements Serializable{
         this.mImageUrl = imageUrl;
     }
 
-    public long getId() {
+    public int getId() {
         return mId;
     }
 

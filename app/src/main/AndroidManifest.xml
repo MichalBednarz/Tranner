@@ -27,12 +27,22 @@
         <activity
             android:name=".categoryscreen.activities.CategoryActivity"
             android:label="@string/category_activity"
-            android:parentActivityName="com.example.android.tranner.mainscreen.MainActivity"
-            android:theme="@style/AppThemeOne.NoActionBar">
+            android:parentActivityName=".mainscreen.MainActivity"
+            android:theme="@style/AppThemeOne.NoActionBar"
+            tools:targetApi="jelly_bean">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.android.tranner.mainscreen.MainActivity">
-            </meta-data>
+                android:value="com.example.android.tranner.mainscreen.MainActivity" />
+        </activity>
+        <activity
+            android:name=".mainscreen.DetailActivity"
+            android:label="@string/detail_activity"
+            android:parentActivityName=".categoryscreen.activities.CategoryActivity"
+            android:theme="@style/AppThemeOne.NoActionBar"
+            tools:targetApi="jelly_bean">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".categoryscreen.activities.CategoryActivity" />
         </activity>
     </application>
 

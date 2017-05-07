@@ -68,11 +68,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
             return true;
         });
         holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(mContext, CategoryActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putSerializable(ConstantKeys.CATEGORY_INTENT, category);
-            intent.putExtras(bundle);
-            mContext.startActivity(intent);
+            mListener.onCategoryOpened(category);
         });
 
         provideAnimation(holder, position);

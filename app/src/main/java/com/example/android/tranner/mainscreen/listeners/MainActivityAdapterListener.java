@@ -9,4 +9,5 @@ import com.example.android.tranner.data.providers.categoryprovider.Category;
 public interface MainActivityAdapterListener {
     void onCategoryDeleted(Category category);
     void onChangeBackdropClicked(Category category);
+    void onCategoryOpened(Category category);
 }

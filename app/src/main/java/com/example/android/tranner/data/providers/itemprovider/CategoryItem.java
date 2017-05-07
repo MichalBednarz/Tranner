@@ -9,13 +9,15 @@ import com.example.android.tranner.data.providers.categoryprovider.Category;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.io.Serializable;
+
 import static com.example.android.tranner.data.providers.CategoryDatabaseContract.*;
 
 /**
  * CategoryItem POJO.
  */
 @DatabaseTable(tableName = ItemEntry.ITEM_TABLE)
-public class CategoryItem {
+public class CategoryItem implements Serializable {
 
     @DatabaseField(columnName = ItemEntry._ID, generatedId = true)
     private int mId;

@@ -20,18 +20,20 @@ public class FragmentSlidingAdapter extends FragmentPagerAdapter {
     final int PAGE_COUNT = 2;
     private SparseArray<WeakReference<Fragment>> mRegisteredFragments = new SparseArray<>();
     private String mTabTitles[] = new String[]{"New", "Familiar"};
+    private int mParentId;
 
-    public FragmentSlidingAdapter(FragmentManager fm) {
+    public FragmentSlidingAdapter(FragmentManager fm, int parentId) {
         super(fm);
+        this.mParentId = parentId;
     }
 
     @Override
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return FragmentNew.newInstance();
+                return FragmentNew.newInstance(mParentId);
             case 1:
-                return FragmentFamiliar.newInstance();
+                return FragmentFamiliar.newInstance(mParentId);
             default:
                 return null;
         }
