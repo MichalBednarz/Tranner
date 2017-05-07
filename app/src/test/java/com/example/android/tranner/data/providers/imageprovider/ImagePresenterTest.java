@@ -27,9 +27,9 @@ public class ImagePresenterTest {
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
     @Mock
-    ImageContract.service service;
+    ImageContract.Service service;
     @Mock
-    ImageContract.view view;
+    ImageContract.View view;
 
     private ImagePresenter presenter;
 

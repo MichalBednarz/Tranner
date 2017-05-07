@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -24,7 +23,6 @@ import com.example.android.tranner.categoryscreen.listeners.OnListItemClickListe
 import com.example.android.tranner.categoryscreen.listeners.OnNewFragmentListener;
 import com.example.android.tranner.dagger.components.DaggerFragmentNewComponent;
 import com.example.android.tranner.data.ConstantKeys;
-import com.example.android.tranner.data.providers.categoryprovider.Category;
 import com.example.android.tranner.data.providers.itemprovider.CategoryItem;
 import com.example.android.tranner.data.providers.itemprovider.ItemContract;
 import com.example.android.tranner.data.providers.itemprovider.NewItemPresenter;
@@ -43,17 +41,14 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-import static com.example.android.tranner.data.ConstantKeys.DIALOG_TITLE_NEW;
-import static com.example.android.tranner.data.ConstantKeys.ITEM_TAB_FAMILIAR;
 import static com.example.android.tranner.data.ConstantKeys.ITEM_TAB_NEW;
 import static com.example.android.tranner.data.ConstantKeys.RELOAD_EVENT;
 
 public class FragmentNew extends Fragment implements OnListItemClickListener, OnAddItemDialogListener,
         ItemContract.NewView {
 
-    private static final String TAG = "FragmentNew";
     public static final String ARG_ID = "arg_id";
-
+    private static final String TAG = "FragmentNew";
     @BindView(R.id.recyclerview_new_fragment)
     RecyclerView mRecyclerView;
 
@@ -128,7 +123,7 @@ public class FragmentNew extends Fragment implements OnListItemClickListener, On
         mNewItemPresenter.setView(this);
 
         //mParentCategory = ((CategoryActivity) getActivity()).getParentCategory();
-        if(!getArguments().isEmpty()) {
+        if (!getArguments().isEmpty()) {
             mParentId = getArguments().getInt(ARG_ID);
             mNewItemPresenter.loadNewItems(mParentId);
             setUpRecyclerView();

@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //change item theme depending on last user choice stored in activity shared preferences
-        //invoked necessarily before setting view
+        //invoked necessarily before setting View
         changeTheme(getPreferences(MODE_PRIVATE).getInt("theme", 0));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);

@@ -122,7 +122,7 @@ public class ItemRepositoryTest {
         long itemId = mItemRepository.addItem(item).blockingGet();
 
         //TODO test doesn't pass first time after table creation
-        List<CategoryItem> itemList = mItemRepository.loadNewItems(category).blockingGet();
+        List<CategoryItem> itemList = mItemRepository.loadNewItems(category.getId()).blockingGet();
 
         //then
         assertFalse(itemList.isEmpty());

@@ -9,7 +9,7 @@ import static com.example.android.tranner.data.ConstantKeys.API_KEY;
  * Created by Michał on 2017-05-04.
  */
 
-public class PixabayService implements ImageContract.service {
+public class PixabayService implements ImageContract.Service {
     private Retrofit mRetrofit;
 
     public PixabayService(Retrofit retrofit) {

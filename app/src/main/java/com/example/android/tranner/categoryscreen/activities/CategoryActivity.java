@@ -22,7 +22,7 @@ import com.example.android.tranner.data.providers.categorypreferences.Preference
 import com.example.android.tranner.data.providers.categorypreferences.PreferencePresenter;
 import com.example.android.tranner.data.providers.categoryprovider.Category;
 import com.example.android.tranner.data.providers.itemprovider.CategoryItem;
-import com.example.android.tranner.mainscreen.DetailActivity;
+import com.example.android.tranner.detailscreen.DetailActivity;
 
 import javax.inject.Inject;
 
@@ -91,8 +91,9 @@ public class CategoryActivity extends AppCompatActivity implements
 
     @Override
     public void onFamiliarItemOpened(CategoryItem item) {
-        Intent startIntent = DetailActivity.getStartIntent(this, item);
-        this.startActivity(startIntent);
+        Intent startIntent = DetailActivity.getStartIntent(this, item.getId());
+
+        startActivity(startIntent);
     }
 
     /**
@@ -101,9 +102,9 @@ public class CategoryActivity extends AppCompatActivity implements
      */
     @Override
     public void onNewItemOpened(CategoryItem item) {
-        Intent startIntent = DetailActivity.getStartIntent(this, item);
-        this.startActivity(startIntent);
+        Intent startIntent = DetailActivity.getStartIntent(this, item.getId());
 
+        startActivity(startIntent);
     }
 
     @Override
@@ -113,7 +114,7 @@ public class CategoryActivity extends AppCompatActivity implements
     }
 
     /**
-     * CategoryActivity presenter methods responsible for retrieval of
+     * CategoryActivity Presenter methods responsible for retrieval of
      * parent category stored in shared preferences.
      */
 

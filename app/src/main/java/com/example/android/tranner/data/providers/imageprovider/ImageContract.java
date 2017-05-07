@@ -7,7 +7,7 @@ import io.reactivex.Single;
  */
 
 public class ImageContract {
-    public interface view {
+    public interface View {
         void onWaitingForResults();
 
         void onStopWaiting();
@@ -17,11 +17,11 @@ public class ImageContract {
         void onImageFetchError();
     }
 
-    public interface presenter {
+    public interface Presenter {
         void fetchImages(String query);
     }
 
-    public interface service {
+    public interface Service {
         Single<PixabayResponse> fetchImages(String query);
     }
 

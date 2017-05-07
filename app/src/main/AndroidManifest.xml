@@ -35,7 +35,7 @@
                 android:value="com.example.android.tranner.mainscreen.MainActivity" />
         </activity>
         <activity
-            android:name=".mainscreen.DetailActivity"
+            android:name=".detailscreen.DetailActivity"
             android:label="@string/detail_activity"
             android:parentActivityName=".categoryscreen.activities.CategoryActivity"
             android:theme="@style/AppThemeOne.NoActionBar"

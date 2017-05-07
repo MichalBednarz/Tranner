@@ -10,7 +10,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -40,7 +39,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  * Created by Michał on 2017-04-10.
  */
 
-public class WebImageDialog extends DialogFragment implements ImageContract.view {
+public class WebImageDialog extends DialogFragment implements ImageContract.View {
 
     public static final String ARG_CATEGORY = "arg_category";
     public static final String TITLE = "Pick BACKDROP";
@@ -92,7 +91,7 @@ public class WebImageDialog extends DialogFragment implements ImageContract.view
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        View view = getActivity().getLayoutInflater().inflate(R.layout.web_dialog_fragment, null);
+        android.view.View view = getActivity().getLayoutInflater().inflate(R.layout.web_dialog_fragment, null);
         unbinder = ButterKnife.bind(this, view);
 
         //Retrieve specific category chosen by user to modify its backdrop
@@ -142,7 +141,7 @@ public class WebImageDialog extends DialogFragment implements ImageContract.view
     }
 
     /**
-     * ImagePresenter view methods.
+     * ImagePresenter View methods.
      */
 
     @Override

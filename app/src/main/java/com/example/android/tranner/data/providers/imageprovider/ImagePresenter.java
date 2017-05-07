@@ -10,19 +10,19 @@ import io.reactivex.schedulers.Schedulers;
  * Created by Michał on 2017-05-04.
  */
 
-public class ImagePresenter implements ImageContract.presenter {
+public class ImagePresenter implements ImageContract.Presenter {
 
-    private ImageContract.view mView;
-    private ImageContract.service mService;
+    private ImageContract.View mView;
+    private ImageContract.Service mService;
     private Scheduler mMainScheduler;
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
-    public ImagePresenter(ImageContract.service service, Scheduler mainScheduler) {
+    public ImagePresenter(ImageContract.Service service, Scheduler mainScheduler) {
         this.mService = service;
         this.mMainScheduler = mainScheduler;
     }
 
-    public void init(ImageContract.view view) {
+    public void init(ImageContract.View view) {
         this.mView = view;
     }
 

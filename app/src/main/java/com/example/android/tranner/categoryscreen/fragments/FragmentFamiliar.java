@@ -21,7 +21,6 @@ import com.example.android.tranner.categoryscreen.listeners.OnAddItemDialogListe
 import com.example.android.tranner.categoryscreen.listeners.OnFamiliarFragmentListener;
 import com.example.android.tranner.categoryscreen.listeners.OnListItemClickListener;
 import com.example.android.tranner.dagger.components.DaggerFragmentFamiliarComponent;
-import com.example.android.tranner.data.providers.categoryprovider.Category;
 import com.example.android.tranner.data.providers.itemprovider.CategoryItem;
 import com.example.android.tranner.data.providers.itemprovider.FamiliarItemPresenter;
 import com.example.android.tranner.data.providers.itemprovider.ItemContract;
@@ -125,7 +124,7 @@ public class FragmentFamiliar extends Fragment implements OnListItemClickListene
         mFamiliarItemPresenter.setView(this);
 
         //mParentCategory = ((CategoryActivity) getActivity()).getParentCategory();
-        if(!getArguments().isEmpty()) {
+        if (!getArguments().isEmpty()) {
             mParentId = getArguments().getInt(ARG_ID);
             mFamiliarItemPresenter.loadFamiliarItems(mParentId);
             setUpRecyclerView();
@@ -134,7 +133,6 @@ public class FragmentFamiliar extends Fragment implements OnListItemClickListene
                     .setTitleText("Ups, something went wrong!")
                     .show();
         }
-
 
 
     }
