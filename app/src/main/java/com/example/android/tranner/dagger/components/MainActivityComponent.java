@@ -1,7 +1,7 @@
 package com.example.android.tranner.dagger.components;
 
-import com.example.android.tranner.dagger.modules.CategoryPresenterModule;
-import com.example.android.tranner.dagger.modules.CategoryRepositoryModule;
+import com.example.android.tranner.dagger.modules.categorymodules.CategoryPresenterModule;
+import com.example.android.tranner.dagger.modules.categorymodules.CategoryRepositoryModule;
 import com.example.android.tranner.dagger.modules.DatabaseHelperModule;
 import com.example.android.tranner.dagger.modules.ThreadModule;
 import com.example.android.tranner.dagger.scopes.ActivityScope;

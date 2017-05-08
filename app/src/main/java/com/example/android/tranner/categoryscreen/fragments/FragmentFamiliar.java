@@ -121,7 +121,7 @@ public class FragmentFamiliar extends Fragment implements OnListItemClickListene
                 .build()
                 .inject(this);
 
-        mFamiliarItemPresenter.setView(this);
+        mFamiliarItemPresenter.attachFamiliarView(this);
 
         //mParentCategory = ((CategoryActivity) getActivity()).getParentCategory();
         if (!getArguments().isEmpty()) {
@@ -141,7 +141,7 @@ public class FragmentFamiliar extends Fragment implements OnListItemClickListene
     public void onDetach() {
         super.onDetach();
         mListener = null;
-        mFamiliarItemPresenter.unsubscribe();
+        mFamiliarItemPresenter.detachFamiliarView();
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.example.android.tranner.dagger.components;
 
 import com.example.android.tranner.categoryscreen.fragments.FragmentFamiliar;
-import com.example.android.tranner.dagger.modules.FamiliarItemPresenterModule;
+import com.example.android.tranner.dagger.modules.itemmodules.FamiliarItemPresenterModule;
 import com.example.android.tranner.dagger.scopes.FragmentScope;
 
 import dagger.Component;

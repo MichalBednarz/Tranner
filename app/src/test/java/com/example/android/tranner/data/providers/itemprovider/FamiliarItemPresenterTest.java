@@ -39,12 +39,13 @@ public class FamiliarItemPresenterTest {
     @Before
     public void setUp() {
         presenter = new FamiliarItemPresenter(repository, Schedulers.trampoline());
-        presenter.setView(view);
+        presenter.attachFamiliarView(view);
         RxJavaPlugins.setIoSchedulerHandler(scheduler -> Schedulers.trampoline());
     }
 
     @After
     public void cleanUp() {
+        presenter.detachFamiliarView();
         RxJavaPlugins.reset();
     }
 

@@ -46,12 +46,13 @@ public class CategoryPresenterTest {
     @Before
     public void setUp() {
         presenter = new CategoryPresenter(repository, Schedulers.trampoline());
-        presenter.setView(view);
+        presenter.attachView(view);
         RxJavaPlugins.setIoSchedulerHandler(scheduler -> Schedulers.trampoline());
     }
 
     @After
     public void cleanUp() {
+        presenter.detachView();
         RxJavaPlugins.reset();
     }
 

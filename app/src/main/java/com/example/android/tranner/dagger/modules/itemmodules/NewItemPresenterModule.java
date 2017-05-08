@@ -1,4 +1,4 @@
-package com.example.android.tranner.dagger.modules;
+package com.example.android.tranner.dagger.modules.itemmodules;
 
 import com.example.android.tranner.dagger.scopes.FragmentScope;
 import com.example.android.tranner.data.providers.itemprovider.ItemRepository;

@@ -22,8 +22,15 @@ public class ImagePresenter implements ImageContract.Presenter {
         this.mMainScheduler = mainScheduler;
     }
 
-    public void init(ImageContract.View view) {
+    @Override
+    public void attachView(ImageContract.View view) {
         this.mView = view;
+    }
+
+    @Override
+    public void detachView() {
+        mView = null;
+        mCompositeDisposable.dispose();
     }
 
     @Override
@@ -48,9 +55,5 @@ public class ImagePresenter implements ImageContract.Presenter {
                         mView.onImageFetchError();
                     }
                 }));
-    }
-
-    public void unsubscribe() {
-        mCompositeDisposable.dispose();
     }
 }

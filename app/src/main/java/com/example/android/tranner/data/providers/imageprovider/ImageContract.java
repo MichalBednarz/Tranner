@@ -1,5 +1,7 @@
 package com.example.android.tranner.data.providers.imageprovider;
 
+import com.example.android.tranner.data.providers.itemprovider.ItemContract;
+
 import io.reactivex.Single;
 
 /**
@@ -18,6 +20,10 @@ public class ImageContract {
     }
 
     public interface Presenter {
+        void attachView(ImageContract.View view);
+
+        void detachView();
+
         void fetchImages(String query);
     }
 

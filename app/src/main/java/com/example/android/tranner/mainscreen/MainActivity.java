@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
                 .build()
                 .inject(this);
 
-        mPresenter.setView(this);
+        mPresenter.attachView(this);
 
 
         mCategoryList = new ArrayList<>();
@@ -89,9 +89,8 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mPresenter.unsubscribe();
+        mPresenter.detachView();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -66,6 +66,10 @@ public class ItemContract {
 
 
     public interface NewPresenter {
+        void attachNewView(ItemContract.NewView newView);
+
+        void detachNewView();
+
         void loadNewItems(int parentCategory);
 
         void addNewItem(CategoryItem item);
@@ -76,6 +80,10 @@ public class ItemContract {
     }
 
     public interface FamiliarPresenter {
+        void attachFamiliarView(ItemContract.FamiliarView newView);
+
+        void detachFamiliarView();
+
         void loadFamiliarItems(int parentCategory);
 
         void addFamiliarItem(CategoryItem item);

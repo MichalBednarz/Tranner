@@ -35,7 +35,11 @@ public class CategoryContract {
         void onCategoryUpdatedError();
     }
 
-    public interface Actions {
+    public interface Presenter {
+        void attachView(CategoryContract.View view);
+
+        void detachView();
+
         void loadCategories();
 
         void addCategory(Category category);

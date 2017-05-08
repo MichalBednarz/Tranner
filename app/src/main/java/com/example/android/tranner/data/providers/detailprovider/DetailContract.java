@@ -22,6 +22,10 @@ public class DetailContract {
     }
 
     public interface Presenter {
+        void attachView(DetailContract.View view);
+
+        void detachView();
+
         void loadItem(int itemId);
 
         void updateItem(CategoryItem item);

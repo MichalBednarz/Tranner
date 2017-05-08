@@ -104,7 +104,7 @@ public class WebImageDialog extends DialogFragment implements ImageContract.View
                 .inject(this);
 
         //Provide ImagePresenter with class implementing ImageContract.View
-        mImagePresenter.init(this);
+        mImagePresenter.attachView(this);
 
         mAlertDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE)
                 .setTitleText("Waiting for response...");
@@ -123,7 +123,7 @@ public class WebImageDialog extends DialogFragment implements ImageContract.View
     public void onDetach() {
         super.onDetach();
         mListener = null;
-        mImagePresenter.unsubscribe();
+        mImagePresenter.detachView();
     }
 
     @Override

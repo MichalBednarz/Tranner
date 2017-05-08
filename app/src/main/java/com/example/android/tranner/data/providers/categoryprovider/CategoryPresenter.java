@@ -12,7 +12,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by Michał on 2017-04-11.
  */
 
-public class CategoryPresenter implements CategoryContract.Actions {
+public class CategoryPresenter implements CategoryContract.Presenter {
 
     private CategoryContract.View mView;
     private CategoryContract.Repository mRepository;
@@ -24,8 +24,15 @@ public class CategoryPresenter implements CategoryContract.Actions {
         this.mMainScheduler = mainScheduler;
     }
 
-    public void setView(CategoryContract.View view) {
+    @Override
+    public void attachView(CategoryContract.View view) {
         this.mView = view;
+    }
+
+    @Override
+    public void detachView() {
+        mView = null;
+        mCompositeDisposable.dispose();
     }
 
     @Override
@@ -118,9 +125,5 @@ public class CategoryPresenter implements CategoryContract.Actions {
                         mView.onCategoryUpdatedError();
                     }
                 }));
-    }
-
-    public void unsubscribe() {
-        mCompositeDisposable.dispose();
     }
 }

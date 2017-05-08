@@ -40,12 +40,13 @@ public class NewItemPresenterTest {
     @Before
     public void setUp() {
         presenter = new NewItemPresenter(repository, Schedulers.trampoline());
-        presenter.setView(view);
+        presenter.attachNewView(view);
         RxJavaPlugins.setIoSchedulerHandler(scheduler -> Schedulers.trampoline());
     }
 
     @After
     public void cleanUp() {
+        presenter.detachNewView();
         RxJavaPlugins.reset();
     }
 

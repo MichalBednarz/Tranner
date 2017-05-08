@@ -49,13 +49,14 @@ public class PreferencePresenterTest {
     @Before
     public void setUp() {
         presenter = new PreferencePresenter(repository, Schedulers.trampoline());
-        presenter.init(view);
+        presenter.attachView(view);
         rxSharedPreferences = RxSharedPreferences.create(sharedPreferences);
         RxJavaPlugins.setIoSchedulerHandler(scheduler -> Schedulers.trampoline());
     }
 
     @After
     public void cleanUp() {
+        presenter.detachView();
         RxJavaPlugins.reset();
     }
 

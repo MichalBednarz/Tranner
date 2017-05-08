@@ -1,6 +1,6 @@
 package com.example.android.tranner.dagger.components;
 
-import com.example.android.tranner.dagger.modules.ImagePresenterModule;
+import com.example.android.tranner.dagger.modules.imagemodules.ImagePresenterModule;
 import com.example.android.tranner.dagger.scopes.FragmentScope;
 import com.example.android.tranner.mainscreen.dialogs.WebImageDialog;
 

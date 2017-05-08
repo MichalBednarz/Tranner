@@ -17,6 +17,7 @@ import com.example.android.tranner.categoryscreen.listeners.OnFamiliarFragmentLi
 import com.example.android.tranner.categoryscreen.listeners.OnNewFragmentListener;
 import com.example.android.tranner.dagger.components.CategoryActivityComponent;
 import com.example.android.tranner.dagger.components.DaggerCategoryActivityComponent;
+import com.example.android.tranner.dagger.components.DaggerPreferenceComponent;
 import com.example.android.tranner.data.ConstantKeys;
 import com.example.android.tranner.data.providers.categorypreferences.PreferenceContract;
 import com.example.android.tranner.data.providers.categorypreferences.PreferencePresenter;
@@ -69,9 +70,13 @@ public class CategoryActivity extends AppCompatActivity implements
                 .appComponent(((TrannerApp) getApplication()).getComponent())
                 .build();
 
-        mComponent.inject(this);
+        //separate dependency injection component providing PreferencePresenter
+        DaggerPreferenceComponent.builder()
+                .appComponent(((TrannerApp) getApplication()).getComponent())
+                .build()
+                .inject(this);
 
-        mPreferencePresenter.init(this);
+        mPreferencePresenter.attachView(this);
 
         //handle Category id passed from MainActivity
         //category instance is specific Category opened by the user
@@ -107,10 +112,11 @@ public class CategoryActivity extends AppCompatActivity implements
         startActivity(startIntent);
     }
 
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mPreferencePresenter.unsubscribe();
+        mPreferencePresenter.detachView();
     }
 
     /**

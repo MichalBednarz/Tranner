@@ -36,12 +36,13 @@ public class ImagePresenterTest {
     @Before
     public void setUp() {
         presenter = new ImagePresenter(service, Schedulers.trampoline());
-        presenter.init(view);
+        presenter.attachView(view);
         RxJavaPlugins.setIoSchedulerHandler(scheduler -> Schedulers.trampoline());
     }
 
     @After
     public void cleanUp() {
+        presenter.detachView();
         RxJavaPlugins.reset();
     }
 

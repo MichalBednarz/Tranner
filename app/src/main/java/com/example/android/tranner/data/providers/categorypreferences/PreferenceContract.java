@@ -26,11 +26,16 @@ public class PreferenceContract {
     }
 
     public interface Presenter {
+        void attachView(PreferenceContract.View view);
+
+        void detachView();
+
         void saveParentId(int parentId);
 
         void retrieveParentId();
 
         void loadParentCategory(int parentId);
+
     }
 
     public interface Repository {

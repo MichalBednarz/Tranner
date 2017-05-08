@@ -24,8 +24,15 @@ public class DetailPresenter implements DetailContract.Presenter {
         this.mMainScheduler = mainScheduler;
     }
 
-    public void init(DetailContract.View view) {
+    @Override
+    public void attachView(DetailContract.View view) {
         this.mView = view;
+    }
+
+    @Override
+    public void detachView() {
+        mView = null;
+        mCompositeDisposable.dispose();
     }
 
     @Override
@@ -67,9 +74,5 @@ public class DetailPresenter implements DetailContract.Presenter {
                         mView.onItemUpdateError();
                     }
                 }));
-    }
-
-    public void unsubscribe() {
-        mCompositeDisposable.dispose();
     }
 }

@@ -1,8 +1,12 @@
 package com.example.android.tranner.dagger.components;
 
 import com.example.android.tranner.dagger.modules.AppModule;
-import com.example.android.tranner.dagger.modules.ImagePresenterModule;
-import com.example.android.tranner.dagger.modules.NetworkModule;
+import com.example.android.tranner.dagger.modules.imagemodules.GsonModule;
+import com.example.android.tranner.dagger.modules.imagemodules.HttpCacheModule;
+import com.example.android.tranner.dagger.modules.imagemodules.SchedulerModule;
+import com.example.android.tranner.dagger.modules.imagemodules.OkHttpClientModule;
+import com.example.android.tranner.dagger.modules.imagemodules.PixabayServiceModule;
+import com.example.android.tranner.dagger.modules.imagemodules.RetrofitModule;
 import com.example.android.tranner.data.providers.imageprovider.PixabayService;
 
 import javax.inject.Singleton;
@@ -15,7 +19,8 @@ import io.reactivex.Scheduler;
  */
 
 @Singleton
-@Component(modules = {NetworkModule.class, AppModule.class, ImagePresenterModule.class})
+@Component(modules = {SchedulerModule.class, AppModule.class,
+        GsonModule.class, HttpCacheModule.class, OkHttpClientModule.class, PixabayServiceModule.class, RetrofitModule.class})
 public interface NetworkComponent {
     PixabayService providesPixabayService();
 

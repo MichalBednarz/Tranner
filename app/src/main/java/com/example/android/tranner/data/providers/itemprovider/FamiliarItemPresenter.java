@@ -23,8 +23,15 @@ public class FamiliarItemPresenter implements ItemContract.FamiliarPresenter {
         this.mMainScheduler = mainScheduler;
     }
 
-    public void setView(ItemContract.FamiliarView view) {
-        this.mView = view;
+    @Override
+    public void attachFamiliarView(ItemContract.FamiliarView newView) {
+        this.mView = newView;
+    }
+
+    @Override
+    public void detachFamiliarView() {
+        mView = null;
+        mCompositeDisposable.dispose();
     }
 
     @Override
@@ -120,9 +127,5 @@ public class FamiliarItemPresenter implements ItemContract.FamiliarPresenter {
                     }
                 }));
 
-    }
-
-    public void unsubscribe() {
-        mCompositeDisposable.dispose();
     }
 }

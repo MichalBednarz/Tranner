@@ -1,4 +1,4 @@
-package com.example.android.tranner.dagger.modules;
+package com.example.android.tranner.dagger.modules.detailmodules;
 
 import com.example.android.tranner.dagger.scopes.ActivityScope;
 import com.example.android.tranner.data.providers.CategoryDatabaseHelper;

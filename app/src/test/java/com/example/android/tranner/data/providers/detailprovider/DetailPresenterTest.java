@@ -42,12 +42,13 @@ public class DetailPresenterTest {
     @Before
     public void setUp() {
         presenter = new DetailPresenter(repository, Schedulers.trampoline());
-        presenter.init(view);
+        presenter.attachView(view);
         RxJavaPlugins.setIoSchedulerHandler(scheduler -> Schedulers.trampoline());
     }
 
     @After
     public void cleanUp() {
+        presenter.detachView();
         RxJavaPlugins.reset();
     }
 

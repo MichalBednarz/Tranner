@@ -4,6 +4,9 @@ import android.util.Log;
 
 import com.example.android.tranner.data.providers.categoryprovider.Category;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
 import io.reactivex.Scheduler;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
@@ -28,14 +31,23 @@ public class PreferencePresenter implements PreferenceContract.Presenter {
         this.mMainScheduler = mainScheduler;
     }
 
-    public void init(PreferenceContract.View view) {
+    @Override
+    public void attachView(PreferenceContract.View view) {
         this.mView = view;
     }
 
     @Override
+    public void detachView() {
+        mView = null;
+        mCompositeDisposable.dispose();
+    }
+
+    //TODO observe on mainScheduler
+    @Override
     public void saveParentId(int parentId) {
         mCompositeDisposable.add(mRepository.saveParentId(parentId)
                 .subscribeOn(Schedulers.io())
+                //.observeOn(mainScheduler)
                 .subscribeWith(new DisposableSingleObserver<Boolean>() {
                     @Override
                     public void onSuccess(@NonNull Boolean aBoolean) {
@@ -92,10 +104,5 @@ public class PreferencePresenter implements PreferenceContract.Presenter {
                         mView.onParentCategoryLoadError();
                     }
                 }));
-    }
-
-
-    public void unsubscribe() {
-        this.mCompositeDisposable.dispose();
     }
 }

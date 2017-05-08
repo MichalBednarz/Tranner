@@ -23,8 +23,15 @@ public class NewItemPresenter implements ItemContract.NewPresenter {
         this.mMainScheduler = mainScheduler;
     }
 
-    public void setView(ItemContract.NewView view) {
-        this.mView = view;
+    @Override
+    public void attachNewView(ItemContract.NewView newView) {
+        this.mView = newView;
+    }
+
+    @Override
+    public void detachNewView() {
+        mView = null;
+        mCompositeDisposable.dispose();
     }
 
     @Override
@@ -121,9 +128,5 @@ public class NewItemPresenter implements ItemContract.NewPresenter {
                     }
                 }));
 
-    }
-
-    public void unsubscribe() {
-        mCompositeDisposable.dispose();
     }
 }

@@ -54,7 +54,7 @@ public class DetailActivity extends AppCompatActivity implements DetailContract.
                 .build()
                 .inject(this);
 
-        mPresenter.init(this);
+        mPresenter.attachView(this);
 
         if (getIntent().hasExtra(DETAIL_INTENT)) {
             Bundle bundle = getIntent().getExtras();
@@ -67,10 +67,12 @@ public class DetailActivity extends AppCompatActivity implements DetailContract.
         }
     }
 
+
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mPresenter.unsubscribe();
+        mPresenter.detachView();
 
     }
 

@@ -120,7 +120,7 @@ public class FragmentNew extends Fragment implements OnListItemClickListener, On
                 .build()
                 .inject(this);
 
-        mNewItemPresenter.setView(this);
+        mNewItemPresenter.attachNewView(this);
 
         //mParentCategory = ((CategoryActivity) getActivity()).getParentCategory();
         if (!getArguments().isEmpty()) {
@@ -138,7 +138,7 @@ public class FragmentNew extends Fragment implements OnListItemClickListener, On
     public void onDetach() {
         super.onDetach();
         mFragmentListener = null;
-        mNewItemPresenter.unsubscribe();
+        mNewItemPresenter.detachNewView();
     }
 
     private void setUpRecyclerView() {
