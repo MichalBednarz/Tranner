@@ -23,6 +23,7 @@ public final class CategoryDatabaseContract {
         public static final String ITEM_DESCRIPTION = "item_description";
         public static final String ITEM_PARENT_CATEGORY = "item_parent_category";
         public static final String ITEM_TAB = "item_tab";
+        public static final String ITEM_IMAGE_URI = "item_image_uri";
     }
 
 }

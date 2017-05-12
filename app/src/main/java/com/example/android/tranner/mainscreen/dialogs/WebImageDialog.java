@@ -133,7 +133,7 @@ public class WebImageDialog extends DialogFragment implements ImageContract.View
     }
 
     private void setupRecyclerView() {
-        mAdapter = new WebImageDialogAdapter(this.getContext(), mImageList, mPickedCategory);
+        mAdapter = new WebImageDialogAdapter(this, mImageList, mPickedCategory);
         mAdapter.setListener(mListener);
         mRecyclerView.setAdapter(mAdapter);
         RecyclerView.LayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);

@@ -65,7 +65,7 @@ public class CategoryDialog extends DialogFragment implements CategoryDialogAdap
 
         View rootView = inflater.inflate(R.layout.category_dialog_view, container, false);
 
-        mToolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        mToolbar = (Toolbar) rootView.findViewById(R.id.category_dialog_toolbar);
         mDialogEdit = (EditText) rootView.findViewById(R.id.dialog_edit);
         mRecyclerview = (RecyclerView) rootView.findViewById(R.id.dialog_recyclerview_full);
 

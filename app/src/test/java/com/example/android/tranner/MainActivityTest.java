@@ -56,14 +56,7 @@ public class MainActivityTest {
         Assertions.assertThat(adapter.getItemCount()).isEqualTo(categoryList.size());
 
 
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                recycler.findViewHolderForAdapterPosition(0).itemView.performClick();
-
-            }
-        }, 500);
-
+        new Handler(Looper.getMainLooper()).postDelayed(() -> recycler.findViewHolderForAdapterPosition(0).itemView.performClick(), 500);
     }
 
 }

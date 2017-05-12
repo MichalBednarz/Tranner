@@ -1,17 +1,35 @@
 <resources>
     <string name="app_name">Tranner</string>
-    <string name="action_theme_one">Pastel</string>
     <string name="enter_category_name">Custom category...</string>
     <string name="item_delete">delete</string>
     <string name="add_backdrop">backdrop</string>
-    <string name="action_theme_two">YellowBlack</string>
-    <string name="action_theme_three">Soft</string>
     <string name="title_activity_category">CategoryActivity</string>
     <string name="category_activity">category_activity</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="item_move">move</string>
     <string name="search_button">search</string>
     <string name="detail_activity">detail_activity</string>
+    <string name="detail_description">Type your description...</string>
+
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="openDrawer">open_drawer</string>
+    <string name="closeDrawer">close_drawer</string>
+
+    <!-- Navigation Drawer menu labels -->
+    <string name="action_theme_one">Pastel</string>
+    <string name="action_theme_two">YellowBlack</string>
+    <string name="action_theme_three">Soft</string>
+    <string name="nav_about_us">About Us</string>
+    <string name="nav_exit">Exit</string>
+
+
+    <string name="activity_title_about_us">About Us</string>
+    <string name="activity_title_privacy_policy">Privacy Policy</string>
+    <string name="action_clear_all">Clear All</string>
+    <string name="action_logout">Logout</string>
+    <string name="action_mark_all_read">Mark All as Read</string>
+    <string name="privacy_policy">Privacy Policy</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.example.android.tranner.mainscreen.adapters;
 
 import android.content.Context;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,13 +26,13 @@ import butterknife.ButterKnife;
 
 public class WebImageDialogAdapter extends RecyclerView.Adapter<WebImageDialogAdapter.ViewHolder> {
 
-    private Context mContext;
+    private DialogFragment mDialogFragment;
     private List<ImageHit> mImageList;
     private Category mCategory;
     private WebImageDialogAdapterListener mListener;
 
-    public WebImageDialogAdapter(Context context, List<ImageHit> imageList, Category category) {
-        this.mContext = context;
+    public WebImageDialogAdapter(DialogFragment dialogFragment, List<ImageHit> imageList, Category category) {
+        this.mDialogFragment = dialogFragment;
         this.mImageList = imageList;
         this.mCategory = category;
     }
@@ -49,10 +50,11 @@ public class WebImageDialogAdapter extends RecyclerView.Adapter<WebImageDialogAd
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final String imageURL = mImageList.get(position).getWebformatURL();
-        Picasso.with(mContext).load(imageURL).into(holder.webDialogImage);
+        Picasso.with(mDialogFragment.getContext()).load(imageURL).into(holder.webDialogImage);
         holder.itemView.setOnClickListener(v -> {
             mCategory.setImageUrl(imageURL);
             mListener.onPickImageUrl(mCategory);
+            mDialogFragment.dismiss();
         });
     }
 

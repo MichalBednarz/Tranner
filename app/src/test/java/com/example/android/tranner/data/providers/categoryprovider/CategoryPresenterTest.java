@@ -1,4 +1,4 @@
-package com.example.android.tranner.mainscreen.mvp;
+package com.example.android.tranner.data.providers.categoryprovider;
 
 import com.example.android.tranner.data.providers.categoryprovider.Category;
 import com.example.android.tranner.data.providers.categoryprovider.CategoryContract;

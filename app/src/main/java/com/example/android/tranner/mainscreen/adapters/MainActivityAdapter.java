@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
+import android.support.v13.view.ViewCompat;
+import android.support.v4.view.ViewPropertyAnimatorListener;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -23,6 +25,7 @@ import com.example.android.tranner.categoryscreen.activities.CategoryActivity;
 import com.example.android.tranner.data.ConstantKeys;
 import com.example.android.tranner.data.providers.categoryprovider.Category;
 import com.example.android.tranner.mainscreen.listeners.MainActivityAdapterListener;
+import com.github.florent37.viewanimator.ViewAnimator;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -30,6 +33,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import jp.wasabeef.recyclerview.animators.holder.AnimateViewHolder;
 
 /**
  * Created by Michał on 2017-04-09.
@@ -63,15 +67,12 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
             Picasso.with(mContext).load(category.getImageUrl()).into(holder.mainItemImage);
         }
         holder.mainItemButton.setOnClickListener(view -> showPopupMenu(view, category, holder));
-        holder.itemView.setOnLongClickListener(v -> {
-            showPopupMenu(v, category, holder);
-            return true;
-        });
+
         holder.itemView.setOnClickListener(v -> {
             mListener.onCategoryOpened(category);
         });
 
-        provideAnimation(holder, position);
+        //provideAnimation(holder, position);
 
         setItemBackdrop(holder, position);
     }
@@ -84,9 +85,15 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
      */
     private void provideAnimation(ViewHolder holder, int position) {
         if (position > mPreviousPosition) {
-            AnimationUtil.animate(holder, true);
+           // AnimationUtil.animate(holder, true);
+            ViewAnimator.animate(holder.itemView)
+                    .scale(0,1)
+                    .start();
         } else {
-            AnimationUtil.animate(holder, false);
+            //AnimationUtil.animate(holder, false);
+            ViewAnimator.animate(holder.itemView)
+                    .bounceOut()
+                    .start();
         }
         mPreviousPosition = position;
     }
@@ -159,7 +166,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
         return mCategoryList.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements AnimateViewHolder {
         @BindView(R.id.main_item_text)
         TextView textView;
         @BindView(R.id.main_item_image)
@@ -170,6 +177,37 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+
+        @Override
+        public void preAnimateAddImpl(RecyclerView.ViewHolder holder) {
+
+        }
+
+        @Override
+        public void preAnimateRemoveImpl(RecyclerView.ViewHolder holder) {
+            ViewCompat.setTranslationY(itemView, -itemView.getHeight() * 0.3f);
+            ViewCompat.setAlpha(itemView, 0);
+        }
+
+        @Override
+        public void animateAddImpl(RecyclerView.ViewHolder holder, ViewPropertyAnimatorListener listener) {
+            ViewCompat.animate(itemView)
+                    .translationY(0)
+                    .alpha(1)
+                    .setDuration(300)
+                    .setListener(listener)
+                    .start();
+        }
+
+        @Override
+        public void animateRemoveImpl(RecyclerView.ViewHolder holder, ViewPropertyAnimatorListener listener) {
+            ViewCompat.animate(itemView)
+                    .translationY(-itemView.getHeight() * 0.3f)
+                    .alpha(0)
+                    .setDuration(300)
+                    .setListener(listener)
+                    .start();
         }
     }
 }

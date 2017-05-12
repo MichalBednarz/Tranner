@@ -17,7 +17,7 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+            android:id="@+id/category_dialog_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:minWidth="1000dp"
@@ -40,7 +40,6 @@
         <EditText
             android:id="@+id/dialog_edit"
             android:textSize="@dimen/dialog_hint_font"
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:focusableInTouchMode="true"

@@ -42,12 +42,11 @@ public class PreferencePresenter implements PreferenceContract.Presenter {
         mCompositeDisposable.dispose();
     }
 
-    //TODO observe on mainScheduler
     @Override
     public void saveParentId(int parentId) {
         mCompositeDisposable.add(mRepository.saveParentId(parentId)
                 .subscribeOn(Schedulers.io())
-                //.observeOn(mainScheduler)
+                .observeOn(mMainScheduler)
                 .subscribeWith(new DisposableSingleObserver<Boolean>() {
                     @Override
                     public void onSuccess(@NonNull Boolean aBoolean) {
@@ -69,7 +68,7 @@ public class PreferencePresenter implements PreferenceContract.Presenter {
     public void retrieveParentId() {
         mCompositeDisposable.add(mRepository.retrieveParentId()
                 .subscribeOn(Schedulers.io())
-                //.observeOn(mMainScheduler)
+                .observeOn(mMainScheduler)
                 .subscribeWith(new DisposableSingleObserver<Integer>() {
                     @Override
                     public void onSuccess(@NonNull Integer integer) {
@@ -92,7 +91,7 @@ public class PreferencePresenter implements PreferenceContract.Presenter {
     public void loadParentCategory(int parentId) {
         mCompositeDisposable.add(mRepository.loadParentCategory(parentId)
                 .subscribeOn(Schedulers.io())
-                //.observeOn(mMainScheduler)
+                .observeOn(mMainScheduler)
                 .subscribeWith(new DisposableSingleObserver<Category>() {
                     @Override
                     public void onSuccess(@NonNull Category category) {

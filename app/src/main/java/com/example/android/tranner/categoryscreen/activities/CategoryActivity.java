@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 
 import com.example.android.tranner.R;
 import com.example.android.tranner.TrannerApp;
@@ -43,7 +44,7 @@ public class CategoryActivity extends AppCompatActivity implements
     TabLayout mSlidingTabs;
     @BindView(R.id.viewpager)
     ViewPager mViewpager;
-    @BindView(R.id.toolbar)
+    @BindView(R.id.category_dialog_toolbar)
     Toolbar mToolbar;
     @Inject
     PreferencePresenter mPreferencePresenter;
@@ -99,6 +100,7 @@ public class CategoryActivity extends AppCompatActivity implements
         Intent startIntent = DetailActivity.getStartIntent(this, item.getId());
 
         startActivity(startIntent);
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
 
     /**
@@ -110,6 +112,7 @@ public class CategoryActivity extends AppCompatActivity implements
         Intent startIntent = DetailActivity.getStartIntent(this, item.getId());
 
         startActivity(startIntent);
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
 
 
@@ -117,6 +120,13 @@ public class CategoryActivity extends AppCompatActivity implements
     protected void onDestroy() {
         super.onDestroy();
         mPreferencePresenter.detachView();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+
     }
 
     /**
@@ -131,7 +141,6 @@ public class CategoryActivity extends AppCompatActivity implements
         mViewpager.setAdapter(mAdapter);
         mSlidingTabs.setupWithViewPager(mViewpager);
     }
-
 
     @Override
     public void onParentCategoryLoadError() {

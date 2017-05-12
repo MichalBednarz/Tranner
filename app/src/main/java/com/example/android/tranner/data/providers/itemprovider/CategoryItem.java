@@ -4,14 +4,12 @@ package com.example.android.tranner.data.providers.itemprovider;
  * Created by Michał on 2017-04-23.
  */
 
-import com.example.android.tranner.data.providers.CategoryDatabaseContract;
-import com.example.android.tranner.data.providers.categoryprovider.Category;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;
 
-import static com.example.android.tranner.data.providers.CategoryDatabaseContract.*;
+import static com.example.android.tranner.data.providers.CategoryDatabaseContract.ItemEntry;
 
 /**
  * CategoryItem POJO.
@@ -34,6 +32,8 @@ public class CategoryItem implements Serializable {
     @DatabaseField(columnName = ItemEntry.ITEM_TAB)
     private String mTab;
 
+    @DatabaseField(columnName = ItemEntry.ITEM_IMAGE_URI)
+    private String mImageUri;
 
     public CategoryItem() {
     }
@@ -89,5 +89,11 @@ public class CategoryItem implements Serializable {
         this.mDescription = description;
     }
 
+    public String getImageUri() {
+        return mImageUri;
+    }
 
+    public void setImageUri(String imageUri) {
+        this.mImageUri = imageUri;
+    }
 }
