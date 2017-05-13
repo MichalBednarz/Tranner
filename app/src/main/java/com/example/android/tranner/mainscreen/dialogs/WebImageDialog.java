@@ -3,6 +3,7 @@ package com.example.android.tranner.mainscreen.dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -45,6 +46,7 @@ public class WebImageDialog extends DialogFragment implements ImageContract.View
     public static final String TITLE = "Pick BACKDROP";
     public static final String NEGATIVE_BUTTON = "CANCEL";
     private static final String TAG = "WebImageDialog";
+    private static final String WAIT_TEXT = "Waiting for response...";
     @BindView(R.id.web_dialog_recyclerview)
     RecyclerView mRecyclerView;
     @BindView(R.id.web_edit_search)
@@ -106,8 +108,9 @@ public class WebImageDialog extends DialogFragment implements ImageContract.View
         //Provide ImagePresenter with class implementing ImageContract.View
         mImagePresenter.attachView(this);
 
-        mAlertDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE)
-                .setTitleText("Waiting for response...");
+        mAlertDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
+        mAlertDialog.setTitleText(WAIT_TEXT);
+        mAlertDialog.getProgressHelper().setBarColor(Color.CYAN);
 
         setupRecyclerView();
 

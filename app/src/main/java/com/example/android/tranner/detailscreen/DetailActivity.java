@@ -10,12 +10,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.android.tranner.R;
@@ -47,20 +45,18 @@ public class DetailActivity extends AppCompatActivity implements DetailContract.
 
     @BindView(R.id.detail_activity_toolbar)
     Toolbar mToolbar;
-    @BindView(R.id.activity_detail_textview)
-    EditText mDescription;
     @BindView(R.id.detail_category_fab_menu)
     FloatingActionMenu mFloatingMenu;
-    @BindView(R.id.material_design_floating_action_menu_item1)
-    FloatingActionButton mFloatingMenuOne;
     @BindView(R.id.material_design_floating_action_menu_item2)
     FloatingActionButton mFloatingMenuTwo;
     @BindView(R.id.material_design_floating_action_menu_item3)
     FloatingActionButton mFloatingMenuThree;
     @BindView(R.id.htab_collapse_toolbar)
     CollapsingToolbarLayout mCollapseToolbar;
-    @BindView(R.id.detail_activity_layout)
-    CoordinatorLayout detailActivityLayout;
+    @BindView(R.id.activity_detail_edit_text)
+    TextInputLayout mDescription;
+    @BindView(R.id.editText1)
+    TextInputEditText mEditText;
 
     private CategoryItem mParentItem;
     private int mParentId;
@@ -107,31 +103,6 @@ public class DetailActivity extends AppCompatActivity implements DetailContract.
         mPresenter.detachView();
     }
 
-    @OnClick(R.id.material_design_floating_action_menu_item1)
-    public void onItemOneClick() {
-        mFloatingMenu.close(false);
-
-        mDescription.setClickable(true);
-        mDescription.setEnabled(true);
-        mDescription.setFocusable(true);
-        mDescription.setFocusableInTouchMode(true);
-
-        Log.d(TAG, "onItemOneClick: " + mDescription.requestFocus());
-
-        showSoftKeyboard(mDescription);
-
-    }
-
-    private void showSoftKeyboard(View view) {
-        Log.d(TAG, "showSoftKeyboard: " + view.requestFocus());
-
-        if (view.requestFocus()) {
-            InputMethodManager imm = (InputMethodManager)
-                    getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
-        }
-    }
-
     @OnClick(R.id.material_design_floating_action_menu_item2)
     public void onItemTwoClick() {
 
@@ -170,7 +141,7 @@ public class DetailActivity extends AppCompatActivity implements DetailContract.
     public void onItemLoaded(CategoryItem item) {
         mParentItem = item;
         mCollapseToolbar.setTitle(item.getName());
-        mDescription.setText(item.getDescription());
+        mEditText.setText(item.getDescription());
 
         if (item.getImageUri() != null) {
             updateBackground(item.getImageUri());

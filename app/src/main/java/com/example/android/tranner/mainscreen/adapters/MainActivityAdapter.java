@@ -44,8 +44,6 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
     private Context mContext;
     private List<Category> mCategoryList;
     private MainActivityAdapterListener mListener;
-    //field used for animation purpose to detect whether down or up scrolling
-    private int mPreviousPosition = 0;
 
     public MainActivityAdapter(Context mContext, List<Category> mCategoryList) {
         this.mContext = mContext;
@@ -66,36 +64,13 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
         if (category.getImageUrl() != null && !category.getImageUrl().equals("")) {
             Picasso.with(mContext).load(category.getImageUrl()).into(holder.mainItemImage);
         }
-        holder.mainItemButton.setOnClickListener(view -> showPopupMenu(view, category, holder));
+        holder.mainItemButton.setOnClickListener(view -> showPopupMenu(view, category, holder, position));
 
         holder.itemView.setOnClickListener(v -> {
             mListener.onCategoryOpened(category);
         });
 
-        //provideAnimation(holder, position);
-
         setItemBackdrop(holder, position);
-    }
-
-    /**
-     * Provides item animation respectively for down scroll and up scrool.
-     *
-     * @param holder
-     * @param position
-     */
-    private void provideAnimation(ViewHolder holder, int position) {
-        if (position > mPreviousPosition) {
-           // AnimationUtil.animate(holder, true);
-            ViewAnimator.animate(holder.itemView)
-                    .scale(0,1)
-                    .start();
-        } else {
-            //AnimationUtil.animate(holder, false);
-            ViewAnimator.animate(holder.itemView)
-                    .bounceOut()
-                    .start();
-        }
-        mPreviousPosition = position;
     }
 
     /**
@@ -132,7 +107,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
      * @param view
      * @param holder
      */
-    private void showPopupMenu(View view, final Category category, final ViewHolder holder) {
+    private void showPopupMenu(View view, final Category category, final ViewHolder holder, int position) {
         PopupMenu popup = new PopupMenu(view.getContext(), view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_main_item, popup.getMenu());
@@ -147,13 +122,13 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
                             .showCancelButton(true)
                             .setCancelClickListener(sDialog -> sDialog.cancel())
                             .setConfirmClickListener(sDialog -> {
-                                mListener.onCategoryDeleted(category);
+                                mListener.onCategoryDeleted(category, position);
                                 sDialog.cancel();
                             })
                             .show();
                     return true;
                 case R.id.item_backdrop:
-                    mListener.onChangeBackdropClicked(category);
+                    mListener.onChangeBackdropClicked(category, position);
                     return true;
             }
             return false;
@@ -166,7 +141,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
         return mCategoryList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements AnimateViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.main_item_text)
         TextView textView;
         @BindView(R.id.main_item_image)
@@ -177,37 +152,6 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-        }
-
-        @Override
-        public void preAnimateAddImpl(RecyclerView.ViewHolder holder) {
-
-        }
-
-        @Override
-        public void preAnimateRemoveImpl(RecyclerView.ViewHolder holder) {
-            ViewCompat.setTranslationY(itemView, -itemView.getHeight() * 0.3f);
-            ViewCompat.setAlpha(itemView, 0);
-        }
-
-        @Override
-        public void animateAddImpl(RecyclerView.ViewHolder holder, ViewPropertyAnimatorListener listener) {
-            ViewCompat.animate(itemView)
-                    .translationY(0)
-                    .alpha(1)
-                    .setDuration(300)
-                    .setListener(listener)
-                    .start();
-        }
-
-        @Override
-        public void animateRemoveImpl(RecyclerView.ViewHolder holder, ViewPropertyAnimatorListener listener) {
-            ViewCompat.animate(itemView)
-                    .translationY(-itemView.getHeight() * 0.3f)
-                    .alpha(0)
-                    .setDuration(300)
-                    .setListener(listener)
-                    .start();
         }
     }
 }

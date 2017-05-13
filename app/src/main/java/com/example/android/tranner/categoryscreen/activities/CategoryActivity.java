@@ -123,10 +123,9 @@ public class CategoryActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void finish() {
-        super.finish();
+    public void onBackPressed() {
+        finish();
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-
     }
 
     /**

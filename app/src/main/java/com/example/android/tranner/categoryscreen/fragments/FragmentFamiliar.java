@@ -2,17 +2,20 @@ package com.example.android.tranner.categoryscreen.fragments;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.android.tranner.R;
 import com.example.android.tranner.categoryscreen.ReloadEvent;
 import com.example.android.tranner.categoryscreen.activities.CategoryActivity;
@@ -46,6 +49,11 @@ import static com.example.android.tranner.data.ConstantKeys.RELOAD_EVENT;
 public class FragmentFamiliar extends Fragment implements OnListItemClickListener, OnAddItemDialogListener, ItemContract.FamiliarView {
 
     public static final String ARG_ID = "arg_id";
+    private static final String TITLE_DIALOG = "Familiar TITLE";
+    private static final String ADD_DIALOG = "Add FAMILIAR";
+    private static final String ADD_CANCEL = "Go back";
+    private static final String ADD_APPROVE = "Lets add it!";
+    private static final String ERROR_DIALOG = "Ups, something went wrong!";
 
     @BindView(R.id.recyclerview_familiar_fragment)
     RecyclerView mRecyclerView;
@@ -130,7 +138,7 @@ public class FragmentFamiliar extends Fragment implements OnListItemClickListene
             setUpRecyclerView();
         } else {
             new SweetAlertDialog(getContext(), SweetAlertDialog.ERROR_TYPE)
-                    .setTitleText("Ups, something went wrong!")
+                    .setTitleText(ERROR_DIALOG)
                     .show();
         }
 
@@ -172,17 +180,42 @@ public class FragmentFamiliar extends Fragment implements OnListItemClickListene
 
     @OnClick(R.id.fragment_familiar_fab)
     public void onFabClicked() {
+        openAddDialog();
+    }
+
+    /**
+     * This method opens dialog aimed to add new item when user click floating action button.
+     */
+    private void openAddDialog() {
         new SweetAlertDialog(getActivity(), SweetAlertDialog.CUSTOM_IMAGE_TYPE)
-                .setTitleText("Add FAMILIAR")
-                .setCancelText("Go back")
+                .setTitleText(ADD_DIALOG)
+                .setCancelText(ADD_CANCEL)
                 .setCancelClickListener(Dialog::dismiss)
-                .setConfirmText("Lets add it!")
+                .setConfirmText(ADD_APPROVE)
                 .setConfirmClickListener(sweetAlertDialog -> {
-                    CategoryItem mRawItem = new CategoryItem("your title...", mParentId, ITEM_TAB_FAMILIAR);
-                    mFamiliarItemPresenter.addFamiliarItem(mRawItem);
-                    mFamiliarItemPresenter.loadFamiliarItems(mParentId);
                     sweetAlertDialog.dismiss();
+
+                    openTitleDialog();
                 })
+                .show();
+    }
+
+    /**
+     * This method opens dialog only if item add was confirmed by user in dialog
+     * from openAddDialog method.
+     */
+    private void openTitleDialog() {
+        new MaterialDialog.Builder(getActivity())
+                .title(TITLE_DIALOG)
+                .inputType(InputType.TYPE_CLASS_TEXT)
+                .input(null, null, (dialog, input) -> {
+                    CategoryItem item =
+                            new CategoryItem(input.toString(), mParentId, ITEM_TAB_FAMILIAR);
+                    mFamiliarItemPresenter.addFamiliarItem(item);
+                    mFamiliarItemPresenter.loadFamiliarItems(mParentId);
+                })
+                .widgetColor(Color.CYAN)
+                .positiveColor(Color.CYAN)
                 .show();
     }
 

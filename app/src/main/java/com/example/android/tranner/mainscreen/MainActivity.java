@@ -14,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -40,6 +41,9 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 public class MainActivity extends AppCompatActivity implements CategoryDialogListener,
         MainActivityAdapterListener,
@@ -92,11 +96,8 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
 
         mCategoryList = new ArrayList<>();
         mPresenter.loadCategories();
-        mAdapter = new MainActivityAdapter(this, mCategoryList);
 
-        mRecyclerView.setAdapter(mAdapter);
-        RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(manager);
+        setUpReclerView();
 
         mNavigationHeader = mNavigationView.getHeaderView(0);
         mNavHeaderImage = (ImageView) mNavigationHeader.findViewById(R.id.img_header_bg);
@@ -105,6 +106,17 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
         loadNavHeader();
         // initializing navigation menu
         setUpNavigationView();
+    }
+
+    private void setUpReclerView() {
+        mAdapter = new MainActivityAdapter(this, mCategoryList);
+        mRecyclerView.setItemAnimator(new SlideInUpAnimator(new OvershootInterpolator(0.5f)));
+        AlphaInAnimationAdapter alphaAdapter = new AlphaInAnimationAdapter(mAdapter);
+        alphaAdapter.setDuration(1000);
+        alphaAdapter.setInterpolator(new OvershootInterpolator(0.5f));
+        alphaAdapter.setFirstOnly(false);
+        mRecyclerView.setAdapter(new ScaleInAnimationAdapter(alphaAdapter));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     /***
@@ -171,6 +183,7 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
     /**
      * This method saves already picked theme number in shared preferences and recreates current
      * activity with the purpose of applying it.
+     *
      * @param theme constant pointing one of themes.
      */
     private void recreateWithNewTheme(int theme) {
@@ -232,7 +245,7 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
     }
 
     @Override
-    public void onChangeBackdropClicked(Category category) {
+    public void onChangeBackdropClicked(Category category, int position) {
         FragmentManager manager = getSupportFragmentManager();
         mWebDialog = WebImageDialog.newInstance(category);
         mWebDialog.show(manager, "web_dialog");
@@ -246,8 +259,10 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
     }
 
     @Override
-    public void onCategoryDeleted(Category category) {
+    public void onCategoryDeleted(Category category, int position) {
         mPresenter.deleteCategory(category);
+        mAdapter.notifyItemRemoved(position);
+
         Toast.makeText(this, "Category " + category.getCategory() + " proceeded to deletion.", Toast.LENGTH_SHORT).show();
     }
 
@@ -306,6 +321,7 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
         try {
             if (category.getCategory().length() > 0) {
                 mPresenter.addCategory(category);
+                mAdapter.notifyItemInserted(mCategoryList.size() - 1);
             } else {
                 Toast.makeText(this, "No category added...", Toast.LENGTH_SHORT).show();
             }
@@ -327,6 +343,8 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
     @Override
     public void onCategoryAdded() {
         mPresenter.loadCategories();
+        mAdapter.notifyItemInserted(mCategoryList.size() - 1);
+
         Toast.makeText(this, "Categories loaded after insertion.", Toast.LENGTH_SHORT).show();
     }
 

@@ -2,17 +2,20 @@ package com.example.android.tranner.categoryscreen.fragments;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.android.tranner.R;
 import com.example.android.tranner.categoryscreen.ReloadEvent;
 import com.example.android.tranner.categoryscreen.activities.CategoryActivity;
@@ -41,14 +44,21 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static com.example.android.tranner.data.ConstantKeys.ITEM_TAB_FAMILIAR;
 import static com.example.android.tranner.data.ConstantKeys.ITEM_TAB_NEW;
 import static com.example.android.tranner.data.ConstantKeys.RELOAD_EVENT;
 
 public class FragmentNew extends Fragment implements OnListItemClickListener, OnAddItemDialogListener,
         ItemContract.NewView {
 
-    public static final String ARG_ID = "arg_id";
+    private static final String ARG_ID = "arg_id";
     private static final String TAG = "FragmentNew";
+    private static final String TITLE_DIALOG = "New TITLE";
+    private static final String ADD_DIALOG = "Add NEW";
+    private static final String ADD_CANCEL = "Go back";
+    private static final String ADD_APPROVE = "Lets add it!";
+    private static final String ERROR_DIALOG = "Ups, something went wrong!";
+
     @BindView(R.id.recyclerview_new_fragment)
     RecyclerView mRecyclerView;
 
@@ -122,14 +132,13 @@ public class FragmentNew extends Fragment implements OnListItemClickListener, On
 
         mNewItemPresenter.attachNewView(this);
 
-        //mParentCategory = ((CategoryActivity) getActivity()).getParentCategory();
         if (!getArguments().isEmpty()) {
             mParentId = getArguments().getInt(ARG_ID);
             mNewItemPresenter.loadNewItems(mParentId);
             setUpRecyclerView();
         } else {
             new SweetAlertDialog(getContext(), SweetAlertDialog.ERROR_TYPE)
-                    .setTitleText("Ups, something went wrong!")
+                    .setTitleText(ERROR_DIALOG)
                     .show();
         }
     }
@@ -151,20 +160,42 @@ public class FragmentNew extends Fragment implements OnListItemClickListener, On
 
     @OnClick(R.id.fragment_new_fab)
     public void onFabClicked() {
-       /* FragmentManager manager = getChildFragmentManager();
-        mAddItemDialog = AddItemDialog.newInstance(DIALOG_TITLE_NEW);
-        mAddItemDialog.show(manager, "new_dialog");*/
+        openAddDialog();
+    }
+
+    /**
+     * This method opens dialog aimed to add new item when user click floating action button.
+     */
+    private void openAddDialog() {
         new SweetAlertDialog(getActivity(), SweetAlertDialog.CUSTOM_IMAGE_TYPE)
-                .setTitleText("Add NEW")
-                .setCancelText("Go back")
+                .setTitleText(ADD_DIALOG)
+                .setCancelText(ADD_CANCEL)
                 .setCancelClickListener(Dialog::dismiss)
-                .setConfirmText("Lets add it!")
+                .setConfirmText(ADD_APPROVE)
                 .setConfirmClickListener(sweetAlertDialog -> {
-                    CategoryItem mRawItem = new CategoryItem("your title...", mParentId, ITEM_TAB_NEW);
-                    mNewItemPresenter.addNewItem(mRawItem);
-                    mNewItemPresenter.loadNewItems(mParentId);
                     sweetAlertDialog.dismiss();
+
+                    openTitleDialog();
                 })
+                .show();
+    }
+
+    /**
+     * This method opens dialog only if item add was confirmed by user in dialog
+     * from openAddDialog method.
+     */
+    private void openTitleDialog() {
+        new MaterialDialog.Builder(getActivity())
+                .title(TITLE_DIALOG)
+                .inputType(InputType.TYPE_CLASS_TEXT)
+                .input(null, null, (dialog, input) -> {
+                    CategoryItem item =
+                            new CategoryItem(input.toString(), mParentId, ITEM_TAB_NEW);
+                    mNewItemPresenter.addNewItem(item);
+                    mNewItemPresenter.loadNewItems(mParentId);
+                })
+                .widgetColor(Color.CYAN)
+                .positiveColor(Color.CYAN)
                 .show();
     }
 

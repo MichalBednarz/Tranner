@@ -54,16 +54,6 @@ public class FragmentLayoutAdapter extends RecyclerView.Adapter<FragmentLayoutAd
     public void onBindViewHolder(FragmentLayoutAdapter.ViewHolder holder, int position) {
         CategoryItem item = mItemList.get(position);
         holder.mName.setText(item.getName());
-        holder.mName.setOnClickListener(v -> new MaterialDialog.Builder(mContext)
-                .title("New TITLE")
-                .inputType(InputType.TYPE_CLASS_TEXT)
-                .input(null, null, (dialog, input) -> {
-                    item.setName(input.toString());
-                    mListener.onListUpdateItem(item);
-                })
-                .widgetColor(Color.CYAN)
-                .positiveColor(Color.CYAN)
-                .show());
         holder.mDescription.setText(item.getDescription());
         holder.itemView.setOnClickListener(v -> mListener.onListOpenItem(item));
         holder.mButton.setOnClickListener(v -> showPopupMenu(v, item, holder));
