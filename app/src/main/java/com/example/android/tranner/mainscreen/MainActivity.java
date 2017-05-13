@@ -45,6 +45,8 @@ import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
+import static com.example.android.tranner.data.ConstantKeys.WEB_DIALOG_TAG;
+
 public class MainActivity extends AppCompatActivity implements CategoryDialogListener,
         MainActivityAdapterListener,
         WebImageDialogAdapterListener,
@@ -97,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
         mCategoryList = new ArrayList<>();
         mPresenter.loadCategories();
 
-        setUpReclerView();
+        setUpRecyclerView();
 
         mNavigationHeader = mNavigationView.getHeaderView(0);
         mNavHeaderImage = (ImageView) mNavigationHeader.findViewById(R.id.img_header_bg);
@@ -108,21 +110,14 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
         setUpNavigationView();
     }
 
-    private void setUpReclerView() {
+    private void setUpRecyclerView() {
         mAdapter = new MainActivityAdapter(this, mCategoryList);
-        mRecyclerView.setItemAnimator(new SlideInUpAnimator(new OvershootInterpolator(0.5f)));
-        AlphaInAnimationAdapter alphaAdapter = new AlphaInAnimationAdapter(mAdapter);
-        alphaAdapter.setDuration(1000);
-        alphaAdapter.setInterpolator(new OvershootInterpolator(0.5f));
-        alphaAdapter.setFirstOnly(false);
-        mRecyclerView.setAdapter(new ScaleInAnimationAdapter(alphaAdapter));
+        mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    /***
-     * Load navigation menu header information
-     * like background image, profile image
-     * name, website, notifications action view (dot)
+    /**
+     * Load navigation menu header information.
      */
     private void loadNavHeader() {
         // loading header background image
@@ -130,12 +125,14 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
                 .into(mNavHeaderImage);
     }
 
+    /**
+     * Provide all navigation view elements functionality.
+     */
     private void setUpNavigationView() {
         //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
         mNavigationView.setNavigationItemSelectedListener(menuItem -> {
             //Check to see which item was being clicked and perform appropriate action
             switch (menuItem.getItemId()) {
-                //Replacing the main content with ContentFragment Which is our Inbox View;
                 case R.id.nav_theme_one:
                     recreateWithNewTheme(THEME_PASTEL);
                     return true;
@@ -209,6 +206,7 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
         mPresenter.detachView();
     }
 
@@ -246,9 +244,9 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
 
     @Override
     public void onChangeBackdropClicked(Category category, int position) {
-        FragmentManager manager = getSupportFragmentManager();
         mWebDialog = WebImageDialog.newInstance(category);
-        mWebDialog.show(manager, "web_dialog");
+
+        mWebDialog.show(getSupportFragmentManager(), WEB_DIALOG_TAG);
     }
 
     @Override
@@ -261,16 +259,15 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
     @Override
     public void onCategoryDeleted(Category category, int position) {
         mPresenter.deleteCategory(category);
-        mAdapter.notifyItemRemoved(position);
+        mPresenter.loadCategories();
 
-        Toast.makeText(this, "Category " + category.getCategory() + " proceeded to deletion.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Category " + category.getTitle() + " proceeded to deletion.", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onCategoryLoaded(List<Category> categoryList) {
-        mCategoryList.clear();
-        mCategoryList.addAll(categoryList);
-        mAdapter.notifyDataSetChanged();
+        mAdapter.updateItems(categoryList);
+
         Toast.makeText(this, "Categories loaded from database.", Toast.LENGTH_SHORT).show();
     }
 
@@ -319,9 +316,8 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
     @Override
     public void onNewCategoryCreated(Category category) {
         try {
-            if (category.getCategory().length() > 0) {
+            if (category.getTitle().length() > 0) {
                 mPresenter.addCategory(category);
-                mAdapter.notifyItemInserted(mCategoryList.size() - 1);
             } else {
                 Toast.makeText(this, "No category added...", Toast.LENGTH_SHORT).show();
             }
@@ -343,7 +339,6 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
     @Override
     public void onCategoryAdded() {
         mPresenter.loadCategories();
-        mAdapter.notifyItemInserted(mCategoryList.size() - 1);
 
         Toast.makeText(this, "Categories loaded after insertion.", Toast.LENGTH_SHORT).show();
     }

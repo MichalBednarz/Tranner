@@ -1,14 +1,8 @@
 package com.example.android.tranner.mainscreen.adapters;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.res.Resources;
-import android.os.Bundle;
 import android.support.annotation.ColorInt;
-import android.support.v13.view.ViewCompat;
-import android.support.v4.view.ViewPropertyAnimatorListener;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
@@ -21,11 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.tranner.R;
-import com.example.android.tranner.categoryscreen.activities.CategoryActivity;
-import com.example.android.tranner.data.ConstantKeys;
 import com.example.android.tranner.data.providers.categoryprovider.Category;
 import com.example.android.tranner.mainscreen.listeners.MainActivityAdapterListener;
-import com.github.florent37.viewanimator.ViewAnimator;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -33,7 +24,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import jp.wasabeef.recyclerview.animators.holder.AnimateViewHolder;
 
 /**
  * Created by Michał on 2017-04-09.
@@ -60,7 +50,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final Category category = mCategoryList.get(position);
-        holder.textView.setText(category.getCategory());
+        holder.textView.setText(category.getTitle());
         if (category.getImageUrl() != null && !category.getImageUrl().equals("")) {
             Picasso.with(mContext).load(category.getImageUrl()).into(holder.mainItemImage);
         }
@@ -105,7 +95,9 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
      * for displaying menu and handling each menu item click.
      *
      * @param view
+     * @param category
      * @param holder
+     * @param position
      */
     private void showPopupMenu(View view, final Category category, final ViewHolder holder, int position) {
         PopupMenu popup = new PopupMenu(view.getContext(), view);
@@ -115,10 +107,10 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
             switch (item.getItemId()) {
                 case R.id.item_delete:
                     new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
-                            .setTitleText("Are you sure?")
-                            .setContentText("Won't be able to recover this file!")
-                            .setCancelText("No, cancel plx!")
-                            .setConfirmText("Yes, delete it!")
+                            .setTitleText(mContext.getString(R.string.delete_title))
+                            .setContentText(mContext.getString(R.string.delete_content))
+                            .setCancelText(mContext.getString(R.string.delete_cancel))
+                            .setConfirmText(mContext.getString(R.string.delete_confirm))
                             .showCancelButton(true)
                             .setCancelClickListener(sDialog -> sDialog.cancel())
                             .setConfirmClickListener(sDialog -> {
@@ -134,6 +126,17 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
             return false;
         });
         popup.show();
+    }
+
+    /**
+     * This method performs all necessary operations to update list of data smoothly.
+     *
+     * @param newCategories
+     */
+    public void updateItems(List<Category> newCategories) {
+        mCategoryList.clear();
+        mCategoryList.addAll(newCategories);
+        notifyDataSetChanged();
     }
 
     @Override

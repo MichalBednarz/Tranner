@@ -21,7 +21,7 @@ public class Category implements Serializable{
     private int mId;
 
     @DatabaseField(columnName = CategoryDatabaseContract.CategoryEntry.CATEGORY_TITLE, unique = true)
-    private String mName;
+    private String mTitle;
 
     @DatabaseField(columnName = CategoryDatabaseContract.CategoryEntry.CATEGORY_URL)
     private String mImageUrl;
@@ -31,7 +31,7 @@ public class Category implements Serializable{
     }
 
     public Category(String name) {
-        this.mName = name;
+        this.mTitle = name;
     }
 
     /*
@@ -39,12 +39,12 @@ public class Category implements Serializable{
      *
      */
 
-    public String getCategory() {
-        return mName;
+    public String getTitle() {
+        return mTitle;
     }
 
-    public void setCategory(String category) {
-        this.mName = category;
+    public void setTitle(String title) {
+        this.mTitle = title;
     }
 
     public String getImageUrl() {

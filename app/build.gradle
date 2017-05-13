@@ -89,5 +89,5 @@ dependencies {
     compile 'com.github.clans:fab:1.6.2'
     compile 'com.github.florent37:viewanimator:1.0.5'
     compile 'jp.wasabeef:recyclerview-animators:2.2.6'
-    compile 'com.github.andyxialm:TyperEditText:1.0.2'
+    compile 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.1.0'
 }

@@ -5,7 +5,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.SET_ANIMATION_SCALE" />
+    <uses-feature android:name="android.hardware.camera"
+        android:required="false" />
 
     <application
         android:name=".TrannerApp"
@@ -41,6 +42,7 @@
             android:label="@string/detail_activity"
             android:parentActivityName=".categoryscreen.activities.CategoryActivity"
             android:theme="@style/AppThemeOne.NoActionBar"
+            android:configChanges="orientation|screenSize"
             tools:targetApi="jelly_bean">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

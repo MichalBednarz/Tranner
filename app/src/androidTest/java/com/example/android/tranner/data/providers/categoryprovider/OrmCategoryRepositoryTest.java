@@ -44,7 +44,7 @@ public class OrmCategoryRepositoryTest {
 
         assertFalse(categoryList.isEmpty());
 
-        assertTrue(categoryList.get(0).getCategory().equals("category"));
+        assertTrue(categoryList.get(0).getTitle().equals("category"));
 
     }
 }

@@ -29,6 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:gravity="top"
+                android:title="@null"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                 app:titleMarginTop="13dp" />
@@ -49,6 +50,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/activity_detail_appbar"
+        android:focusableInTouchMode="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <android.support.design.widget.TextInputLayout
@@ -62,8 +64,9 @@
                 android:layout_height="match_parent"
                 android:background="@null"
                 android:fontFamily="casual"
+                android:cursorVisible="false"
                 android:gravity="top"
-                android:inputType="textMultiLine" />
+                android:inputType="textCapSentences"/>
         </android.support.design.widget.TextInputLayout>
 
     </FrameLayout>

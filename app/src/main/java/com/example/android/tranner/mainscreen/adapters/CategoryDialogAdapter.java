@@ -49,7 +49,7 @@ public class CategoryDialogAdapter extends RecyclerView.Adapter<CategoryDialogAd
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final Category suggested = SUGGESTED_CATEGORIES.get(position);
-        holder.dialogItemText.setText(suggested.getCategory());
+        holder.dialogItemText.setText(suggested.getTitle());
         holder.itemView.setOnClickListener(v -> {
             mSelected = position;
             notifyDataSetChanged();

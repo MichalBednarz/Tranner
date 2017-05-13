@@ -8,7 +8,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MenuItem;
 
 import com.example.android.tranner.R;
 import com.example.android.tranner.TrannerApp;
@@ -135,7 +134,7 @@ public class CategoryActivity extends AppCompatActivity implements
 
     @Override
     public void onParentCategoryLoaded(Category parentCategory) {
-        setTitle(parentCategory.getCategory());
+        setTitle(parentCategory.getTitle());
         mAdapter = new FragmentSlidingAdapter(getSupportFragmentManager(), parentCategory.getId());
         mViewpager.setAdapter(mAdapter);
         mSlidingTabs.setupWithViewPager(mViewpager);

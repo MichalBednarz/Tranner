@@ -2,14 +2,15 @@ package com.example.android.tranner.detailscreen;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +26,8 @@ import com.example.android.tranner.data.providers.itemprovider.CategoryItem;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
+
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
@@ -38,8 +41,10 @@ import static com.example.android.tranner.data.ConstantKeys.DETAIL_INTENT;
 
 public class DetailActivity extends AppCompatActivity implements DetailContract.View {
 
-    public static final int SELECT_PHOTO = 1;
+    private static final int SELECT_PHOTO = 1;
     private static final String TAG = "DetailActivity";
+    private static final String TEXT_SAVE = "text_save";
+    private static final int REQUEST_IMAGE_CAPTURE = 2;
     @Inject
     DetailPresenter mPresenter;
 
@@ -94,6 +99,17 @@ public class DetailActivity extends AppCompatActivity implements DetailContract.
                     .setTitleText("Ups, something went wrong!")
                     .show();*/
         }
+
+        KeyboardVisibilityEvent.setEventListener(
+                this,
+                isOpen -> {
+                    // some code depending on keyboard visiblity status
+                    if (!isOpen) {
+                        mParentItem.setDescription(mEditText.getText().toString());
+
+                        mPresenter.updateItem(mParentItem);
+                    }
+                });
     }
 
     @Override
@@ -105,7 +121,17 @@ public class DetailActivity extends AppCompatActivity implements DetailContract.
 
     @OnClick(R.id.material_design_floating_action_menu_item2)
     public void onItemTwoClick() {
+        mFloatingMenu.close(true);
+       //hasSystemFeature(PackageManager.FEATURE_CAMERA);
+        dispatchTakePictureIntent();
 
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
     }
 
     @OnClick(R.id.material_design_floating_action_menu_item3)
@@ -129,9 +155,14 @@ public class DetailActivity extends AppCompatActivity implements DetailContract.
             case SELECT_PHOTO:
                 if (resultCode == RESULT_OK) {
                     Uri selectedImage = imageReturnedIntent.getData();
-
                     mParentItem.setImageUri(selectedImage.toString());
-
+                    mPresenter.updateItem(mParentItem);
+                }
+                break;
+            case REQUEST_IMAGE_CAPTURE:
+                if (resultCode == RESULT_OK) {
+                    Uri takenPhoto = imageReturnedIntent.getData();
+                    mParentItem.setImageUri(takenPhoto.toString());
                     mPresenter.updateItem(mParentItem);
                 }
         }
@@ -145,8 +176,6 @@ public class DetailActivity extends AppCompatActivity implements DetailContract.
 
         if (item.getImageUri() != null) {
             updateBackground(item.getImageUri());
-        } else {
-
         }
 
         Toast.makeText(this, "Item loaded.", Toast.LENGTH_SHORT).show();
