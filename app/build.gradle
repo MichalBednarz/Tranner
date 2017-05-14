@@ -88,6 +88,5 @@ dependencies {
     compile 'com.f2prateek.rx.preferences2:rx-preferences:2.0.0-RC2'
     compile 'com.github.clans:fab:1.6.2'
     compile 'com.github.florent37:viewanimator:1.0.5'
-    compile 'jp.wasabeef:recyclerview-animators:2.2.6'
     compile 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.1.0'
 }

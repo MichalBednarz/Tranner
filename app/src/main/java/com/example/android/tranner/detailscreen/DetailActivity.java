@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -36,14 +37,14 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.example.android.tranner.data.ConstantKeys.DETAIL_INTENT;
 
 public class DetailActivity extends AppCompatActivity implements DetailContract.View {
 
-    private static final int SELECT_PHOTO = 1;
     private static final String TAG = "DetailActivity";
-    private static final String TEXT_SAVE = "text_save";
+    private static final int SELECT_PHOTO = 1;
     private static final int REQUEST_IMAGE_CAPTURE = 2;
     @Inject
     DetailPresenter mPresenter;
@@ -95,15 +96,15 @@ public class DetailActivity extends AppCompatActivity implements DetailContract.
             mParentId = bundle.getInt(DETAIL_INTENT);
             mPresenter.loadItem(mParentId);
         } else {
-            /*new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+            new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
                     .setTitleText("Ups, something went wrong!")
-                    .show();*/
+                    .show();
         }
 
+        //saves description data typed by the user on keyboard hide
         KeyboardVisibilityEvent.setEventListener(
                 this,
                 isOpen -> {
-                    // some code depending on keyboard visiblity status
                     if (!isOpen) {
                         mParentItem.setDescription(mEditText.getText().toString());
 
@@ -122,9 +123,12 @@ public class DetailActivity extends AppCompatActivity implements DetailContract.
     @OnClick(R.id.material_design_floating_action_menu_item2)
     public void onItemTwoClick() {
         mFloatingMenu.close(true);
-       //hasSystemFeature(PackageManager.FEATURE_CAMERA);
-        dispatchTakePictureIntent();
 
+        if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+            dispatchTakePictureIntent();
+        } else {
+            Toast.makeText(this, "Option not available.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void dispatchTakePictureIntent() {
@@ -181,16 +185,29 @@ public class DetailActivity extends AppCompatActivity implements DetailContract.
         Toast.makeText(this, "Item loaded.", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * This method takes care for conversion of image address stored by user in the item
+     * into background image.
+     * @param path
+     */
     private void updateBackground(String path) {
         InputStream imageStream = null;
+
         try {
             imageStream = getContentResolver().openInputStream(Uri.parse(path));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+
         Bitmap yourSelectedImage = BitmapFactory.decodeStream(imageStream);
-        Drawable drawable = new BitmapDrawable(yourSelectedImage);
-        mCollapseToolbar.setBackgroundDrawable(drawable);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            Drawable drawable = new BitmapDrawable(getResources(), yourSelectedImage);
+            mCollapseToolbar.setBackground(drawable);
+        } else {
+            Drawable drawable = new BitmapDrawable(yourSelectedImage);
+            mCollapseToolbar.setBackgroundDrawable(drawable);
+        }
     }
 
     @Override

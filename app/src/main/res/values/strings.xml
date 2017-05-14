@@ -19,9 +19,6 @@
     <string name="closeDrawer">close_drawer</string>
 
     <!-- Navigation Drawer menu labels -->
-    <string name="action_theme_one">Pastel</string>
-    <string name="action_theme_two">YellowBlack</string>
-    <string name="action_theme_three">Soft</string>
     <string name="nav_about_us">About Us</string>
     <string name="nav_exit">Exit</string>
 

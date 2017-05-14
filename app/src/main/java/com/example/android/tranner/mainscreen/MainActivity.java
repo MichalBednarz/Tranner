@@ -9,12 +9,10 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -31,6 +29,12 @@ import com.example.android.tranner.mainscreen.dialogs.WebImageDialog;
 import com.example.android.tranner.mainscreen.listeners.CategoryDialogListener;
 import com.example.android.tranner.mainscreen.listeners.MainActivityAdapterListener;
 import com.example.android.tranner.mainscreen.listeners.WebImageDialogAdapterListener;
+import com.example.android.tranner.mainscreen.themes.AppCompatThemedActivity;
+import com.example.android.tranner.mainscreen.themes.AppTheme;
+import com.example.android.tranner.mainscreen.themes.AttributeExtractor;
+import com.example.android.tranner.mainscreen.themes.OnThemeSelectedListener;
+import com.example.android.tranner.mainscreen.themes.ThemePickerAdapter;
+import com.example.android.tranner.mainscreen.themes.ThemePreferences;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -41,13 +45,11 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
-import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
-import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 import static com.example.android.tranner.data.ConstantKeys.WEB_DIALOG_TAG;
 
-public class MainActivity extends AppCompatActivity implements CategoryDialogListener,
+public class MainActivity extends AppCompatThemedActivity implements CategoryDialogListener,
+        OnThemeSelectedListener,
         MainActivityAdapterListener,
         WebImageDialogAdapterListener,
         CategoryContract.View {
@@ -71,19 +73,21 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
     NavigationView mNavigationView;
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawer;
+    @BindView(R.id.recyclerview_inside_nav)
+    RecyclerView mThemeRecyclerView;
     private List<Category> mCategoryList;
     private ImageView mNavHeaderImage;
     private MainActivityAdapter mAdapter;
     private CategoryDialog mCategoryDialog;
     private WebImageDialog mWebDialog;
     private View mNavigationHeader;
+    private ThemePreferences mPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //change item theme depending on last user choice stored in activity shared preferences
-        //invoked necessarily before setting View
-        changeTheme(getPreferences(MODE_PRIVATE).getInt(THEME_PREFERENCE, 0));
         super.onCreate(savedInstanceState);
+        mPreferences = new ThemePreferences(this);
+        applyPreviouslySelectedTheme();
         setContentView(R.layout.activity_drawer_main);
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
@@ -99,18 +103,36 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
         mCategoryList = new ArrayList<>();
         mPresenter.loadCategories();
 
-        setUpRecyclerView();
+        setUpCategoryRecyclerView();
 
         mNavigationHeader = mNavigationView.getHeaderView(0);
-        mNavHeaderImage = (ImageView) mNavigationHeader.findViewById(R.id.img_header_bg);
+        mNavHeaderImage = (ImageView) mNavigationHeader.findViewById(R.id.nav_header_backdrop);
 
         // load nav menu header data
         loadNavHeader();
         // initializing navigation menu
         setUpNavigationView();
+        // initializing recycler view inside navigation view
+        setUpThemeRecyclerView();
     }
 
-    private void setUpRecyclerView() {
+    @Override
+    public void onThemeSelected(AppTheme theme) {
+        applyTheme(theme);
+    }
+
+    private void applyPreviouslySelectedTheme() {
+        AppTheme theme = mPreferences.getSelectedTheme();
+        setTheme(theme.resId());
+    }
+
+    private void setUpThemeRecyclerView() {
+        AttributeExtractor extractor = new AttributeExtractor();
+        mThemeRecyclerView.setAdapter(new ThemePickerAdapter(extractor, this));
+        mThemeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    private void setUpCategoryRecyclerView() {
         mAdapter = new MainActivityAdapter(this, mCategoryList);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -129,32 +151,6 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
      * Provide all navigation view elements functionality.
      */
     private void setUpNavigationView() {
-        //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
-        mNavigationView.setNavigationItemSelectedListener(menuItem -> {
-            //Check to see which item was being clicked and perform appropriate action
-            switch (menuItem.getItemId()) {
-                case R.id.nav_theme_one:
-                    recreateWithNewTheme(THEME_PASTEL);
-                    return true;
-                case R.id.nav_theme_two:
-                    recreateWithNewTheme(THEME_YELLOW);
-                    return true;
-                case R.id.nav_theme_three:
-                    recreateWithNewTheme(THEME_SOFT);
-                    return true;
-                case R.id.nav_about_us:
-
-                    return true;
-                case R.id.nav_exit:
-                    mDrawer.closeDrawers();
-                    exit();
-                    return true;
-                default:
-                    return true;
-            }
-        });
-
-
         ActionBarDrawerToggle actionBarDrawerToggle =
                 new ActionBarDrawerToggle(this, mDrawer, mToolbar, R.string.openDrawer, R.string.closeDrawer) {
                     @Override
@@ -177,32 +173,6 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
         actionBarDrawerToggle.syncState();
     }
 
-    /**
-     * This method saves already picked theme number in shared preferences and recreates current
-     * activity with the purpose of applying it.
-     *
-     * @param theme constant pointing one of themes.
-     */
-    private void recreateWithNewTheme(int theme) {
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putInt(THEME_PREFERENCE, theme);
-        editor.apply();
-        startActivity(new Intent(this, MainActivity.class));
-        finish();
-        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-    }
-
-    /**
-     * Proceed user to the home screen.
-     */
-    private void exit() {
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -220,26 +190,6 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogLis
         FragmentManager manager = getSupportFragmentManager();
         mCategoryDialog = CategoryDialog.newInstance();
         mCategoryDialog.show(manager, "category_dialog");
-    }
-
-    /**
-     * Method responsible for theme change depending on
-     * option selected from action bar by the user.
-     *
-     * @param preference denotes number of item in list of available themes.
-     */
-    private void changeTheme(int preference) {
-        switch (preference) {
-            case 0:
-                setTheme(R.style.AppThemeOne);
-                break;
-            case 1:
-                setTheme(R.style.AppThemeTwo);
-                break;
-            case 2:
-                setTheme(R.style.AppThemeThree);
-                break;
-        }
     }
 
     @Override
