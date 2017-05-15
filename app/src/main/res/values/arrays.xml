@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="category_suggested">
+        <item>Hobby</item>
+        <item>Work</item>
+        <item>Sport</item>
+        <item>Cooking</item>
+        <item>Passion</item>
+        <item>Books</item>
+        <item>Cars</item>
+        <item>Travelling</item>
+        <item>Cycling</item>
+        <item>Science</item>
+        <item>Animals</item>
+        <item>Nature</item>
+        <item>Psychology</item>
+        <item>Health</item>
+    </string-array>
+</resources>

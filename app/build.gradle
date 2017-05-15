@@ -88,4 +88,5 @@ dependencies {
     compile 'com.github.clans:fab:1.6.2'
     compile 'com.github.florent37:viewanimator:1.0.5'
     compile 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.1.0'
+    compile 'com.afollestad.material-dialogs:core:0.9.4.4'
 }

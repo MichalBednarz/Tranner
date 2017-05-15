@@ -4,16 +4,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.android.tranner.R;
 import com.example.android.tranner.TrannerApp;
 import com.example.android.tranner.categoryscreen.activities.CategoryActivity;
@@ -22,7 +23,6 @@ import com.example.android.tranner.data.providers.categoryprovider.Category;
 import com.example.android.tranner.data.providers.categoryprovider.CategoryContract;
 import com.example.android.tranner.data.providers.categoryprovider.CategoryPresenter;
 import com.example.android.tranner.mainscreen.adapters.MainActivityAdapter;
-import com.example.android.tranner.mainscreen.dialogs.CategoryDialog;
 import com.example.android.tranner.mainscreen.dialogs.WebImageDialog;
 import com.example.android.tranner.mainscreen.listeners.CategoryDialogListener;
 import com.example.android.tranner.mainscreen.listeners.MainActivityAdapterListener;
@@ -43,6 +43,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.example.android.tranner.data.ConstantKeys.HEADER_URL;
 import static com.example.android.tranner.data.ConstantKeys.WEB_DIALOG_TAG;
@@ -73,7 +74,6 @@ public class MainActivity extends AppCompatThemedActivity implements CategoryDia
     private List<Category> mCategoryList;
     private ImageView mNavHeaderImage;
     private MainActivityAdapter mAdapter;
-    private CategoryDialog mCategoryDialog;
     private WebImageDialog mWebDialog;
     private View mNavigationHeader;
     private ThemePreferences mPreferences;
@@ -185,14 +185,42 @@ public class MainActivity extends AppCompatThemedActivity implements CategoryDia
 
     /**
      * Method that handles click on floating action button.
-     * This method gets new instance of CategoryDialog class
-     * and displays it.
+     * This method instantiates and displays dialog used to
+     * add new Category with the name chosen by the user.
      */
     @OnClick(R.id.fab)
     public void showCategoryDialog() {
-        FragmentManager manager = getSupportFragmentManager();
-        mCategoryDialog = CategoryDialog.newInstance();
-        mCategoryDialog.show(manager, "category_dialog");
+        /*
+          Instantiate dialog intended to appear on click of neutral button in suggestions dialog.
+         */
+        MaterialDialog customs = new MaterialDialog.Builder(this)
+                .title(R.string.category_custom_title)
+                .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS)
+                .input(getString(R.string.category_custom_hint), null, false, (dialog, input) ->
+                        mPresenter.addCategory(new Category(input.toString())))
+
+                .negativeText(R.string.dialog_cancel)
+                .build();
+
+         /*
+          Instantiate dialog containing list of pre-made suggested category names.
+         */
+        MaterialDialog suggestions = new MaterialDialog.Builder(this)
+                .title(R.string.category_title)
+                .items(R.array.category_suggested)
+                .itemsCallbackSingleChoice(0, (dialog, view, which, text) -> {
+                    mPresenter.addCategory(new Category(text.toString()));
+
+                    return true;
+                })
+                .positiveText(R.string.category_choose)
+                .neutralText(R.string.category_custom)
+                .onNeutral((dialog, which) -> {
+                    customs.show();
+                })
+                .build();
+
+        suggestions.show();
     }
 
     @Override
@@ -211,10 +239,20 @@ public class MainActivity extends AppCompatThemedActivity implements CategoryDia
 
     @Override
     public void onCategoryDeleted(Category category, int position) {
-        mPresenter.deleteCategory(category);
-        mPresenter.loadCategories();
+        new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText(getResources().getString(R.string.delete_title))
+                .setContentText(getResources().getString(R.string.delete_content))
+                .setCancelText(getResources().getString(R.string.delete_cancel))
+                .setConfirmText(getResources().getString(R.string.delete_confirm))
+                .showCancelButton(true)
+                .setCancelClickListener(sDialog -> sDialog.cancel())
+                .setConfirmClickListener(sDialog -> {
+                    mPresenter.deleteCategory(category);
+                    mPresenter.loadCategories();
 
-        Toast.makeText(this, "Category " + category.getTitle() + " proceeded to deletion.", Toast.LENGTH_SHORT).show();
+                    sDialog.cancel();
+                })
+                .show();
     }
 
     @Override

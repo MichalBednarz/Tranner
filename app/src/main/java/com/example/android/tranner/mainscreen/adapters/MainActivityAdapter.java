@@ -106,21 +106,12 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
         popup.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case R.id.item_delete:
-                    new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
-                            .setTitleText(String.valueOf(R.string.delete_title))
-                            .setContentText(String.valueOf(R.string.delete_content))
-                            .setCancelText(String.valueOf(R.string.delete_cancel))
-                            .setConfirmText(String.valueOf(R.string.delete_confirm))
-                            .showCancelButton(true)
-                            .setCancelClickListener(sDialog -> sDialog.cancel())
-                            .setConfirmClickListener(sDialog -> {
-                                mListener.onCategoryDeleted(category, position);
-                                sDialog.cancel();
-                            })
-                            .show();
+                    mListener.onCategoryDeleted(category, position);
+
                     return true;
                 case R.id.item_backdrop:
                     mListener.onChangeBackdropClicked(category, position);
+
                     return true;
             }
             return false;
