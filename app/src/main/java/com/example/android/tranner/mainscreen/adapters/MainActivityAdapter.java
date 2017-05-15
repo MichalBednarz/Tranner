@@ -107,10 +107,10 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
             switch (item.getItemId()) {
                 case R.id.item_delete:
                     new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
-                            .setTitleText(mContext.getString(R.string.delete_title))
-                            .setContentText(mContext.getString(R.string.delete_content))
-                            .setCancelText(mContext.getString(R.string.delete_cancel))
-                            .setConfirmText(mContext.getString(R.string.delete_confirm))
+                            .setTitleText(String.valueOf(R.string.delete_title))
+                            .setContentText(String.valueOf(R.string.delete_content))
+                            .setCancelText(String.valueOf(R.string.delete_cancel))
+                            .setConfirmText(String.valueOf(R.string.delete_confirm))
                             .showCancelButton(true)
                             .setCancelClickListener(sDialog -> sDialog.cancel())
                             .setConfirmClickListener(sDialog -> {

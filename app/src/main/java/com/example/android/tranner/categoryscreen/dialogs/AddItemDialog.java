@@ -27,6 +27,13 @@ public class AddItemDialog extends DialogFragment {
 
     }
 
+    /**
+     * Use this factory method to create a new instance of
+     * this add_item_dialog using the provided parameters.
+     *
+     * @param title
+     * @return
+     */
     public static AddItemDialog newInstance(String title) {
         Bundle args = new Bundle();
         args.putString(DIALOG_KEY, title);
@@ -58,12 +65,11 @@ public class AddItemDialog extends DialogFragment {
             title = bundle.getString(DIALOG_KEY);
         }
 
-
         android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
         builder.setTitle(title)
                 .setView(v)
-                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
-                .setPositiveButton("Create", (dialog, which) -> mDialogListener.onDialogAddItem(mEditText.getText().toString()));
+                .setNegativeButton(getString(R.string.cancel), (dialog, which) -> dialog.dismiss())
+                .setPositiveButton(getString(R.string.create), (dialog, which) -> mDialogListener.onDialogAddItem(mEditText.getText().toString()));
 
         return builder.create();
     }

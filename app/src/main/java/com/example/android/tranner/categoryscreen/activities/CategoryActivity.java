@@ -24,6 +24,7 @@ import com.example.android.tranner.data.providers.categorypreferences.Preference
 import com.example.android.tranner.data.providers.categoryprovider.Category;
 import com.example.android.tranner.data.providers.itemprovider.CategoryItem;
 import com.example.android.tranner.detailscreen.DetailActivity;
+import com.example.android.tranner.mainscreen.themes.AppTheme;
 
 import javax.inject.Inject;
 
@@ -31,7 +32,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-import static com.example.android.tranner.data.ConstantKeys.CATEGORY_INTENT;
+import static com.example.android.tranner.data.ConstantKeys.CATEGORY_INTENT_ID;
 
 public class CategoryActivity extends AppCompatActivity implements
         OnFamiliarFragmentListener,
@@ -50,9 +51,17 @@ public class CategoryActivity extends AppCompatActivity implements
     private FragmentSlidingAdapter mAdapter;
     private CategoryActivityComponent mComponent;
 
+    /**
+     * Use this factory method to create a new instance of
+     * this category_activity using the provided parameters.
+     * @param context
+     *
+     * @param category
+     * @return
+     */
     public static Intent getStartIntent(Context context, Category category) {
         Intent startIntent = new Intent(context, CategoryActivity.class);
-        startIntent.putExtra(ConstantKeys.CATEGORY_INTENT, category.getId());
+        startIntent.putExtra(ConstantKeys.CATEGORY_INTENT_ID, category.getId());
 
         return startIntent;
     }
@@ -80,8 +89,8 @@ public class CategoryActivity extends AppCompatActivity implements
 
         //handle Category id passed from MainActivity
         //category instance is specific Category opened by the user
-        if (getIntent().hasExtra(CATEGORY_INTENT)) {
-            int parentId = getIntent().getIntExtra(CATEGORY_INTENT, -1);
+        if (getIntent().hasExtra(CATEGORY_INTENT_ID)) {
+            int parentId = getIntent().getIntExtra(CATEGORY_INTENT_ID, -1);
 
             mPreferencePresenter.saveParentId(parentId);
         }
@@ -121,12 +130,6 @@ public class CategoryActivity extends AppCompatActivity implements
         mPreferencePresenter.detachView();
     }
 
-    @Override
-    public void onBackPressed() {
-        finish();
-        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-    }
-
     /**
      * CategoryActivity Presenter methods responsible for retrieval of
      * parent category stored in shared preferences.
@@ -143,18 +146,18 @@ public class CategoryActivity extends AppCompatActivity implements
     @Override
     public void onParentCategoryLoadError() {
         new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
-                .setTitleText("Ups, something went wrong!")
+                .setTitleText(getResources().getString(R.string.error))
                 .show();
     }
 
     @Override
     public void onParentIdSaved() {
-        Log.d(TAG, "onParentIdSaved: ");
+
     }
 
     @Override
     public void onParentIdSaveError() {
-        Log.d(TAG, "onParentIdSaveError: ");
+
     }
 
     @Override
@@ -164,13 +167,13 @@ public class CategoryActivity extends AppCompatActivity implements
 
     @Override
     public void onNoParentIdRetrieved() {
-        Log.d(TAG, "onNoParentIdRetrieved: ");
+
     }
 
     @Override
     public void onParentIdRetrieveError() {
         new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
-                .setTitleText("Ups, something went wrong!")
+                .setTitleText(getResources().getString(R.string.error))
                 .show();
     }
 }

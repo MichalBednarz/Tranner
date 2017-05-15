@@ -34,8 +34,6 @@ public class CategoryDialog extends DialogFragment implements CategoryDialogAdap
 
     private static final String TAG = "CategoryDialog";
 
-    public static final String NEW_CATEGORY = "New category";
-
     private RecyclerView mRecyclerview;
     private EditText mDialogEdit;
     private Toolbar mToolbar;
@@ -69,7 +67,7 @@ public class CategoryDialog extends DialogFragment implements CategoryDialogAdap
         mDialogEdit = (EditText) rootView.findViewById(R.id.dialog_edit);
         mRecyclerview = (RecyclerView) rootView.findViewById(R.id.dialog_recyclerview_full);
 
-        mToolbar.setTitle(NEW_CATEGORY);
+        mToolbar.setTitle(R.string.new_title);
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (actionBar != null) {

@@ -49,11 +49,6 @@ import static com.example.android.tranner.data.ConstantKeys.RELOAD_EVENT;
 public class FragmentFamiliar extends Fragment implements OnListItemClickListener, OnAddItemDialogListener, ItemContract.FamiliarView {
 
     public static final String ARG_ID = "arg_id";
-    private static final String TITLE_DIALOG = "Familiar TITLE";
-    private static final String ADD_DIALOG = "Add FAMILIAR";
-    private static final String ADD_CANCEL = "Go back";
-    private static final String ADD_APPROVE = "Lets add it!";
-    private static final String ERROR_DIALOG = "Ups, something went wrong!";
 
     @BindView(R.id.recyclerview_familiar_fragment)
     RecyclerView mRecyclerView;
@@ -131,14 +126,13 @@ public class FragmentFamiliar extends Fragment implements OnListItemClickListene
 
         mFamiliarItemPresenter.attachFamiliarView(this);
 
-        //mParentCategory = ((CategoryActivity) getActivity()).getParentCategory();
         if (!getArguments().isEmpty()) {
             mParentId = getArguments().getInt(ARG_ID);
             mFamiliarItemPresenter.loadFamiliarItems(mParentId);
             setUpRecyclerView();
         } else {
             new SweetAlertDialog(getContext(), SweetAlertDialog.ERROR_TYPE)
-                    .setTitleText(ERROR_DIALOG)
+                    .setTitleText(String.valueOf(R.string.error))
                     .show();
         }
 
@@ -188,10 +182,10 @@ public class FragmentFamiliar extends Fragment implements OnListItemClickListene
      */
     private void openAddDialog() {
         new SweetAlertDialog(getActivity(), SweetAlertDialog.CUSTOM_IMAGE_TYPE)
-                .setTitleText(ADD_DIALOG)
-                .setCancelText(ADD_CANCEL)
+                .setTitleText(getString(R.string.add_familiar))
+                .setCancelText(getString(R.string.go_back))
                 .setCancelClickListener(Dialog::dismiss)
-                .setConfirmText(ADD_APPROVE)
+                .setConfirmText(getString(R.string.lets_add))
                 .setConfirmClickListener(sweetAlertDialog -> {
                     sweetAlertDialog.dismiss();
 
@@ -206,7 +200,7 @@ public class FragmentFamiliar extends Fragment implements OnListItemClickListene
      */
     private void openTitleDialog() {
         new MaterialDialog.Builder(getActivity())
-                .title(TITLE_DIALOG)
+                .title(R.string.familiar_title)
                 .inputType(InputType.TYPE_CLASS_TEXT)
                 .input(null, null, (dialog, input) -> {
                     CategoryItem item =

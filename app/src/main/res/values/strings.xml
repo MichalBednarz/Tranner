@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Tranner</string>
-    <string name="enter_category_name">Custom category...</string>
+    <string name="enter_category_name">Custom category…</string>
     <string name="item_delete">delete</string>
     <string name="add_backdrop">backdrop</string>
     <string name="title_activity_category">CategoryActivity</string>
@@ -10,7 +10,7 @@
     <string name="item_move">move</string>
     <string name="search_button">search</string>
     <string name="detail_activity">detail_activity</string>
-    <string name="detail_description">Type your description...</string>
+    <string name="detail_description">Type your description…</string>
 
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -33,4 +33,17 @@
     <string name="delete_content">Won\'t be able to recover this file!</string>
     <string name="delete_cancel">No, cancel plx!</string>
     <string name="delete_confirm">Yes, delete it!</string>
+    <string name="detail_title">details</string>
+    <string name="error">Ups, something went wrong!</string>
+    <string name="new_title">New category</string>
+    <string name="cancel">Cancel</string>
+    <string name="web_title">Pick BACKDROP</string>
+    <string name="wait_text">Waiting for response…</string>
+    <string name="familiar_title">Familiar TITLE</string>
+    <string name="add_familiar">Add FAMILIAR</string>
+    <string name="go_back">Go back</string>
+    <string name="lets_add">Lets add it!</string>
+    <string name="new_item_title">New TITLE</string>
+    <string name="add_new">Add NEW</string>
+    <string name="create">Create</string>
 </resources>

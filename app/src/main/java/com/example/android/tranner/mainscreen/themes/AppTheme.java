@@ -8,10 +8,12 @@ import android.support.annotation.StyleRes;
 
 import com.example.android.tranner.R;
 
+import java.io.Serializable;
+
 /**
  * Java representation of a Theme
  */
-public enum AppTheme {
+public enum AppTheme implements Serializable{
     DARK(R.style.AppThemeOne, "Pastel"),
     RED(R.style.AppThemeTwo, "Black&Yellow"),
     GREEN(R.style.AppThemeThree, "Softy");

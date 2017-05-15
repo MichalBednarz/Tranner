@@ -1,11 +1,14 @@
 package com.example.android.tranner.categoryscreen.adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.support.annotation.ColorInt;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
@@ -17,6 +20,8 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.android.tranner.R;
 import com.example.android.tranner.categoryscreen.listeners.OnListItemClickListener;
 import com.example.android.tranner.data.providers.itemprovider.CategoryItem;
+import com.example.android.tranner.mainscreen.adapters.MainActivityAdapter;
+import com.github.florent37.viewanimator.ViewAnimator;
 
 import java.util.List;
 
@@ -58,6 +63,40 @@ public class FragmentLayoutAdapter extends RecyclerView.Adapter<FragmentLayoutAd
         holder.itemView.setOnClickListener(v -> mListener.onListOpenItem(item));
         holder.mButton.setOnClickListener(v -> showPopupMenu(v, item, holder));
 
+        setItemBackdrop(holder, position);
+
+        ViewAnimator.animate(holder.itemView)
+                .scale(0.9f, 1)
+                .alpha(0, 1)
+                .start();
+
+    }
+
+    /**
+     * Subsidiary method invoked in onBindViewHolder responsible for setting three different colors
+     * to different items backdrops.
+     *
+     * @param holder
+     * @param position
+     */
+    private void setItemBackdrop(FragmentLayoutAdapter.ViewHolder holder, int position) {
+
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = mContext.getTheme();
+
+        if (position % 3 == 0) {
+            theme.resolveAttribute(R.attr.item_one, typedValue, true);
+            @ColorInt int color = typedValue.data;
+            holder.itemView.setBackgroundColor(color);
+        } else if (position % 2 == 0) {
+            theme.resolveAttribute(R.attr.item_two, typedValue, true);
+            @ColorInt int color = typedValue.data;
+            holder.itemView.setBackgroundColor(color);
+        } else {
+            theme.resolveAttribute(R.attr.item_three, typedValue, true);
+            @ColorInt int color = typedValue.data;
+            holder.itemView.setBackgroundColor(color);
+        }
     }
 
     private void showPopupMenu(View view, final CategoryItem item, final FragmentLayoutAdapter.ViewHolder holder) {
@@ -68,10 +107,10 @@ public class FragmentLayoutAdapter extends RecyclerView.Adapter<FragmentLayoutAd
             switch (menuItem.getItemId()) {
                 case R.id.item_delete:
                     new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
-                            .setTitleText("Are you sure?")
-                            .setContentText("Won't be able to recover this file!")
-                            .setCancelText("No, cancel plx!")
-                            .setConfirmText("Yes, delete it!")
+                            .setTitleText(mContext.getResources().getString(R.string.delete_title))
+                            .setContentText(mContext.getResources().getString(R.string.delete_content))
+                            .setCancelText(mContext.getResources().getString(R.string.delete_cancel))
+                            .setConfirmText(mContext.getResources().getString(R.string.delete_confirm))
                             .showCancelButton(true)
                             .setCancelClickListener(SweetAlertDialog::cancel)
                             .setConfirmClickListener(sDialog -> {

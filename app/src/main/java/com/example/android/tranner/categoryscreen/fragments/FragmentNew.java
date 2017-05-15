@@ -53,11 +53,6 @@ public class FragmentNew extends Fragment implements OnListItemClickListener, On
 
     private static final String ARG_ID = "arg_id";
     private static final String TAG = "FragmentNew";
-    private static final String TITLE_DIALOG = "New TITLE";
-    private static final String ADD_DIALOG = "Add NEW";
-    private static final String ADD_CANCEL = "Go back";
-    private static final String ADD_APPROVE = "Lets add it!";
-    private static final String ERROR_DIALOG = "Ups, something went wrong!";
 
     @BindView(R.id.recyclerview_new_fragment)
     RecyclerView mRecyclerView;
@@ -72,7 +67,6 @@ public class FragmentNew extends Fragment implements OnListItemClickListener, On
 
     private OnNewFragmentListener mFragmentListener;
     private FragmentLayoutAdapter mAdapter;
-    private AddItemDialog mAddItemDialog;
     private List<CategoryItem> mItemList = new ArrayList<>();
     private int mParentId;
 
@@ -138,7 +132,7 @@ public class FragmentNew extends Fragment implements OnListItemClickListener, On
             setUpRecyclerView();
         } else {
             new SweetAlertDialog(getContext(), SweetAlertDialog.ERROR_TYPE)
-                    .setTitleText(ERROR_DIALOG)
+                    .setTitleText(getString(R.string.error))
                     .show();
         }
     }
@@ -168,10 +162,10 @@ public class FragmentNew extends Fragment implements OnListItemClickListener, On
      */
     private void openAddDialog() {
         new SweetAlertDialog(getActivity(), SweetAlertDialog.CUSTOM_IMAGE_TYPE)
-                .setTitleText(ADD_DIALOG)
-                .setCancelText(ADD_CANCEL)
+                .setTitleText(getString(R.string.add_new))
+                .setCancelText(getString(R.string.go_back))
                 .setCancelClickListener(Dialog::dismiss)
-                .setConfirmText(ADD_APPROVE)
+                .setConfirmText(getString(R.string.lets_add))
                 .setConfirmClickListener(sweetAlertDialog -> {
                     sweetAlertDialog.dismiss();
 
@@ -186,7 +180,7 @@ public class FragmentNew extends Fragment implements OnListItemClickListener, On
      */
     private void openTitleDialog() {
         new MaterialDialog.Builder(getActivity())
-                .title(TITLE_DIALOG)
+                .title(R.string.new_item_title)
                 .inputType(InputType.TYPE_CLASS_TEXT)
                 .input(null, null, (dialog, input) -> {
                     CategoryItem item =

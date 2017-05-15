@@ -12,11 +12,13 @@ import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.android.tranner.R;
 import com.example.android.tranner.TrannerApp;
 import com.example.android.tranner.dagger.components.DaggerImagePresenterComponent;
+import com.example.android.tranner.data.ConstantKeys;
 import com.example.android.tranner.data.providers.categoryprovider.Category;
 import com.example.android.tranner.data.providers.imageprovider.ImageContract;
 import com.example.android.tranner.data.providers.imageprovider.ImageHit;
@@ -24,6 +26,9 @@ import com.example.android.tranner.data.providers.imageprovider.ImagePresenter;
 import com.example.android.tranner.data.providers.imageprovider.PixabayResponse;
 import com.example.android.tranner.mainscreen.adapters.WebImageDialogAdapter;
 import com.example.android.tranner.mainscreen.listeners.WebImageDialogAdapterListener;
+import com.squareup.picasso.Picasso;
+
+import org.junit.Before;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,16 +48,16 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 public class WebImageDialog extends DialogFragment implements ImageContract.View {
 
     public static final String ARG_CATEGORY = "arg_category";
-    public static final String TITLE = "Pick BACKDROP";
-    public static final String NEGATIVE_BUTTON = "CANCEL";
     private static final String TAG = "WebImageDialog";
-    private static final String WAIT_TEXT = "Waiting for response...";
+
     @BindView(R.id.web_dialog_recyclerview)
     RecyclerView mRecyclerView;
     @BindView(R.id.web_edit_search)
     AppCompatEditText mEditSearch;
     @BindView(R.id.web_search_button)
     Button mSearchButton;
+    @BindView(R.id.pixabay_logo)
+    ImageView mPixabayLogo;
     Unbinder unbinder;
     @Inject
     ImagePresenter mImagePresenter;
@@ -109,15 +114,20 @@ public class WebImageDialog extends DialogFragment implements ImageContract.View
         mImagePresenter.attachView(this);
 
         mAlertDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
-        mAlertDialog.setTitleText(WAIT_TEXT);
+        mAlertDialog.setTitleText(getString(R.string.wait_text));
         mAlertDialog.getProgressHelper().setBarColor(Color.CYAN);
+
+        //load pixabay logo
+        Picasso.with(getContext())
+                .load(ConstantKeys.PIXABAY_LOGO)
+                .into(mPixabayLogo);
 
         setupRecyclerView();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(TITLE)
+        builder.setTitle(R.string.web_title)
                 .setView(view)
-                .setNegativeButton(NEGATIVE_BUTTON, (dialog, which) -> dialog.dismiss());
+                .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
 
         return builder.create();
     }
@@ -168,7 +178,7 @@ public class WebImageDialog extends DialogFragment implements ImageContract.View
     @Override
     public void onImageFetchError() {
         new SweetAlertDialog(getContext(), SweetAlertDialog.ERROR_TYPE)
-                .setTitleText("Ups, something went wrong!")
+                .setTitleText(getResources().getString(R.string.error))
                 .show();
     }
 }

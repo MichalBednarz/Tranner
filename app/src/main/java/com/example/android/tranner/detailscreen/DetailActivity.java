@@ -16,6 +16,8 @@ import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.android.tranner.R;
@@ -67,6 +69,14 @@ public class DetailActivity extends AppCompatActivity implements DetailContract.
     private CategoryItem mParentItem;
     private int mParentId;
 
+    /**
+     * Use this factory method to create a new instance of
+     * this detail_activity using the provided parameters.
+     *
+     * @param context
+     * @param itemId
+     * @return
+     */
     public static Intent getStartIntent(Context context, int itemId) {
         Intent startIntent = new Intent(context, DetailActivity.class);
         Bundle args = new Bundle();
@@ -97,7 +107,7 @@ public class DetailActivity extends AppCompatActivity implements DetailContract.
             mPresenter.loadItem(mParentId);
         } else {
             new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
-                    .setTitleText("Ups, something went wrong!")
+                    .setTitleText(getString(R.string.error))
                     .show();
         }
 
@@ -174,15 +184,29 @@ public class DetailActivity extends AppCompatActivity implements DetailContract.
 
     @Override
     public void onItemLoaded(CategoryItem item) {
-        mParentItem = item;
-        mCollapseToolbar.setTitle(item.getName());
-        mEditText.setText(item.getDescription());
+        extractItem(item);
 
         if (item.getImageUri() != null) {
             updateBackground(item.getImageUri());
         }
 
         Toast.makeText(this, "Item loaded.", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Load item attributes into layout.
+     * @param item
+     */
+    private void extractItem(CategoryItem item) {
+        mParentItem = item;
+
+        if (item.getName() != null && item.getName().length() > 0) {
+            mCollapseToolbar.setTitle(item.getName());
+        } else {
+            mCollapseToolbar.setTitle(getString(R.string.detail_title));
+        }
+
+        mEditText.setText(item.getDescription());
     }
 
     /**
@@ -218,6 +242,7 @@ public class DetailActivity extends AppCompatActivity implements DetailContract.
     @Override
     public void onItemUpdated() {
         mPresenter.loadItem(mParentId);
+
         Toast.makeText(this, "Item updated.", Toast.LENGTH_SHORT).show();
     }
 

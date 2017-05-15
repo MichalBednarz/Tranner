@@ -8,7 +8,9 @@ package com.example.android.tranner.data;
  * Class responsible for storage of constant keys used across application by different classes.
  */
 public class ConstantKeys {
-    public static final String CATEGORY_INTENT = "cateogry_intent";
+    public static final String CATEGORY_INTENT_ID = "cateogry_intent";
+    public static final String PIXABAY_LOGO = "https://pixabay.com/static/img/public/leaderboard_a.png";
+    public static final String HEADER_URL = "http://api.androidhive.info/images/nav-menu-header-bg.jpg";
     public static final String DETAIL_INTENT = "detail_intent";
     public static final String ITEM_TAB_NEW = "item_tab_new";
     public static final String ITEM_TAB_FAMILIAR = "item_tab_familiar";

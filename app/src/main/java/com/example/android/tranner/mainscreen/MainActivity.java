@@ -1,8 +1,6 @@
 package com.example.android.tranner.mainscreen;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -46,6 +44,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.example.android.tranner.data.ConstantKeys.HEADER_URL;
 import static com.example.android.tranner.data.ConstantKeys.WEB_DIALOG_TAG;
 
 public class MainActivity extends AppCompatThemedActivity implements CategoryDialogListener,
@@ -55,18 +54,12 @@ public class MainActivity extends AppCompatThemedActivity implements CategoryDia
         CategoryContract.View {
 
     private static final String TAG = "MainActivity";
-    private static final String HEADER_URL = "http://api.androidhive.info/images/nav-menu-header-bg.jpg";
-    private static final String THEME_PREFERENCE = "theme_preference";
-    private static final int THEME_PASTEL = 0;
-    private static final int THEME_YELLOW = 1;
-    private static final int THEME_SOFT = 2;
+
 
     @BindView(R.id.fab)
     FloatingActionButton fab;
     @BindView(R.id.main_recycler_view)
     RecyclerView mRecyclerView;
-    @Inject
-    CategoryPresenter mPresenter;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
     @BindView(R.id.nav_view)
@@ -75,6 +68,8 @@ public class MainActivity extends AppCompatThemedActivity implements CategoryDia
     DrawerLayout mDrawer;
     @BindView(R.id.recyclerview_inside_nav)
     RecyclerView mThemeRecyclerView;
+    @Inject
+    CategoryPresenter mPresenter;
     private List<Category> mCategoryList;
     private ImageView mNavHeaderImage;
     private MainActivityAdapter mAdapter;
@@ -116,16 +111,27 @@ public class MainActivity extends AppCompatThemedActivity implements CategoryDia
         setUpThemeRecyclerView();
     }
 
+    /**
+     * Handle theme change incurred by the user in navigation view.
+     * @param theme
+     */
     @Override
     public void onThemeSelected(AppTheme theme) {
         applyTheme(theme);
     }
 
+    /**
+     * Retrieve from shared preferences theme selected lately by the user
+     * and apply it to the layout.
+     */
     private void applyPreviouslySelectedTheme() {
         AppTheme theme = mPreferences.getSelectedTheme();
         setTheme(theme.resId());
     }
 
+    /**
+     * Provide navigation view with multiple theme options displayed with help of recycler view.
+     */
     private void setUpThemeRecyclerView() {
         AttributeExtractor extractor = new AttributeExtractor();
         mThemeRecyclerView.setAdapter(new ThemePickerAdapter(extractor, this));
@@ -142,7 +148,6 @@ public class MainActivity extends AppCompatThemedActivity implements CategoryDia
      * Load navigation menu header information.
      */
     private void loadNavHeader() {
-        // loading header background image
         Picasso.with(this).load(HEADER_URL)
                 .into(mNavHeaderImage);
     }
@@ -166,10 +171,8 @@ public class MainActivity extends AppCompatThemedActivity implements CategoryDia
                     }
                 };
 
-        //Setting the actionbarToggle to drawer layout
         mDrawer.addDrawerListener(actionBarDrawerToggle);
 
-        //calling sync state is necessary or else your hamburger icon wont show up
         actionBarDrawerToggle.syncState();
     }
 
@@ -213,6 +216,28 @@ public class MainActivity extends AppCompatThemedActivity implements CategoryDia
 
         Toast.makeText(this, "Category " + category.getTitle() + " proceeded to deletion.", Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public void onNewCategoryCreated(Category category) {
+        try {
+            if (category.getTitle().length() > 0) {
+                mPresenter.addCategory(category);
+            } else {
+                Toast.makeText(this, "No category added...", Toast.LENGTH_SHORT).show();
+            }
+        } catch (NullPointerException e) {
+            Toast.makeText(this, "Category insertion error...", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onPickImageUrl(Category category) {
+        mPresenter.updateCategory(category);
+    }
+
+    /**
+     * Presenter methods.
+     */
 
     @Override
     public void onCategoryLoaded(List<Category> categoryList) {
@@ -264,26 +289,8 @@ public class MainActivity extends AppCompatThemedActivity implements CategoryDia
     }
 
     @Override
-    public void onNewCategoryCreated(Category category) {
-        try {
-            if (category.getTitle().length() > 0) {
-                mPresenter.addCategory(category);
-            } else {
-                Toast.makeText(this, "No category added...", Toast.LENGTH_SHORT).show();
-            }
-        } catch (NullPointerException e) {
-            Toast.makeText(this, "Category insertion error...", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
     public void onCategoryUpdated() {
         mPresenter.loadCategories();
-    }
-
-    @Override
-    public void onPickImageUrl(Category category) {
-        mPresenter.updateCategory(category);
     }
 
     @Override
@@ -296,6 +303,7 @@ public class MainActivity extends AppCompatThemedActivity implements CategoryDia
     @Override
     public void onCategoryDeleted() {
         mPresenter.loadCategories();
+
         Toast.makeText(this, "Categories loaded after deletion.", Toast.LENGTH_SHORT).show();
     }
 }
