@@ -7,7 +7,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 
 import com.example.android.tranner.R;
 import com.example.android.tranner.TrannerApp;
@@ -25,6 +24,7 @@ import com.example.android.tranner.data.providers.categoryprovider.Category;
 import com.example.android.tranner.data.providers.itemprovider.CategoryItem;
 import com.example.android.tranner.detailscreen.DetailActivity;
 import com.example.android.tranner.mainscreen.themes.AppTheme;
+import com.example.android.tranner.mainscreen.themes.ThemePreferences;
 
 import javax.inject.Inject;
 
@@ -50,6 +50,7 @@ public class CategoryActivity extends AppCompatActivity implements
     PreferencePresenter mPreferencePresenter;
     private FragmentSlidingAdapter mAdapter;
     private CategoryActivityComponent mComponent;
+    private ThemePreferences mThemePreferences;
 
     /**
      * Use this factory method to create a new instance of
@@ -97,16 +98,27 @@ public class CategoryActivity extends AppCompatActivity implements
 
         //retrieve parent id from shared preferences so that parent Category could be loaded thereafter
         mPreferencePresenter.retrieveParentId();
+
+        mThemePreferences = new ThemePreferences(getApplicationContext());
+        applyPreviouslySelectedTheme();
     }
 
     public CategoryActivityComponent getComponent() {
         return mComponent;
     }
 
+    /**
+     * Retrieve from shared preferences theme selected lately by the user
+     * and apply it to the layout.
+     */
+    private void applyPreviouslySelectedTheme() {
+        AppTheme theme = mThemePreferences.getSelectedTheme();
+        setTheme(theme.resId());
+    }
+
     @Override
     public void onFamiliarItemOpened(CategoryItem item) {
         Intent startIntent = DetailActivity.getStartIntent(this, item.getId());
-
         startActivity(startIntent);
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
@@ -118,7 +130,6 @@ public class CategoryActivity extends AppCompatActivity implements
     @Override
     public void onNewItemOpened(CategoryItem item) {
         Intent startIntent = DetailActivity.getStartIntent(this, item.getId());
-
         startActivity(startIntent);
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }

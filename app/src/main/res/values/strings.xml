@@ -6,7 +6,6 @@
     <string name="title_activity_category">CategoryActivity</string>
     <string name="category_activity">category_activity</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="item_move">move</string>
     <string name="search_button">search</string>
     <string name="detail_activity">detail_activity</string>
@@ -19,11 +18,10 @@
     <string name="closeDrawer">close_drawer</string>
 
     <!-- Navigation Drawer menu labels -->
-    <string name="nav_about_us">About Us</string>
+    <string name="nav_about_us">About us</string>
     <string name="nav_exit">Exit</string>
 
 
-    <string name="activity_title_about_us">About Us</string>
     <string name="activity_title_privacy_policy">Privacy Policy</string>
     <string name="action_clear_all">Clear All</string>
     <string name="action_logout">Logout</string>
@@ -52,4 +50,6 @@
     <string name="category_custom_hint">category name</string>
     <string name="web_image_not_found">No images found</string>
     <string name="web_image_search">Search</string>
+    <string name="nav_themes">Themes</string>
+    <string name="nav_menu">Menu</string>
 </resources>

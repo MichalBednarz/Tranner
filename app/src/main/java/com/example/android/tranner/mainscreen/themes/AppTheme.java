@@ -13,10 +13,10 @@ import java.io.Serializable;
 /**
  * Java representation of a Theme
  */
-public enum AppTheme implements Serializable{
-    DARK(R.style.AppThemeOne, "Pastel"),
-    RED(R.style.AppThemeTwo, "Black&Yellow"),
-    GREEN(R.style.AppThemeThree, "Softy");
+public enum AppTheme {
+    PASTEL(R.style.AppThemeOne, "Pastel"),
+    YELLOW(R.style.AppThemeTwo, "Yellow"),
+    SOFT(R.style.AppThemeThree, "Softy");
 
     @StyleRes
     private final int styleResId;

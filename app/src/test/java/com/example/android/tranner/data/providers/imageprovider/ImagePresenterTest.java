@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
  */
 public class ImagePresenterTest {
 
-    private final PixabayResponse VALID_DATA = new PixabayResponse();
+    private PixabayResponse VALID_DATA;
     private PixabayResponse EMPTY_DATA;
     private final String QUERY = "query";
 
@@ -35,6 +35,12 @@ public class ImagePresenterTest {
 
     @Before
     public void setUp() {
+        VALID_DATA = new PixabayResponse();
+        VALID_DATA.setTotal(1);
+
+        EMPTY_DATA = new PixabayResponse();
+        EMPTY_DATA.setTotal(0);
+
         presenter = new ImagePresenter(service, Schedulers.trampoline());
         presenter.attachView(view);
         RxJavaPlugins.setIoSchedulerHandler(scheduler -> Schedulers.trampoline());
@@ -53,6 +59,15 @@ public class ImagePresenterTest {
         presenter.fetchImages(QUERY);
 
         verify(view).onImagesFetched(VALID_DATA);
+    }
+
+    @Test
+    public void shouldPassNoResponseToView() {
+        when(service.fetchImages(QUERY)).thenReturn(Single.just(EMPTY_DATA));
+
+        presenter.fetchImages(QUERY);
+
+        verify(view).onNoImagesFetched();
     }
 
     @Test

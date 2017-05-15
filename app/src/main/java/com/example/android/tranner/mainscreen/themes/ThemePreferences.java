@@ -14,7 +14,7 @@ import android.preference.PreferenceManager;
 public class ThemePreferences {
 
     private static final String KEY_SELECTED_THEME = "KEY_SELECTED_THEME";
-    private static final String DEFAULT_THEME = AppTheme.DARK.themeName();
+    private static final String DEFAULT_THEME = AppTheme.PASTEL.themeName();
 
     private final SharedPreferences preferences;
 

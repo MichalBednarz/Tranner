@@ -3,13 +3,11 @@ package com.example.android.tranner.mainscreen;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -19,6 +17,7 @@ import com.example.android.tranner.R;
 import com.example.android.tranner.TrannerApp;
 import com.example.android.tranner.categoryscreen.activities.CategoryActivity;
 import com.example.android.tranner.dagger.components.DaggerMainActivityComponent;
+import com.example.android.tranner.data.ConstantKeys;
 import com.example.android.tranner.data.providers.categoryprovider.Category;
 import com.example.android.tranner.data.providers.categoryprovider.CategoryContract;
 import com.example.android.tranner.data.providers.categoryprovider.CategoryPresenter;
@@ -29,10 +28,11 @@ import com.example.android.tranner.mainscreen.listeners.MainActivityAdapterListe
 import com.example.android.tranner.mainscreen.listeners.WebImageDialogAdapterListener;
 import com.example.android.tranner.mainscreen.themes.AppCompatThemedActivity;
 import com.example.android.tranner.mainscreen.themes.AppTheme;
-import com.example.android.tranner.mainscreen.themes.AttributeExtractor;
-import com.example.android.tranner.mainscreen.themes.OnThemeSelectedListener;
-import com.example.android.tranner.mainscreen.themes.ThemePickerAdapter;
 import com.example.android.tranner.mainscreen.themes.ThemePreferences;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.model.DividerDrawerItem;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -45,17 +45,21 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-import static com.example.android.tranner.data.ConstantKeys.HEADER_URL;
 import static com.example.android.tranner.data.ConstantKeys.WEB_DIALOG_TAG;
 
 public class MainActivity extends AppCompatThemedActivity implements CategoryDialogListener,
-        OnThemeSelectedListener,
         MainActivityAdapterListener,
         WebImageDialogAdapterListener,
         CategoryContract.View {
 
     private static final String TAG = "MainActivity";
-
+    private static final int THEME_POSITION = 0;
+    private static final int PASTEL_POSITION = 1;
+    private static final int YELLOW_POSITION = 2;
+    private static final int SOFT_POSITION = 3;
+    private static final int MENU_POSITION = 4;
+    private static final int ABOUT_POSITION = 5;
+    private static final int EXIT_POSITION = 6;
 
     @BindView(R.id.fab)
     FloatingActionButton fab;
@@ -63,27 +67,19 @@ public class MainActivity extends AppCompatThemedActivity implements CategoryDia
     RecyclerView mRecyclerView;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
-    @BindView(R.id.nav_view)
-    NavigationView mNavigationView;
-    @BindView(R.id.drawer_layout)
-    DrawerLayout mDrawer;
-    @BindView(R.id.recyclerview_inside_nav)
-    RecyclerView mThemeRecyclerView;
     @Inject
     CategoryPresenter mPresenter;
-    private List<Category> mCategoryList;
-    private ImageView mNavHeaderImage;
+    private List<Category> mCategoryList = new ArrayList<>();
     private MainActivityAdapter mAdapter;
     private WebImageDialog mWebDialog;
-    private View mNavigationHeader;
-    private ThemePreferences mPreferences;
+    private ThemePreferences mThemePreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPreferences = new ThemePreferences(this);
+        mThemePreferences = new ThemePreferences(getApplicationContext());
         applyPreviouslySelectedTheme();
-        setContentView(R.layout.activity_drawer_main);
+        setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
 
@@ -95,29 +91,74 @@ public class MainActivity extends AppCompatThemedActivity implements CategoryDia
 
         mPresenter.attachView(this);
 
-        mCategoryList = new ArrayList<>();
         mPresenter.loadCategories();
 
         setUpCategoryRecyclerView();
 
-        mNavigationHeader = mNavigationView.getHeaderView(0);
-        mNavHeaderImage = (ImageView) mNavigationHeader.findViewById(R.id.nav_header_backdrop);
-
-        // load nav menu header data
-        loadNavHeader();
-        // initializing navigation menu
-        setUpNavigationView();
-        // initializing recycler view inside navigation view
-        setUpThemeRecyclerView();
+        setUpNavigationDrawer();
     }
 
-    /**
-     * Handle theme change incurred by the user in navigation view.
-     * @param theme
-     */
-    @Override
-    public void onThemeSelected(AppTheme theme) {
-        applyTheme(theme);
+    private void setUpNavigationDrawer() {
+        View navigationHeader = LayoutInflater.from(this).inflate(R.layout.nav_header_main, null);
+        ImageView headerBackdrop = ButterKnife.findById(navigationHeader, R.id.nav_header_backdrop);
+
+        PrimaryDrawerItem itemTheme = new PrimaryDrawerItem().withIdentifier(THEME_POSITION).withName(R.string.nav_themes).withSelectable(false);
+        SecondaryDrawerItem itemPastel = new SecondaryDrawerItem().withIdentifier(PASTEL_POSITION).withName(AppTheme.PASTEL.themeName());
+        SecondaryDrawerItem itemYellow = new SecondaryDrawerItem().withIdentifier(YELLOW_POSITION).withName(AppTheme.YELLOW.themeName());
+        SecondaryDrawerItem itemSoft = new SecondaryDrawerItem().withIdentifier(SOFT_POSITION).withName(AppTheme.SOFT.themeName());
+        PrimaryDrawerItem itemMenu = new PrimaryDrawerItem().withIdentifier(MENU_POSITION).withName(R.string.nav_menu).withSelectable(false).withSelectable(false);
+        SecondaryDrawerItem itemAbousUs = new SecondaryDrawerItem().withIdentifier(ABOUT_POSITION).withName(R.string.nav_about_us);
+        SecondaryDrawerItem itemExit = new SecondaryDrawerItem().withIdentifier(EXIT_POSITION).withName(R.string.nav_exit);
+
+        new DrawerBuilder()
+                .withActivity(this)
+                .withToolbar(mToolbar)
+                .withHeader(navigationHeader)
+                .addDrawerItems(
+                        itemTheme,
+                        new DividerDrawerItem(),
+                        itemPastel,
+                        itemYellow,
+                        itemSoft,
+                        new DividerDrawerItem(),
+                        itemMenu,
+                        itemAbousUs,
+                        itemExit
+                )
+                .withOnDrawerItemClickListener((view, position, drawerItem) -> {
+                    switch ((int) drawerItem.getIdentifier()) {
+                        case THEME_POSITION:
+                            break;
+                        case PASTEL_POSITION:
+                            applyTheme(AppTheme.PASTEL);
+                            break;
+                        case YELLOW_POSITION:
+                            applyTheme(AppTheme.YELLOW);
+                            break;
+                        case SOFT_POSITION:
+                            applyTheme(AppTheme.SOFT);
+                            break;
+                        case MENU_POSITION:
+                            break;
+                        case ABOUT_POSITION:
+                            break;
+                        case EXIT_POSITION:
+                            exitApp();
+                            break;
+                    }
+
+                    return true;
+                })
+                .build();
+
+        Picasso.with(this).load(ConstantKeys.HEADER_URL).into(headerBackdrop);
+    }
+
+    private void exitApp() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     /**
@@ -125,55 +166,14 @@ public class MainActivity extends AppCompatThemedActivity implements CategoryDia
      * and apply it to the layout.
      */
     private void applyPreviouslySelectedTheme() {
-        AppTheme theme = mPreferences.getSelectedTheme();
+        AppTheme theme = mThemePreferences.getSelectedTheme();
         setTheme(theme.resId());
-    }
-
-    /**
-     * Provide navigation view with multiple theme options displayed with help of recycler view.
-     */
-    private void setUpThemeRecyclerView() {
-        AttributeExtractor extractor = new AttributeExtractor();
-        mThemeRecyclerView.setAdapter(new ThemePickerAdapter(extractor, this));
-        mThemeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     private void setUpCategoryRecyclerView() {
         mAdapter = new MainActivityAdapter(this, mCategoryList);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-    }
-
-    /**
-     * Load navigation menu header information.
-     */
-    private void loadNavHeader() {
-        Picasso.with(this).load(HEADER_URL)
-                .into(mNavHeaderImage);
-    }
-
-    /**
-     * Provide all navigation view elements functionality.
-     */
-    private void setUpNavigationView() {
-        ActionBarDrawerToggle actionBarDrawerToggle =
-                new ActionBarDrawerToggle(this, mDrawer, mToolbar, R.string.openDrawer, R.string.closeDrawer) {
-                    @Override
-                    public void onDrawerClosed(View drawerView) {
-                        // Code here will be triggered once the drawer closes as we dont want anything to happen so we leave this blank
-                        super.onDrawerClosed(drawerView);
-                    }
-
-                    @Override
-                    public void onDrawerOpened(View drawerView) {
-                        // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
-                        super.onDrawerOpened(drawerView);
-                    }
-                };
-
-        mDrawer.addDrawerListener(actionBarDrawerToggle);
-
-        actionBarDrawerToggle.syncState();
     }
 
     @Override

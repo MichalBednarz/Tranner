@@ -89,4 +89,5 @@ dependencies {
     compile 'com.github.florent37:viewanimator:1.0.5'
     compile 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.1.0'
     compile 'com.afollestad.material-dialogs:core:0.9.4.4'
+    compile('com.mikepenz:materialdrawer:5.9.1@aar') { transitive = true }
 }
