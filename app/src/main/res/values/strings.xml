@@ -50,4 +50,6 @@
     <string name="category_custom">Custom</string>
     <string name="category_custom_title">Your category</string>
     <string name="category_custom_hint">category name</string>
+    <string name="web_image_not_found">No images found</string>
+    <string name="web_image_search">Search</string>
 </resources>

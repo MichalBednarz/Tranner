@@ -1,6 +1,7 @@
 package com.example.android.tranner.mainscreen.adapters;
 
 import android.content.Context;
+import android.media.Image;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -56,6 +57,17 @@ public class WebImageDialogAdapter extends RecyclerView.Adapter<WebImageDialogAd
             mListener.onPickImageUrl(mCategory);
             mDialogFragment.dismiss();
         });
+    }
+
+    /**
+     * This method performs all necessary operations to update list of data smoothly.
+     *
+     * @param newCategories
+     */
+    public void updateItems(List<ImageHit> images) {
+        mImageList.clear();
+        mImageList.addAll(images);
+        notifyDataSetChanged();
     }
 
     @Override

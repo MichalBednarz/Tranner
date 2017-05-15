@@ -3,7 +3,6 @@ package com.example.android.tranner.mainscreen.dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -13,7 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.example.android.tranner.R;
 import com.example.android.tranner.TrannerApp;
@@ -28,8 +26,6 @@ import com.example.android.tranner.mainscreen.adapters.WebImageDialogAdapter;
 import com.example.android.tranner.mainscreen.listeners.WebImageDialogAdapterListener;
 import com.squareup.picasso.Picasso;
 
-import org.junit.Before;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +33,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -54,8 +49,6 @@ public class WebImageDialog extends DialogFragment implements ImageContract.View
     RecyclerView mRecyclerView;
     @BindView(R.id.web_edit_search)
     AppCompatEditText mEditSearch;
-    @BindView(R.id.web_search_button)
-    Button mSearchButton;
     @BindView(R.id.pixabay_logo)
     ImageView mPixabayLogo;
     Unbinder unbinder;
@@ -74,15 +67,6 @@ public class WebImageDialog extends DialogFragment implements ImageContract.View
         fragment.setArguments(args);
 
         return fragment;
-    }
-
-    @OnClick(R.id.web_search_button)
-    public void searchImagesByTag() {
-        if (mEditSearch.getText() != null && mEditSearch.getText().length() > 0) {
-            mImagePresenter.fetchImages(mEditSearch.getText().toString());
-        } else {
-            Toast.makeText(getActivity(), "Please type query.", Toast.LENGTH_SHORT).show();
-        }
     }
 
     @Override
@@ -113,9 +97,8 @@ public class WebImageDialog extends DialogFragment implements ImageContract.View
         //Provide ImagePresenter with class implementing ImageContract.View
         mImagePresenter.attachView(this);
 
-        mAlertDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
-        mAlertDialog.setTitleText(getString(R.string.wait_text));
-        mAlertDialog.getProgressHelper().setBarColor(Color.CYAN);
+        mAlertDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE)
+                .setTitleText(getString(R.string.wait_text));
 
         //load pixabay logo
         Picasso.with(getContext())
@@ -124,12 +107,19 @@ public class WebImageDialog extends DialogFragment implements ImageContract.View
 
         setupRecyclerView();
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.web_title)
+        AlertDialog webImageDialog = new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.web_title)
                 .setView(view)
-                .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
+                .setPositiveButton(R.string.web_image_search, null)
+                .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss())
+                .create();
 
-        return builder.create();
+        webImageDialog.setOnShowListener(dialog -> {
+            Button button = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+            button.setOnClickListener(view1 -> mImagePresenter.fetchImages(mEditSearch.getText().toString()));
+        });
+
+        return webImageDialog;
     }
 
     @Override
@@ -160,7 +150,6 @@ public class WebImageDialog extends DialogFragment implements ImageContract.View
     @Override
     public void onWaitingForResults() {
         mAlertDialog.show();
-
     }
 
     @Override
@@ -170,9 +159,14 @@ public class WebImageDialog extends DialogFragment implements ImageContract.View
 
     @Override
     public void onImagesFetched(PixabayResponse pixabayResponseList) {
-        mImageList.clear();
-        mImageList.addAll(pixabayResponseList.getHits());
-        mAdapter.notifyDataSetChanged();
+        mAdapter.updateItems(pixabayResponseList.getHits());
+    }
+
+    @Override
+    public void onNoImagesFetched() {
+        new SweetAlertDialog(getContext(), SweetAlertDialog.ERROR_TYPE)
+                .setTitleText(getString(R.string.web_image_not_found))
+                .show();
     }
 
     @Override

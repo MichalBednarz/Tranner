@@ -44,8 +44,11 @@ public class ImagePresenter implements ImageContract.Presenter {
                     @Override
                     public void onSuccess(@NonNull PixabayResponse pixabayResponse) {
                         mView.onStopWaiting();
-
-                        mView.onImagesFetched(pixabayResponse);
+                        if(pixabayResponse.getTotal() > 0) {
+                            mView.onImagesFetched(pixabayResponse);
+                        } else {
+                            mView.onNoImagesFetched();
+                        }
                     }
 
                     @Override

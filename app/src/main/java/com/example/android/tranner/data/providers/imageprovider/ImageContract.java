@@ -17,6 +17,8 @@ public class ImageContract {
         void onImagesFetched(PixabayResponse pixabayResponse);
 
         void onImageFetchError();
+
+        void onNoImagesFetched();
     }
 
     public interface Presenter {
