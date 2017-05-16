@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Tranner</string>
     <string name="enter_category_name">Custom category…</string>
-    <string name="item_delete">delete</string>
-    <string name="add_backdrop">backdrop</string>
+    <string name="main_item_delete">delete</string>
+    <string name="main_item_backdrop">backdrop</string>
     <string name="title_activity_category">CategoryActivity</string>
     <string name="category_activity">category_activity</string>
 
