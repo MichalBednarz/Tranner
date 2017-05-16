@@ -99,6 +99,9 @@ public class WebImageDialog extends DialogFragment implements ImageContract.View
 
         mAlertDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE)
                 .setTitleText(getString(R.string.wait_text));
+        mAlertDialog.getProgressHelper()
+                .setBarColor(getResources().getColor(R.color.colorAccent));
+
 
         //load pixabay logo
         Picasso.with(getContext())

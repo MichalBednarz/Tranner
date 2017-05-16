@@ -59,9 +59,8 @@ public class MainActivity extends AppCompatThemedActivity implements CategoryDia
     private static final int SOFT_POSITION = 3;
     private static final int MENU_POSITION = 4;
     private static final int ABOUT_POSITION = 5;
-    private static final int EXIT_POSITION = 6;
 
-    @BindView(R.id.fab)
+    @BindView(R.id.activity_main_fab)
     FloatingActionButton fab;
     @BindView(R.id.main_recycler_view)
     RecyclerView mRecyclerView;
@@ -108,7 +107,6 @@ public class MainActivity extends AppCompatThemedActivity implements CategoryDia
         SecondaryDrawerItem itemSoft = new SecondaryDrawerItem().withIdentifier(SOFT_POSITION).withName(AppTheme.SOFT.themeName());
         PrimaryDrawerItem itemMenu = new PrimaryDrawerItem().withIdentifier(MENU_POSITION).withName(R.string.nav_menu).withSelectable(false).withSelectable(false);
         SecondaryDrawerItem itemAbousUs = new SecondaryDrawerItem().withIdentifier(ABOUT_POSITION).withName(R.string.nav_about_us);
-        SecondaryDrawerItem itemExit = new SecondaryDrawerItem().withIdentifier(EXIT_POSITION).withName(R.string.nav_exit);
 
         new DrawerBuilder()
                 .withActivity(this)
@@ -122,8 +120,7 @@ public class MainActivity extends AppCompatThemedActivity implements CategoryDia
                         itemSoft,
                         new DividerDrawerItem(),
                         itemMenu,
-                        itemAbousUs,
-                        itemExit
+                        itemAbousUs
                 )
                 .withOnDrawerItemClickListener((view, position, drawerItem) -> {
                     switch ((int) drawerItem.getIdentifier()) {
@@ -142,9 +139,6 @@ public class MainActivity extends AppCompatThemedActivity implements CategoryDia
                             break;
                         case ABOUT_POSITION:
                             break;
-                        case EXIT_POSITION:
-                            exitApp();
-                            break;
                     }
 
                     return true;
@@ -152,13 +146,6 @@ public class MainActivity extends AppCompatThemedActivity implements CategoryDia
                 .build();
 
         Picasso.with(this).load(ConstantKeys.HEADER_URL).into(headerBackdrop);
-    }
-
-    private void exitApp() {
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
     }
 
     /**
@@ -188,7 +175,7 @@ public class MainActivity extends AppCompatThemedActivity implements CategoryDia
      * This method instantiates and displays dialog used to
      * add new Category with the name chosen by the user.
      */
-    @OnClick(R.id.fab)
+    @OnClick(R.id.activity_main_fab)
     public void showCategoryDialog() {
         /*
           Instantiate dialog intended to appear on click of neutral button in suggestions dialog.
