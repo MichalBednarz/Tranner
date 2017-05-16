@@ -16,15 +16,12 @@ import com.example.android.tranner.categoryscreen.listeners.OnFamiliarFragmentLi
 import com.example.android.tranner.categoryscreen.listeners.OnNewFragmentListener;
 import com.example.android.tranner.dagger.components.CategoryActivityComponent;
 import com.example.android.tranner.dagger.components.DaggerCategoryActivityComponent;
-import com.example.android.tranner.dagger.components.DaggerPreferenceComponent;
 import com.example.android.tranner.data.ConstantKeys;
-import com.example.android.tranner.data.providers.categorypreferences.PreferenceContract;
-import com.example.android.tranner.data.providers.categorypreferences.PreferencePresenter;
+import com.example.android.tranner.data.providers.categoryparent.ParentCategoryContract;
+import com.example.android.tranner.data.providers.categoryparent.ParentCategoryPresenter;
 import com.example.android.tranner.data.providers.categoryprovider.Category;
 import com.example.android.tranner.data.providers.itemprovider.CategoryItem;
 import com.example.android.tranner.detailscreen.DetailActivity;
-import com.example.android.tranner.mainscreen.themes.AppTheme;
-import com.example.android.tranner.mainscreen.themes.ThemePreferences;
 
 import javax.inject.Inject;
 
@@ -37,9 +34,8 @@ import static com.example.android.tranner.data.ConstantKeys.CATEGORY_INTENT_ID;
 public class CategoryActivity extends AppCompatActivity implements
         OnFamiliarFragmentListener,
         OnNewFragmentListener,
-        PreferenceContract.View {
+        ParentCategoryContract.View {
 
-    private static final String TAG = "CategoryActivity";
     @BindView(R.id.sliding_tabs)
     TabLayout mSlidingTabs;
     @BindView(R.id.viewpager)
@@ -47,16 +43,15 @@ public class CategoryActivity extends AppCompatActivity implements
     @BindView(R.id.category_dialog_toolbar)
     Toolbar mToolbar;
     @Inject
-    PreferencePresenter mPreferencePresenter;
+    ParentCategoryPresenter mParentCategoryPresenter;
     private FragmentSlidingAdapter mAdapter;
     private CategoryActivityComponent mComponent;
-    private ThemePreferences mThemePreferences;
 
     /**
      * Use this factory method to create a new instance of
      * this category_activity using the provided parameters.
-     * @param context
      *
+     * @param context
      * @param category
      * @return
      */
@@ -75,45 +70,23 @@ public class CategoryActivity extends AppCompatActivity implements
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        //instantiate dependency injection component
         mComponent = DaggerCategoryActivityComponent.builder()
                 .appComponent(((TrannerApp) getApplication()).getComponent())
                 .build();
 
-        //separate dependency injection component providing PreferencePresenter
-        DaggerPreferenceComponent.builder()
-                .appComponent(((TrannerApp) getApplication()).getComponent())
-                .build()
-                .inject(this);
+        mComponent.inject(this);
 
-        mPreferencePresenter.attachView(this);
+        mParentCategoryPresenter.attachView(this);
 
-        //handle Category id passed from MainActivity
-        //category instance is specific Category opened by the user
         if (getIntent().hasExtra(CATEGORY_INTENT_ID)) {
             int parentId = getIntent().getIntExtra(CATEGORY_INTENT_ID, -1);
 
-            mPreferencePresenter.saveParentId(parentId);
+            mParentCategoryPresenter.loadParentCategory(parentId);
         }
-
-        //retrieve parent id from shared preferences so that parent Category could be loaded thereafter
-        mPreferencePresenter.retrieveParentId();
-
-        mThemePreferences = new ThemePreferences(getApplicationContext());
-        applyPreviouslySelectedTheme();
     }
 
     public CategoryActivityComponent getComponent() {
         return mComponent;
-    }
-
-    /**
-     * Retrieve from shared preferences theme selected lately by the user
-     * and apply it to the layout.
-     */
-    private void applyPreviouslySelectedTheme() {
-        AppTheme theme = mThemePreferences.getSelectedTheme();
-        setTheme(theme.resId());
     }
 
     @Override
@@ -125,7 +98,7 @@ public class CategoryActivity extends AppCompatActivity implements
 
     /**
      * This method is component of {@link OnNewFragmentListener}
-     * listener implemented by {@link FragmentNew}. It sends callbacks when usere clicks on subcategory item.
+     * listener implemented by {@link FragmentNew}. It sends callbacks when user clicks on subcategory item.
      */
     @Override
     public void onNewItemOpened(CategoryItem item) {
@@ -138,7 +111,7 @@ public class CategoryActivity extends AppCompatActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mPreferencePresenter.detachView();
+        mParentCategoryPresenter.detachView();
     }
 
     /**
@@ -156,33 +129,6 @@ public class CategoryActivity extends AppCompatActivity implements
 
     @Override
     public void onParentCategoryLoadError() {
-        new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
-                .setTitleText(getResources().getString(R.string.error))
-                .show();
-    }
-
-    @Override
-    public void onParentIdSaved() {
-
-    }
-
-    @Override
-    public void onParentIdSaveError() {
-
-    }
-
-    @Override
-    public void onParentIdRetrieved(int parentId) {
-        mPreferencePresenter.loadParentCategory(parentId);
-    }
-
-    @Override
-    public void onNoParentIdRetrieved() {
-
-    }
-
-    @Override
-    public void onParentIdRetrieveError() {
         new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
                 .setTitleText(getResources().getString(R.string.error))
                 .show();

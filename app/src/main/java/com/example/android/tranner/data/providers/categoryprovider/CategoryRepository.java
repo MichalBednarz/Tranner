@@ -74,4 +74,21 @@ public class CategoryRepository implements CategoryContract.Repository{
         }
         return Single.just(rowNum);
     }
+
+    @Override
+    public Single<Category> loadParentCategory(int parentId) {
+        Category category = null;
+        try {
+            mCategoryDao = mDatabaseHelper.getCategoryDao();
+            category = mCategoryDao.queryBuilder()
+                    .where()
+                    .eq(CategoryDatabaseContract.CategoryEntry._ID, parentId)
+                    .queryForFirst();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        assert category != null;
+        return Single.just(category);
+    }
 }

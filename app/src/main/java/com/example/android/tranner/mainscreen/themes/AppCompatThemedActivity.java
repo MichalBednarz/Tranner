@@ -19,7 +19,7 @@ public class AppCompatThemedActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        preferences = new ThemePreferences(this);
+        preferences = new ThemePreferences(getApplicationContext());
         applyPreviouslySelectedTheme();
     }
 

@@ -51,5 +51,5 @@
     <string name="web_image_not_found">No images found</string>
     <string name="web_image_search">Search</string>
     <string name="nav_themes">Themes</string>
-    <string name="nav_menu">Menu</string>
+    <string name="nav_other">Other</string>
 </resources>

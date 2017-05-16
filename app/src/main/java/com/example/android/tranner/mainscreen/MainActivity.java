@@ -28,7 +28,6 @@ import com.example.android.tranner.mainscreen.listeners.MainActivityAdapterListe
 import com.example.android.tranner.mainscreen.listeners.WebImageDialogAdapterListener;
 import com.example.android.tranner.mainscreen.themes.AppCompatThemedActivity;
 import com.example.android.tranner.mainscreen.themes.AppTheme;
-import com.example.android.tranner.mainscreen.themes.ThemePreferences;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
@@ -52,12 +51,11 @@ public class MainActivity extends AppCompatThemedActivity implements CategoryDia
         WebImageDialogAdapterListener,
         CategoryContract.View {
 
-    private static final String TAG = "MainActivity";
     private static final int THEME_POSITION = 0;
     private static final int PASTEL_POSITION = 1;
     private static final int YELLOW_POSITION = 2;
     private static final int SOFT_POSITION = 3;
-    private static final int MENU_POSITION = 4;
+    private static final int OTHER_POSITION = 4;
     private static final int ABOUT_POSITION = 5;
 
     @BindView(R.id.activity_main_fab)
@@ -71,18 +69,14 @@ public class MainActivity extends AppCompatThemedActivity implements CategoryDia
     private List<Category> mCategoryList = new ArrayList<>();
     private MainActivityAdapter mAdapter;
     private WebImageDialog mWebDialog;
-    private ThemePreferences mThemePreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mThemePreferences = new ThemePreferences(getApplicationContext());
-        applyPreviouslySelectedTheme();
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
 
-        //Dependency injection providing CategoryPresenter
         DaggerMainActivityComponent.builder()
                 .appComponent(((TrannerApp) getApplication()).getComponent())
                 .build()
@@ -105,7 +99,7 @@ public class MainActivity extends AppCompatThemedActivity implements CategoryDia
         SecondaryDrawerItem itemPastel = new SecondaryDrawerItem().withIdentifier(PASTEL_POSITION).withName(AppTheme.PASTEL.themeName());
         SecondaryDrawerItem itemYellow = new SecondaryDrawerItem().withIdentifier(YELLOW_POSITION).withName(AppTheme.YELLOW.themeName());
         SecondaryDrawerItem itemSoft = new SecondaryDrawerItem().withIdentifier(SOFT_POSITION).withName(AppTheme.SOFT.themeName());
-        PrimaryDrawerItem itemMenu = new PrimaryDrawerItem().withIdentifier(MENU_POSITION).withName(R.string.nav_menu).withSelectable(false).withSelectable(false);
+        PrimaryDrawerItem itemMenu = new PrimaryDrawerItem().withIdentifier(OTHER_POSITION).withName(R.string.nav_other).withSelectable(false).withSelectable(false);
         SecondaryDrawerItem itemAbousUs = new SecondaryDrawerItem().withIdentifier(ABOUT_POSITION).withName(R.string.nav_about_us);
 
         new DrawerBuilder()
@@ -135,7 +129,7 @@ public class MainActivity extends AppCompatThemedActivity implements CategoryDia
                         case SOFT_POSITION:
                             applyTheme(AppTheme.SOFT);
                             break;
-                        case MENU_POSITION:
+                        case OTHER_POSITION:
                             break;
                         case ABOUT_POSITION:
                             break;
@@ -146,15 +140,6 @@ public class MainActivity extends AppCompatThemedActivity implements CategoryDia
                 .build();
 
         Picasso.with(this).load(ConstantKeys.HEADER_URL).into(headerBackdrop);
-    }
-
-    /**
-     * Retrieve from shared preferences theme selected lately by the user
-     * and apply it to the layout.
-     */
-    private void applyPreviouslySelectedTheme() {
-        AppTheme theme = mThemePreferences.getSelectedTheme();
-        setTheme(theme.resId());
     }
 
     private void setUpCategoryRecyclerView() {

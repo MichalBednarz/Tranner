@@ -67,7 +67,7 @@ public class MainActivityTest {
 
         onView(withText(R.string.nav_themes)).perform(click());
 
-        onView(withText(R.string.nav_menu)).perform(click());
+        onView(withText(R.string.nav_other)).perform(click());
     }
 
     @Test

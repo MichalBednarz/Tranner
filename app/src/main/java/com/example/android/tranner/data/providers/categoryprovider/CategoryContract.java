@@ -57,5 +57,7 @@ public class CategoryContract {
         Single<Integer> deleteCategory(Category category);
 
         Single<Integer> updateCategory(Category category);
+
+        Single<Category> loadParentCategory(int parentId);
     }
 }

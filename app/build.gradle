@@ -84,7 +84,6 @@ dependencies {
     apt 'com.jakewharton:butterknife-compiler:8.5.1'
     apt 'com.google.dagger:dagger-compiler:2.10'
     provided 'javax.annotation:jsr250-api:1.0'
-    compile 'com.f2prateek.rx.preferences2:rx-preferences:2.0.0-RC2'
     compile 'com.github.clans:fab:1.6.2'
     compile 'com.github.florent37:viewanimator:1.0.5'
     compile 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.1.0'
