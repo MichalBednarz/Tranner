@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import com.example.android.tranner.data.providers.CategoryDatabaseContract;
 import com.example.android.tranner.data.providers.CategoryDatabaseHelper;
 import com.example.android.tranner.data.providers.categoryprovider.Category;
+import com.example.android.tranner.mainscreen.themes.AppTheme;
 import com.f2prateek.rx.preferences2.RxSharedPreferences;
 import com.j256.ormlite.dao.Dao;
 
@@ -20,6 +21,8 @@ public class PreferenceRepository implements PreferenceContract.Repository {
 
     private static final String PARENT_KEY = "parent_id";
     private static final int DEFAULT_ID = -1;
+    private static final String KEY_SELECTED_THEME = "KEY_SELECTED_THEME";
+    private static final String DEFAULT_THEME = AppTheme.PASTEL.themeName();
 
     private SharedPreferences mPreferences;
     private RxSharedPreferences mRxPreferences;
@@ -62,5 +65,12 @@ public class PreferenceRepository implements PreferenceContract.Repository {
         prefsEditor.putInt(PARENT_KEY, parentId);
 
         return Single.just(prefsEditor.commit());
+    }
+
+    @Override
+    public Single<String> retrieveAppTheme() {
+        return mRxPreferences.getString(KEY_SELECTED_THEME, DEFAULT_THEME)
+                .asObservable()
+                .firstOrError();
     }
 }

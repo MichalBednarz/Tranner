@@ -7,6 +7,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.widget.Toast;
 
 import com.example.android.tranner.R;
 import com.example.android.tranner.TrannerApp;
@@ -50,7 +51,6 @@ public class CategoryActivity extends AppCompatActivity implements
     PreferencePresenter mPreferencePresenter;
     private FragmentSlidingAdapter mAdapter;
     private CategoryActivityComponent mComponent;
-    private ThemePreferences mThemePreferences;
 
     /**
      * Use this factory method to create a new instance of
@@ -98,22 +98,11 @@ public class CategoryActivity extends AppCompatActivity implements
 
         //retrieve parent id from shared preferences so that parent Category could be loaded thereafter
         mPreferencePresenter.retrieveParentId();
-
-        mThemePreferences = new ThemePreferences(getApplicationContext());
-        applyPreviouslySelectedTheme();
+        mPreferencePresenter.retrieveAppTheme();
     }
 
     public CategoryActivityComponent getComponent() {
         return mComponent;
-    }
-
-    /**
-     * Retrieve from shared preferences theme selected lately by the user
-     * and apply it to the layout.
-     */
-    private void applyPreviouslySelectedTheme() {
-        AppTheme theme = mThemePreferences.getSelectedTheme();
-        setTheme(theme.resId());
     }
 
     @Override
@@ -129,6 +118,7 @@ public class CategoryActivity extends AppCompatActivity implements
      */
     @Override
     public void onNewItemOpened(CategoryItem item) {
+
         Intent startIntent = DetailActivity.getStartIntent(this, item.getId());
         startActivity(startIntent);
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
@@ -186,5 +176,15 @@ public class CategoryActivity extends AppCompatActivity implements
         new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
                 .setTitleText(getResources().getString(R.string.error))
                 .show();
+    }
+
+    @Override
+    public void onAppThemeRetrieved(String themeName) {
+        setTheme(AppTheme.withName(themeName).resId());
+    }
+
+    @Override
+    public void onAppThemeRetrieveError() {
+        Toast.makeText(this, "App theme retrieve error.", Toast.LENGTH_SHORT).show();
     }
 }

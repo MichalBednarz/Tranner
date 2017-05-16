@@ -28,6 +28,7 @@ import static org.mockito.Mockito.when;
  * Created by Michał on 2017-05-06.
  */
 public class PreferencePresenterTest {
+    private static final String THEME_NAME = "theme_name";
     private final Category DATA = new Category();
     private final int PARENT_ID = 1;
     private final int DEFAULT_ID = -1;
@@ -134,6 +135,24 @@ public class PreferencePresenterTest {
         presenter.retrieveParentId();
 
         verify(view).onParentIdRetrieveError();
+    }
+
+    @Test
+    public void shouldRetrieveAppTheme() {
+        when(repository.retrieveAppTheme()).thenReturn(Single.just(THEME_NAME));
+
+        presenter.retrieveAppTheme();
+
+        verify(view).onAppThemeRetrieved(THEME_NAME);
+    }
+
+    @Test
+    public void shouldHandleRetrieveAppThemeError() {
+        when(repository.retrieveAppTheme()).thenReturn(Single.error(new Throwable("error")));
+
+        presenter.retrieveAppTheme();
+
+        verify(view).onAppThemeRetrieveError();
     }
 
 

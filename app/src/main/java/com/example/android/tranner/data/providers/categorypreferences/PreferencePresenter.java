@@ -104,4 +104,22 @@ public class PreferencePresenter implements PreferenceContract.Presenter {
                     }
                 }));
     }
+
+    @Override
+    public void retrieveAppTheme() {
+        mCompositeDisposable.add(mRepository.retrieveAppTheme()
+                .subscribeOn(Schedulers.io())
+                .observeOn(mMainScheduler)
+                .subscribeWith(new DisposableSingleObserver<String>() {
+                    @Override
+                    public void onSuccess(@NonNull String string) {
+                        mView.onAppThemeRetrieved(string);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        mView.onAppThemeRetrieveError();
+                    }
+                }));
+    }
 }

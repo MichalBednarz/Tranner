@@ -1,6 +1,7 @@
 package com.example.android.tranner.data.providers.categorypreferences;
 
 import com.example.android.tranner.data.providers.categoryprovider.Category;
+import com.example.android.tranner.mainscreen.themes.AppTheme;
 
 import io.reactivex.Single;
 
@@ -23,6 +24,10 @@ public class PreferenceContract {
         void onParentIdRetrieved(int parentId);
 
         void onParentIdRetrieveError();
+
+        void onAppThemeRetrieved(String themeName);
+
+        void onAppThemeRetrieveError();
     }
 
     public interface Presenter {
@@ -36,6 +41,8 @@ public class PreferenceContract {
 
         void loadParentCategory(int parentId);
 
+        void retrieveAppTheme();
+
     }
 
     public interface Repository {
@@ -44,5 +51,7 @@ public class PreferenceContract {
         Single<Integer> retrieveParentId();
 
         Single<Category> loadParentCategory(int parentId);
+
+        Single<String> retrieveAppTheme();
     }
 }
