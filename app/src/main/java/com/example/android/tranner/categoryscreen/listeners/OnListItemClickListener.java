@@ -9,7 +9,7 @@ import com.example.android.tranner.data.providers.itemprovider.CategoryItem;
 public interface OnListItemClickListener {
     void onListOpenItem(CategoryItem item);
 
-    void onListDeleteItem(CategoryItem item);
+    void onListDeleteItem(CategoryItem item, int position);
 
     void onListMoveItem(CategoryItem item);
 

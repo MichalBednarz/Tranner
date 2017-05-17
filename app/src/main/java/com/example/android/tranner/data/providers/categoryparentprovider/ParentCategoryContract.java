@@ -1,4 +1,4 @@
-package com.example.android.tranner.data.providers.categoryparent;
+package com.example.android.tranner.data.providers.categoryparentprovider;
 
 import com.example.android.tranner.data.providers.categoryprovider.Category;
 

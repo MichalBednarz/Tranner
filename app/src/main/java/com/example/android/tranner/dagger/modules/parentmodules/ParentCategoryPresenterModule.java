@@ -1,7 +1,7 @@
 package com.example.android.tranner.dagger.modules.parentmodules;
 
 import com.example.android.tranner.dagger.scopes.ActivityScope;
-import com.example.android.tranner.data.providers.categoryparent.ParentCategoryPresenter;
+import com.example.android.tranner.data.providers.categoryparentprovider.ParentCategoryPresenter;
 import com.example.android.tranner.data.providers.categoryprovider.CategoryRepository;
 
 import dagger.Module;

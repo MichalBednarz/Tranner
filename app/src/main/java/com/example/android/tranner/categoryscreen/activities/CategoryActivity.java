@@ -2,10 +2,10 @@ package com.example.android.tranner.categoryscreen.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.example.android.tranner.R;
@@ -17,11 +17,12 @@ import com.example.android.tranner.categoryscreen.listeners.OnNewFragmentListene
 import com.example.android.tranner.dagger.components.CategoryActivityComponent;
 import com.example.android.tranner.dagger.components.DaggerCategoryActivityComponent;
 import com.example.android.tranner.data.ConstantKeys;
-import com.example.android.tranner.data.providers.categoryparent.ParentCategoryContract;
-import com.example.android.tranner.data.providers.categoryparent.ParentCategoryPresenter;
+import com.example.android.tranner.data.providers.categoryparentprovider.ParentCategoryContract;
+import com.example.android.tranner.data.providers.categoryparentprovider.ParentCategoryPresenter;
 import com.example.android.tranner.data.providers.categoryprovider.Category;
 import com.example.android.tranner.data.providers.itemprovider.CategoryItem;
 import com.example.android.tranner.detailscreen.DetailActivity;
+import com.example.android.tranner.mainscreen.themes.AppCompatThemedActivity;
 
 import javax.inject.Inject;
 
@@ -31,10 +32,13 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.example.android.tranner.data.ConstantKeys.CATEGORY_INTENT_ID;
 
-public class CategoryActivity extends AppCompatActivity implements
+public class CategoryActivity extends AppCompatThemedActivity implements
         OnFamiliarFragmentListener,
         OnNewFragmentListener,
         ParentCategoryContract.View {
+
+    private static final int TAB_NEW = 0;
+    private static final int TAB_FAMILIAR = 1;
 
     @BindView(R.id.sliding_tabs)
     TabLayout mSlidingTabs;
@@ -89,6 +93,23 @@ public class CategoryActivity extends AppCompatActivity implements
         return mComponent;
     }
 
+    private void setupSlidingTabs(Category parentCategory) {
+        mAdapter = new FragmentSlidingAdapter(getSupportFragmentManager(), parentCategory.getId());
+        mViewpager.setAdapter(mAdapter);
+        mSlidingTabs.setupWithViewPager(mViewpager);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mSlidingTabs.setBackgroundColor(getResources().getColor(R.color.colorSilver, getTheme()));
+        } else {
+            mSlidingTabs.setBackgroundColor(getResources().getColor(R.color.colorSilver));
+        }
+
+
+        //mSlidingTabs.getTabAt(TAB_NEW).setIcon();
+        //mSlidingTabs.getTabAt(TAB_FAMILIAR).setIcon()
+    }
+
+
     @Override
     public void onFamiliarItemOpened(CategoryItem item) {
         Intent startIntent = DetailActivity.getStartIntent(this, item.getId());
@@ -122,9 +143,7 @@ public class CategoryActivity extends AppCompatActivity implements
     @Override
     public void onParentCategoryLoaded(Category parentCategory) {
         setTitle(parentCategory.getTitle());
-        mAdapter = new FragmentSlidingAdapter(getSupportFragmentManager(), parentCategory.getId());
-        mViewpager.setAdapter(mAdapter);
-        mSlidingTabs.setupWithViewPager(mViewpager);
+        setupSlidingTabs(parentCategory);
     }
 
     @Override

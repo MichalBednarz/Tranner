@@ -31,7 +31,6 @@ import com.example.android.tranner.data.providers.itemprovider.ItemContract;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -45,6 +44,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import static com.example.android.tranner.data.ConstantKeys.ITEM_TAB_FAMILIAR;
 import static com.example.android.tranner.data.ConstantKeys.ITEM_TAB_NEW;
 import static com.example.android.tranner.data.ConstantKeys.RELOAD_EVENT;
+import static java.util.Collections.EMPTY_LIST;
 
 public class FragmentFamiliar extends Fragment implements OnListItemClickListener, OnAddItemDialogListener, ItemContract.FamiliarView {
 
@@ -63,11 +63,9 @@ public class FragmentFamiliar extends Fragment implements OnListItemClickListene
 
     private OnFamiliarFragmentListener mListener;
     private FragmentLayoutAdapter mAdapter;
-    private List<CategoryItem> mItemList = new ArrayList<>();
     private int mParentId;
 
     public FragmentFamiliar() {
-        // Required empty public constructor
     }
 
     /**
@@ -167,7 +165,7 @@ public class FragmentFamiliar extends Fragment implements OnListItemClickListene
     private void setUpRecyclerView() {
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
         mRecyclerView.setLayoutManager(layoutManager);
-        mAdapter = new FragmentLayoutAdapter(this, mItemList);
+        mAdapter = new FragmentLayoutAdapter(this);
         mAdapter.setListener(this);
         mRecyclerView.setAdapter(mAdapter);
     }
@@ -218,16 +216,14 @@ public class FragmentFamiliar extends Fragment implements OnListItemClickListene
      */
 
     @Override
-    public void onListDeleteItem(CategoryItem item) {
+    public void onListDeleteItem(CategoryItem item, int position) {
         mFamiliarItemPresenter.deleteFamiliarItem(item);
-        mFamiliarItemPresenter.loadFamiliarItems(mParentId);
     }
 
     @Override
     public void onListMoveItem(CategoryItem item) {
         item.setTab(ITEM_TAB_NEW);
         mFamiliarItemPresenter.updateFamiliarItem(item);
-        mFamiliarItemPresenter.loadFamiliarItems(mParentId);
 
         ReloadEvent event = new ReloadEvent();
         event.setMessage(RELOAD_EVENT);
@@ -243,7 +239,6 @@ public class FragmentFamiliar extends Fragment implements OnListItemClickListene
     @Override
     public void onListUpdateItem(CategoryItem item) {
         mFamiliarItemPresenter.updateFamiliarItem(item);
-        mFamiliarItemPresenter.loadFamiliarItems(mParentId);
     }
 
     /**
@@ -254,7 +249,6 @@ public class FragmentFamiliar extends Fragment implements OnListItemClickListene
     public void onDialogAddItem(String name) {
         CategoryItem item = new CategoryItem(name, mParentId, ITEM_TAB_FAMILIAR);
         mFamiliarItemPresenter.addFamiliarItem(item);
-        mFamiliarItemPresenter.loadFamiliarItems(mParentId);
     }
 
     /**
@@ -263,17 +257,16 @@ public class FragmentFamiliar extends Fragment implements OnListItemClickListene
 
     @Override
     public void onFamiliarItemLoaded(List<CategoryItem> familiarItemList) {
-        mItemList.clear();
-        mItemList.addAll(familiarItemList);
-        mAdapter.notifyDataSetChanged();
+        mAdapter.updateItemList(familiarItemList);
+
         Toast.makeText(getActivity(), "Familiar items loaded from database.", Toast.LENGTH_SHORT).show();
     }
 
 
     @Override
     public void onNoFamiliarItemLoaded() {
-        mItemList.clear();
-        mAdapter.notifyDataSetChanged();
+        mAdapter.updateItemList(EMPTY_LIST);
+
         Toast.makeText(getActivity(), "No familiar items loaded from database.", Toast.LENGTH_SHORT).show();
     }
 
@@ -284,7 +277,7 @@ public class FragmentFamiliar extends Fragment implements OnListItemClickListene
 
     @Override
     public void onItemAdded() {
-
+        mFamiliarItemPresenter.loadFamiliarItems(mParentId);
     }
 
     @Override
@@ -299,7 +292,7 @@ public class FragmentFamiliar extends Fragment implements OnListItemClickListene
 
     @Override
     public void onItemDeleted() {
-
+        mFamiliarItemPresenter.loadFamiliarItems(mParentId);
     }
 
     @Override
@@ -314,7 +307,7 @@ public class FragmentFamiliar extends Fragment implements OnListItemClickListene
 
     @Override
     public void onItemUpdated() {
-
+        mFamiliarItemPresenter.loadFamiliarItems(mParentId);
     }
 
     @Override

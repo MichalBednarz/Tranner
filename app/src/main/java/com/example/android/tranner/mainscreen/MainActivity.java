@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatThemedActivity implements CategoryDia
     }
 
     private void setUpCategoryRecyclerView() {
-        mAdapter = new MainActivityAdapter(this, mCategoryList);
+        mAdapter = new MainActivityAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -251,7 +251,7 @@ public class MainActivity extends AppCompatThemedActivity implements CategoryDia
 
     @Override
     public void onCategoryLoaded(List<Category> categoryList) {
-        mAdapter.updateItems(categoryList);
+        mAdapter.updateCategoryList(categoryList);
 
         Toast.makeText(this, "Categories loaded from database.", Toast.LENGTH_SHORT).show();
     }

@@ -1,11 +1,10 @@
 <resources>
-
     <!-- Base application theme. -->
     <style name="AppThemeOne" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/colorPink</item>
+        <item name="colorPrimaryDark">@color/colorCyan</item>
+        <item name="colorAccent">@color/colorGreen</item>
         <item name="item_one">@color/colorGreen</item>
         <item name="item_two">@color/colorPink</item>
         <item name="item_three">@color/colorCyan</item>
@@ -16,9 +15,9 @@
 
     <style name="AppThemeTwo" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@android:color/black</item>
+        <item name="colorPrimaryDark">@color/colorYellow</item>
+        <item name="colorAccent">@android:color/white</item>
         <item name="item_one">@android:color/black</item>
         <item name="item_two">@android:color/white</item>
         <item name="item_three">@color/colorYellow</item>
@@ -26,9 +25,9 @@
 
     <style name="AppThemeThree" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/colorChocolate</item>
+        <item name="colorPrimaryDark">@color/colorSilver</item>
+        <item name="colorAccent">@color/colorPurple</item>
         <item name="item_one">@color/colorChocolate</item>
         <item name="item_two">@color/colorSilver</item>
         <item name="item_three">@color/colorPurple</item>
@@ -43,9 +42,7 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="MainScreenTheme" parent="Theme.AppCompat.Light">
-
-    </style>
+    <style name="MainScreenTheme" parent="Theme.AppCompat.Light"/>
 
     <style name="AppThemeOne.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 

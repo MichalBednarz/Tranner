@@ -3,6 +3,7 @@ package com.example.android.tranner.mainscreen.adapters;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.annotation.ColorInt;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
@@ -15,15 +16,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.tranner.R;
+import com.example.android.tranner.categoryscreen.adapters.ItemListDiffCallback;
 import com.example.android.tranner.data.providers.categoryprovider.Category;
 import com.example.android.tranner.mainscreen.listeners.MainActivityAdapterListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * Created by Michał on 2017-04-09.
@@ -32,12 +34,12 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapter.ViewHolder> {
 
     private Context mContext;
-    private List<Category> mCategoryList;
+    private List<Category> mCategoryList = new ArrayList<>();
     private MainActivityAdapterListener mListener;
+    private DiffUtil.DiffResult mDiffResult;
 
-    public MainActivityAdapter(Context mContext, List<Category> mCategoryList) {
+    public MainActivityAdapter(Context mContext) {
         this.mContext = mContext;
-        this.mCategoryList = mCategoryList;
         this.mListener = (MainActivityAdapterListener) mContext;
     }
 
@@ -122,12 +124,13 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
     /**
      * This method performs all necessary operations to update list of data smoothly.
      *
-     * @param newCategories
+     * @param newCategoryList
      */
-    public void updateItems(List<Category> newCategories) {
+    public void updateCategoryList(List<Category> newCategoryList) {
+        mDiffResult = DiffUtil.calculateDiff(new CategoryListDiffCallback(mCategoryList, newCategoryList), true);
         mCategoryList.clear();
-        mCategoryList.addAll(newCategories);
-        notifyDataSetChanged();
+        mCategoryList.addAll(newCategoryList);
+        mDiffResult.dispatchUpdatesTo(this);
     }
 
     @Override

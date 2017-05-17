@@ -2,12 +2,11 @@ package com.example.android.tranner.categoryscreen.adapters;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.support.annotation.ColorInt;
 import android.support.v4.app.Fragment;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.text.InputType;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -16,13 +15,11 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.android.tranner.R;
 import com.example.android.tranner.categoryscreen.listeners.OnListItemClickListener;
 import com.example.android.tranner.data.providers.itemprovider.CategoryItem;
-import com.example.android.tranner.mainscreen.adapters.MainActivityAdapter;
-import com.github.florent37.viewanimator.ViewAnimator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -36,17 +33,25 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 public class FragmentLayoutAdapter extends RecyclerView.Adapter<FragmentLayoutAdapter.ViewHolder> {
 
     private OnListItemClickListener mListener;
-    private List<CategoryItem> mItemList;
+    private List<CategoryItem> mItemList = new ArrayList<>();
     private Context mContext;
+    private DiffUtil.DiffResult mDiffResult;
 
-    public FragmentLayoutAdapter(Fragment fragment, List<CategoryItem> itemList) {
-        this.mItemList = itemList;
+    public FragmentLayoutAdapter(Fragment fragment) {
         this.mContext = fragment.getContext();
         this.mListener = (OnListItemClickListener) fragment;
     }
 
     public void setListener(OnListItemClickListener listener) {
         mListener = listener;
+    }
+
+
+    public void updateItemList(List<CategoryItem> newItemList) {
+        mDiffResult = DiffUtil.calculateDiff(new ItemListDiffCallback(mItemList, newItemList), true);
+        mItemList.clear();
+        mItemList.addAll(newItemList);
+        mDiffResult.dispatchUpdatesTo(this);
     }
 
     @Override
@@ -61,15 +66,9 @@ public class FragmentLayoutAdapter extends RecyclerView.Adapter<FragmentLayoutAd
         holder.mName.setText(item.getName());
         holder.mDescription.setText(item.getDescription());
         holder.itemView.setOnClickListener(v -> mListener.onListOpenItem(item));
-        holder.mButton.setOnClickListener(v -> showPopupMenu(v, item, holder));
+        holder.mButton.setOnClickListener(v -> showPopupMenu(v, item, holder, position));
 
         setItemBackdrop(holder, position);
-
-        ViewAnimator.animate(holder.itemView)
-                .scale(0.9f, 1)
-                .alpha(0, 1)
-                .start();
-
     }
 
     /**
@@ -99,7 +98,7 @@ public class FragmentLayoutAdapter extends RecyclerView.Adapter<FragmentLayoutAd
         }
     }
 
-    private void showPopupMenu(View view, final CategoryItem item, final FragmentLayoutAdapter.ViewHolder holder) {
+    private void showPopupMenu(View view, final CategoryItem item, final FragmentLayoutAdapter.ViewHolder holder,final int position) {
         PopupMenu popup = new PopupMenu(view.getContext(), view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_fragment_item, popup.getMenu());
@@ -114,7 +113,7 @@ public class FragmentLayoutAdapter extends RecyclerView.Adapter<FragmentLayoutAd
                             .showCancelButton(true)
                             .setCancelClickListener(SweetAlertDialog::cancel)
                             .setConfirmClickListener(sDialog -> {
-                                mListener.onListDeleteItem(item);
+                                mListener.onListDeleteItem(item, position);
                                 sDialog.cancel();
                             })
                             .show();

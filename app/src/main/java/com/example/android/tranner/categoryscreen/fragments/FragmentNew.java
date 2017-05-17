@@ -20,7 +20,6 @@ import com.example.android.tranner.R;
 import com.example.android.tranner.categoryscreen.ReloadEvent;
 import com.example.android.tranner.categoryscreen.activities.CategoryActivity;
 import com.example.android.tranner.categoryscreen.adapters.FragmentLayoutAdapter;
-import com.example.android.tranner.categoryscreen.dialogs.AddItemDialog;
 import com.example.android.tranner.categoryscreen.listeners.OnAddItemDialogListener;
 import com.example.android.tranner.categoryscreen.listeners.OnListItemClickListener;
 import com.example.android.tranner.categoryscreen.listeners.OnNewFragmentListener;
@@ -34,6 +33,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -44,15 +44,14 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-import static com.example.android.tranner.data.ConstantKeys.ITEM_TAB_FAMILIAR;
 import static com.example.android.tranner.data.ConstantKeys.ITEM_TAB_NEW;
 import static com.example.android.tranner.data.ConstantKeys.RELOAD_EVENT;
+import static java.util.Collections.*;
 
 public class FragmentNew extends Fragment implements OnListItemClickListener, OnAddItemDialogListener,
         ItemContract.NewView {
 
     private static final String ARG_ID = "arg_id";
-    private static final String TAG = "FragmentNew";
 
     @BindView(R.id.recyclerview_new_fragment)
     RecyclerView mRecyclerView;
@@ -67,12 +66,9 @@ public class FragmentNew extends Fragment implements OnListItemClickListener, On
 
     private OnNewFragmentListener mFragmentListener;
     private FragmentLayoutAdapter mAdapter;
-    private List<CategoryItem> mItemList = new ArrayList<>();
     private int mParentId;
 
-    public FragmentNew() {
-        // Required empty public constructor
-    }
+    public FragmentNew() {}
 
     /**
      * Use this factory method to create a new instance of
@@ -147,7 +143,7 @@ public class FragmentNew extends Fragment implements OnListItemClickListener, On
     private void setUpRecyclerView() {
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
         mRecyclerView.setLayoutManager(layoutManager);
-        mAdapter = new FragmentLayoutAdapter(this, mItemList);
+        mAdapter = new FragmentLayoutAdapter(this);
         mAdapter.setListener(this);
         mRecyclerView.setAdapter(mAdapter);
     }
@@ -221,9 +217,8 @@ public class FragmentNew extends Fragment implements OnListItemClickListener, On
     }
 
     @Override
-    public void onListDeleteItem(CategoryItem item) {
+    public void onListDeleteItem(CategoryItem item, int position) {
         mNewItemPresenter.deleteNewItem(item);
-        mNewItemPresenter.loadNewItems(mParentId);
     }
 
     @Override
@@ -241,7 +236,6 @@ public class FragmentNew extends Fragment implements OnListItemClickListener, On
     @Override
     public void onListUpdateItem(CategoryItem item) {
         mNewItemPresenter.updateNewItem(item);
-        mNewItemPresenter.loadNewItems(mParentId);
     }
 
     /**
@@ -253,7 +247,6 @@ public class FragmentNew extends Fragment implements OnListItemClickListener, On
         CategoryItem item = new CategoryItem(name, mParentId, ConstantKeys.ITEM_TAB_NEW);
 
         mNewItemPresenter.addNewItem(item);
-        mNewItemPresenter.loadNewItems(mParentId);
     }
 
     /**
@@ -262,16 +255,15 @@ public class FragmentNew extends Fragment implements OnListItemClickListener, On
 
     @Override
     public void onNewItemLoaded(List<CategoryItem> newItemList) {
-        mItemList.clear();
-        mItemList.addAll(newItemList);
-        mAdapter.notifyDataSetChanged();
+        mAdapter.updateItemList(newItemList);
+
         Toast.makeText(getActivity(), "New items loaded from database.", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onNoNewItemLoaded() {
-        mItemList.clear();
-        mAdapter.notifyDataSetChanged();
+        mAdapter.updateItemList(EMPTY_LIST);
+
         Toast.makeText(getActivity(), "No new items loaded from database.", Toast.LENGTH_SHORT).show();
     }
 
@@ -282,6 +274,8 @@ public class FragmentNew extends Fragment implements OnListItemClickListener, On
 
     @Override
     public void onItemAdded() {
+        mNewItemPresenter.loadNewItems(mParentId);
+
         Toast.makeText(getActivity(), "Item added.", Toast.LENGTH_SHORT).show();
     }
 
@@ -297,6 +291,8 @@ public class FragmentNew extends Fragment implements OnListItemClickListener, On
 
     @Override
     public void onItemDeleted() {
+        mNewItemPresenter.loadNewItems(mParentId);
+
         Toast.makeText(getActivity(), "Item deleted.", Toast.LENGTH_SHORT).show();
     }
 
@@ -312,7 +308,7 @@ public class FragmentNew extends Fragment implements OnListItemClickListener, On
 
     @Override
     public void onItemUpdated() {
-
+        mNewItemPresenter.loadNewItems(mParentId);
     }
 
     @Override
