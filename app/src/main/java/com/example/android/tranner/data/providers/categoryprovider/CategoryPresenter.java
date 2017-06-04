@@ -1,12 +1,23 @@
 package com.example.android.tranner.data.providers.categoryprovider;
 
+import android.support.v4.util.Pair;
+import android.support.v7.util.DiffUtil;
+
+import com.example.android.tranner.mainscreen.adapters.CategoryListDiffCallback;
+
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Scheduler;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
+
+import static io.reactivex.android.schedulers.AndroidSchedulers.mainThread;
+import static io.reactivex.schedulers.Schedulers.computation;
+import static java.util.Collections.*;
 
 /**
  * Created by Michał on 2017-04-11.

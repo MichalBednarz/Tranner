@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.example.android.tranner.R;
 import com.example.android.tranner.categoryscreen.listeners.OnListItemClickListener;
 import com.example.android.tranner.data.providers.itemprovider.CategoryItem;
+import com.github.florent37.viewanimator.ViewAnimator;
 
 import java.util.ArrayList;
 import java.util.List;

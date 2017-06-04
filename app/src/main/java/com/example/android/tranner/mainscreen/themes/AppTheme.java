@@ -15,8 +15,8 @@ import java.io.Serializable;
  */
 public enum AppTheme {
     PASTEL(R.style.AppThemeOne, "Pastel"),
-    YELLOW(R.style.AppThemeTwo, "Yellow"),
-    SOFT(R.style.AppThemeThree, "Softy");
+    YELLOW(R.style.AppThemeTwo, "Purple"),
+    SOFT(R.style.AppThemeThree, "Brown");
 
     @StyleRes
     private final int styleResId;

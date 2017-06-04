@@ -1,10 +1,10 @@
 <resources>
     <!-- Base application theme. -->
     <style name="AppThemeOne" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPink</item>
-        <item name="colorPrimaryDark">@color/colorCyan</item>
-        <item name="colorAccent">@color/colorGreen</item>
+
+        <item name="colorPrimary">@color/colorPrimary_one</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark_one</item>
+        <item name="colorAccent">@color/colorAccent_one</item>
         <item name="item_one">@color/colorGreen</item>
         <item name="item_two">@color/colorPink</item>
         <item name="item_three">@color/colorCyan</item>
@@ -14,20 +14,20 @@
     </style>
 
     <style name="AppThemeTwo" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@android:color/black</item>
-        <item name="colorPrimaryDark">@color/colorYellow</item>
-        <item name="colorAccent">@android:color/white</item>
+
+        <item name="colorPrimary">@color/colorPrimary_two</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark_two</item>
+        <item name="colorAccent">@color/colorAccent_two</item>
         <item name="item_one">@android:color/black</item>
         <item name="item_two">@android:color/white</item>
-        <item name="item_three">@color/colorYellow</item>
+        <item name="item_three">@color/colorBlueGrey</item>
     </style>
 
     <style name="AppThemeThree" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorChocolate</item>
-        <item name="colorPrimaryDark">@color/colorSilver</item>
-        <item name="colorAccent">@color/colorPurple</item>
+
+        <item name="colorPrimary">@color/colorPrimary_three</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark_three</item>
+        <item name="colorAccent">@color/colorAccent_three</item>
         <item name="item_one">@color/colorChocolate</item>
         <item name="item_two">@color/colorSilver</item>
         <item name="item_three">@color/colorPurple</item>
