@@ -1,14 +1,9 @@
 package com.example.android.tranner.categoryscreen.activities;
 
-import android.content.Context;
-import android.content.Intent;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.contrib.RecyclerViewActions;
-import android.support.test.espresso.intent.rule.IntentsTestRule;
+import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.example.android.tranner.R;
-import com.example.android.tranner.mainscreen.MainActivity;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -16,28 +11,31 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.intent.Intents.intended;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withChild;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static org.junit.Assert.*;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static junit.framework.Assert.assertTrue;
 
 /**
  * Created by Michał on 2017-05-09.
  */
 @RunWith(AndroidJUnit4.class)
 public class CategoryActivityTest {
+
+    private static final int NEW_POSITION = 0;
+    private static final int FAMILIAR_POSITION = 1;
+
     @Rule
-    public IntentsTestRule<CategoryActivity> mActivityRule = new IntentsTestRule<CategoryActivity>(
-            CategoryActivity.class, true, false);
+    public ActivityTestRule<CategoryActivity> mActivityRule = new ActivityTestRule<CategoryActivity>(
+            CategoryActivity.class);
 
     @Test
-    public void shouldIntentPassExtras() {
-        Context targetContext = InstrumentationRegistry.getInstrumentation()
-                .getTargetContext();
-        Intent intent = new Intent(targetContext, CategoryActivity.class);
-        intent.putExtra("Name", "Value");
+    public void shouldOpenDialogOnFab() {
+        onView(withId(R.id.fragment_new_fab)).perform(click());
 
-        mActivityRule.launchActivity(intent);
+        onView(withText(R.string.add_new)).check(matches(isDisplayed()));
     }
 
 }

@@ -94,7 +94,7 @@ public class CategoryActivity extends AppCompatThemedActivity implements
     }
 
     private void setupSlidingTabs(Category parentCategory) {
-        mAdapter = new FragmentSlidingAdapter(getSupportFragmentManager(), parentCategory.getId());
+        mAdapter = new FragmentSlidingAdapter(this, parentCategory.getId());
         mViewpager.setAdapter(mAdapter);
         mSlidingTabs.setupWithViewPager(mViewpager);
 

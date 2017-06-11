@@ -1,11 +1,14 @@
 package com.example.android.tranner.categoryscreen.adapters;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
+import com.example.android.tranner.R;
+import com.example.android.tranner.categoryscreen.activities.CategoryActivity;
 import com.example.android.tranner.categoryscreen.fragments.FragmentFamiliar;
 import com.example.android.tranner.categoryscreen.fragments.FragmentNew;
 
@@ -18,12 +21,12 @@ import java.lang.ref.WeakReference;
 public class FragmentSlidingAdapter extends FragmentPagerAdapter {
 
     final int PAGE_COUNT = 2;
-    private SparseArray<WeakReference<Fragment>> mRegisteredFragments = new SparseArray<>();
-    private String mTabTitles[] = new String[]{"New", "Familiar"};
+    private String mTabTitles[];
     private int mParentId;
 
-    public FragmentSlidingAdapter(FragmentManager fm, int parentId) {
-        super(fm);
+    public FragmentSlidingAdapter(Context context, int parentId) {
+        super(((CategoryActivity) context).getSupportFragmentManager());
+        this.mTabTitles = context.getResources().getStringArray(R.array.category_tabs);
         this.mParentId = parentId;
     }
 

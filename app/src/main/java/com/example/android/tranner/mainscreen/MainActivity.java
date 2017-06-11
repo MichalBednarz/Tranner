@@ -35,6 +35,7 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -45,6 +46,7 @@ import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.example.android.tranner.data.ConstantKeys.WEB_DIALOG_TAG;
+import static java.util.Collections.EMPTY_LIST;
 
 public class MainActivity extends AppCompatThemedActivity implements CategoryDialogListener,
         MainActivityAdapterListener,
@@ -258,8 +260,8 @@ public class MainActivity extends AppCompatThemedActivity implements CategoryDia
 
     @Override
     public void onNoCategoryLoaded() {
-        mCategoryList.clear();
-        mAdapter.notifyDataSetChanged();
+        mAdapter.updateCategoryList(EMPTY_LIST);
+
         Toast.makeText(this, "No category loaded...", Toast.LENGTH_SHORT).show();
     }
 

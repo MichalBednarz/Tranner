@@ -10,6 +10,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -18,7 +19,9 @@ import android.widget.TextView;
 import com.example.android.tranner.R;
 import com.example.android.tranner.categoryscreen.adapters.ItemListDiffCallback;
 import com.example.android.tranner.data.providers.categoryprovider.Category;
+import com.example.android.tranner.data.providers.detailprovider.DetailContract;
 import com.example.android.tranner.mainscreen.listeners.MainActivityAdapterListener;
+import com.github.florent37.viewanimator.ViewAnimator;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
