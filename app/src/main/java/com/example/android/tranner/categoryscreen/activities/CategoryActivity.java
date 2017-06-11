@@ -2,11 +2,14 @@ package com.example.android.tranner.categoryscreen.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
 
 import com.example.android.tranner.R;
 import com.example.android.tranner.TrannerApp;
@@ -98,12 +101,11 @@ public class CategoryActivity extends AppCompatThemedActivity implements
         mViewpager.setAdapter(mAdapter);
         mSlidingTabs.setupWithViewPager(mViewpager);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            mSlidingTabs.setBackgroundColor(getResources().getColor(R.color.colorSilver, getTheme()));
-        } else {
-            mSlidingTabs.setBackgroundColor(getResources().getColor(R.color.colorSilver));
-        }
-
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = getTheme();
+        theme.resolveAttribute(R.attr.colorAccent, typedValue, true);
+        @ColorInt int color = typedValue.data;
+        mSlidingTabs.setBackgroundColor(color);
 
         //mSlidingTabs.getTabAt(TAB_NEW).setIcon();
         //mSlidingTabs.getTabAt(TAB_FAMILIAR).setIcon()

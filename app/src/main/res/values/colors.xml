@@ -10,5 +10,18 @@
     <color name="colorChocolate">#D2691E</color>
     <color name="colorSilver">#C0C0C0</color>
     <color name="colorPurple">#DA70D6</color>
+    <color name="colorBlueGrey">#607D8B</color>
+    <color name="colorPrimary_one">#E91E63</color>
+    <color name="colorPrimaryDark_one">#C2185B</color>
+    <color name="colorAccent_one">#00BCD4</color>
+    <color name="colorPrimaryLight_one">#F8BBD0</color>
+    <color name="colorPrimary_two">#9C27B0</color>
+    <color name="colorPrimaryDark_two">#7B1FA2</color>
+    <color name="colorAccent_two">#03A9F4</color>
+    <color name="colorPrimaryLight_two">#E1BEE7</color>
+    <color name="colorPrimary_three">#795548</color>
+    <color name="colorPrimaryDark_three">#5D4037</color>
+    <color name="colorAccent_three">#9E9E9E</color>
+    <color name="colorPrimaryLight_three">#D7CCC8</color>
 
 </resources>
